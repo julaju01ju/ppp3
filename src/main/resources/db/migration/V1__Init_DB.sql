@@ -1,4 +1,23 @@
-﻿    create table answer (
+﻿create sequence answer_seq start 1 increment 1;
+create sequence answer_vote_seq start 1 increment 1;
+create sequence badge_seq start 1 increment 1;
+create sequence chat_seq start 1 increment 1;
+create sequence comment_seq start 1 increment 1;
+create sequence ignore_tag_seq start 1 increment 1;
+create sequence message_seq start 1 increment 1;
+create sequence question_seq start 1 increment 1;
+create sequence question_viewed_seq start 1 increment 1;
+create sequence related_tag_seq start 1 increment 1;
+create sequence reputation_seq start 1 increment 1;
+create sequence role_seq start 1 increment 1;
+create sequence tag_seq start 1 increment 1;
+create sequence tracked_tag_seq start 1 increment 1;
+create sequence user_seq start 1 increment 1;
+create sequence user_badges_seq start 1 increment 1;
+create sequence user_favorite_question_seq start 1 increment 1;
+create sequence vote_question_seq start 1 increment 1;
+
+    create table answer (
         id int8 not null,
         date_accept_time timestamp,
         html_body text not null,

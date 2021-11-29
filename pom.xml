@@ -204,22 +204,7 @@
                         </exclude>
                     </excludes>
                 </configuration>
-
             </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>org.flywaydb</groupId>-->
-<!--                <artifactId>flyway-maven-plugin</artifactId>-->
-<!--                <version>8.0.0</version>-->
-<!--                <configuration>-->
-<!--                    <user>postgres</user>-->
-<!--                    <password>root</password>-->
-<!--                    <schemas>-->
-<!--                        <schema>jm</schema>-->
-<!--                    </schemas>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-
         </plugins>
     </build>
 
