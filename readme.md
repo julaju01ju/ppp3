@@ -422,21 +422,32 @@ URL для Swagger Editor: http://localhost:8091/v2/api-docs
 @Api("Swagger Controller")
 public class SwaggerController {
 
-    User user;
-
     @GetMapping
-    @ApiOperation("Getting a list of all records")
-    public void readAll(@RequestBody User user) {  }
-
-    @PostMapping
-    @ApiOperation("Creating a new record")
-    public void create(@RequestBody User user) {
-
+    @ApiOperation("Получение списка всех записей")
+    public ResponseEntity<UserDto> getAll() {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    @ApiOperation("Updating an existing record")
-    public void update(@PathVariable Long id, @RequestBody User User) { }
+    @PostMapping
+    @ApiOperation("Создание новой записи")
+    public ResponseEntity<UserDto> addUser(@ApiParam(value = "Новый UserDto") @RequestBody UserDto userDto) {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.CREATED);
+    }
 
+    @PutMapping
+    @ApiOperation("Обновление существующей записи")
+    public ResponseEntity<UserDto> editUser(@ApiParam(name = "Обновленный UserDto") @RequestBody UserDto userDto){
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
+    }
+    
+    @DeleteMapping
+    @ApiOperation("Удаление записи")
+    public ResponseEntity<?> deleteUser(@ApiParam(name = "Удаление UserDto") @RequestBody UserDto userDto) {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
+    }
 }
 ````
