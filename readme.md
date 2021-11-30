@@ -403,3 +403,40 @@ User при регистрации получает все знаки лишь �
         return userSet;
     }
 ````
+
+
+## Пример RestController с использованием Swagger
+Swagger - это фреймворк для спецификации RESTful API, дает возможность интерактивно просматривать спецификацию,
+и отправлять запросы (Swagger UI). 
+
+Swagger UI - интерфейс, который представляет документацию, позволяет возможность просмотреть какие типы запросов
+есть, описание моделей и их типов данных.
+URL для Swagger UI: http://localhost:8091/swagger-ui.html
+
+Swagger Editor - онлайн-редактор, позволяет писать документацию в YAML или JSON формата. (https://editor.swagger.io/)
+URL для Swagger Editor: http://localhost:8091/v2/api-docs
+
+````
+@RestController
+@RequestMapping("/api")
+@Api("Swagger Controller")
+public class SwaggerController {
+
+    User user;
+
+    @GetMapping
+    @ApiOperation("Getting a list of all records")
+    public void readAll(@RequestBody User user) {  }
+
+    @PostMapping
+    @ApiOperation("Creating a new record")
+    public void create(@RequestBody User user) {
+
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation("Updating an existing record")
+    public void update(@PathVariable Long id, @RequestBody User User) { }
+
+}
+````
