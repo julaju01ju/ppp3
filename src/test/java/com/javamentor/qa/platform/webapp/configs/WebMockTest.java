@@ -23,8 +23,10 @@ public class WebMockTest {
 
     @Test
     public void greetingShouldReturnMessageFromService() throws Exception {
-//        when(service.test()).thenReturn("Hello, Mock");
-//        this.mockMvc.perform(get("/")).andDo(print()).andExpect(status().isOk())
-//                .andExpect(content().string(containsString("Hello, Mock")));
+        when(service.test()).thenReturn("Hello, Mock");
+        this.mockMvc.perform(get("/"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Hello, Mock")));
     }
 }
