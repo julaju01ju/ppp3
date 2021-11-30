@@ -1,13 +1,11 @@
-package com.javamentor.qa.platform;
+package com.javamentor.qa.platform.webapp.configs;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PlatformApplicationTests {
-
+public class TestingJmApplicationTests {
     @Test
-    void contextLoads() {
+    public void contextLoads() {
     }
-
 }
