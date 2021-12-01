@@ -1,0 +1,19 @@
+USER:
+  - ID: 1
+    FULLNAME: "fullname1"
+    PASSWORD: "password"
+    PERSIST_DATE: "2018-03-20"
+    LAST_REDACTION_DATE: "2018-03-20"
+    EMAIL: "email1"
+    ABOUT: "about1"
+    CITY: "city"
+    LINK_SITE: "site"
+    LINK_GITHUB: "github"
+    LINK_VK: "vk"
+    REPUTATIONCOUNT: 10
+    IS_ENABLED: 1
+    IS_DELETED: false
+    IMAGE_LINK: "image1"
+ROLE:
+    -ID: 1
+    NAME: "ADMIN"

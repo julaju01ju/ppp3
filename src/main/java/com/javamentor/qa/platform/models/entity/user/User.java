@@ -68,6 +68,9 @@ public class User implements UserDetails {
     @Column(name = "image_link")
     private String imageLink;
 
+    @Column(name = "reputation_count")
+    private Long reputationCount;
+
     @Column(name = "last_redaction_date", nullable = false)
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     @UpdateTimestamp
@@ -130,5 +133,137 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, password, fullName);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public LocalDateTime getPersistDateTime() {
+        return persistDateTime;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getLinkSite() {
+        return linkSite;
+    }
+
+    public String getLinkGitHub() {
+        return linkGitHub;
+    }
+
+    public String getLinkVk() {
+        return linkVk;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public String getImageLink() {
+        return imageLink;
+    }
+
+    public Long getReputationCount() {
+        return reputationCount;
+    }
+
+    public LocalDateTime getLastUpdateDateTime() {
+        return lastUpdateDateTime;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPersistDateTime(LocalDateTime persistDateTime) {
+        this.persistDateTime = persistDateTime;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setLinkSite(String linkSite) {
+        this.linkSite = linkSite;
+    }
+
+    public void setLinkGitHub(String linkGitHub) {
+        this.linkGitHub = linkGitHub;
+    }
+
+    public void setLinkVk(String linkVk) {
+        this.linkVk = linkVk;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
+    }
+
+    public void setReputationCount(Long reputationCount) {
+        this.reputationCount = reputationCount;
+    }
+
+    public void setLastUpdateDateTime(LocalDateTime lastUpdateDateTime) {
+        this.lastUpdateDateTime = lastUpdateDateTime;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

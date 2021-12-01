@@ -1,0 +1,10 @@
+Answer:
+  -ID: 1
+  -USER: 1
+  -QUESTION: 1
+  -HTMLBODY: "htmlBody"
+  -PERSISTDATETIME: "[DAY,NOW]"
+  -UPDATEDATETIME: "[DAY,NOW]"
+  -ISHELPFUL: true
+  -DATEACCEPTTIME: "[DAY,NOW]"
+  -ISDELETED: false
