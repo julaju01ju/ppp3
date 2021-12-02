@@ -404,6 +404,54 @@ User при регистрации получает все знаки лишь �
     }
 ````
 
+
+## Пример RestController с использованием Swagger
+Swagger - это фреймворк для спецификации RESTful API, дает возможность интерактивно просматривать спецификацию,
+и отправлять запросы (Swagger UI). 
+
+Swagger UI - интерфейс, который представляет документацию, позволяет возможность просмотреть какие типы запросов
+есть, описание моделей и их типов данных.
+URL для Swagger UI: http://localhost:8091/swagger-ui.html
+
+Swagger Editor - онлайн-редактор, позволяет писать документацию в YAML или JSON формата. (https://editor.swagger.io/)
+URL для Swagger Editor: http://localhost:8091/v2/api-docs
+
+````
+@RestController
+@RequestMapping("/api")
+@Api("Swagger Controller")
+public class SwaggerController {
+
+    @GetMapping
+    @ApiOperation("Получение списка всех записей")
+    public ResponseEntity<UserDto> getAll() {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
+    }
+
+    @PostMapping
+    @ApiOperation("Создание новой записи")
+    public ResponseEntity<UserDto> addUser(@ApiParam(value = "Новый UserDto") @RequestBody UserDto userDto) {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    @ApiOperation("Обновление существующей записи")
+    public ResponseEntity<UserDto> editUser(@ApiParam(name = "Обновленный UserDto") @RequestBody UserDto userDto){
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
+    }
+    
+    @DeleteMapping
+    @ApiOperation("Удаление записи")
+    public ResponseEntity<?> deleteUser(@ApiParam(name = "Удаление UserDto") @RequestBody UserDto userDto) {
+        //....
+        return new ResponseEntity<UserDto>(HttpStatus.OK);
+    }
+}
+````
+
 ## Миграция базы данных через Flyway
 
 Миграция (migration) – процесс преобразования одной структуры базы данных в другой без потери консистентности, при котором меняется схема (таблицы и их колонки, индексы и пр.).
