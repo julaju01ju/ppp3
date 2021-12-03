@@ -1,0 +1,5 @@
+CREATE TABLE Entity
+(
+    id    INTEGER IDENTITY PRIMARY KEY,
+    value VARCHAR(50) NOT NULL
+);
