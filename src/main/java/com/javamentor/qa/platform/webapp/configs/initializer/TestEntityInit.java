@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +18,14 @@ public class TestEntityInit implements CommandLineRunner {
     @Autowired
     public TestEntityInit(TestDataInitService testDataInitService) {
         this.testDataInitService = testDataInitService;
+    }
+
+    @Bean
+    public FlywayMigrationStrategy clean() {
+        return flyway -> {
+            flyway.clean();
+            flyway.migrate();
+        };
     }
 
     @Override
