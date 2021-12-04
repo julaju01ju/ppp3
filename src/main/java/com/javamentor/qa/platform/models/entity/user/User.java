@@ -68,9 +68,6 @@ public class User implements UserDetails {
     @Column(name = "image_link")
     private String imageLink;
 
-    @Column(name = "reputation_count")
-    private Long reputationCount;
-
     @Column(name = "last_redaction_date", nullable = false)
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     @UpdateTimestamp
