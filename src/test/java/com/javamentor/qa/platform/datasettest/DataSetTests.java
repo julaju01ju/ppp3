@@ -23,11 +23,10 @@ import javax.transaction.Transactional;
 @RunWith(SpringRunner.class)
 @DBRider
 @ContextConfiguration(classes = TestConfig.class)
-@DataSet(value = "test.yml")
+//@DataSet(value = "test.yml")
 public class DataSetTests {
 
     @Autowired
-
     private EntityUtils entityUtils;
 
 //    @Autowired
@@ -57,9 +56,9 @@ public class DataSetTests {
     public void test_show_all(){
 //        entityUtils.addValues("value1", "value2");
 //       Entity entity =  entityRepository.getOne(1);
-
+        entityUtils.addValues("value1", "value2");
         System.out.println("======================");
-        entityUtils.showAll();
+//        entityUtils.showAll();
         System.out.println("=======================");
     }
 

@@ -32,28 +32,28 @@ public class EntityUtils {
 
     }
 //
-//    public void addValues(String... values) {
-//        for (String val : values) {
-//            jdbcTemplate.update(INSERT_QUERY, val);
-//        }
-//    }
+    public void addValues(String... values) {
+        for (String val : values) {
+            jdbcTemplate.update(INSERT_QUERY, val);
+        }
+    }
 
 //    public void executeInTransaction(TransactionCallback<?> callback) {
 //        transactionTemplate.execute(callback);
 //    }
 
-//    public void assertValues(String... values) {
-//        Set<String> expected = new HashSet<>(Arrays.asList(values));
-//        Set<String> actual = new HashSet<>(jdbcTemplate.queryForList(SELECT_QUERY, String.class));
-//        assertThat(actual).containsExactlyElementsOf(expected);
-//    }
-
-    public void showAll() {
-//        Entity entity =  jdbcTemplate.query(1);
-        List<String> data=jdbcTemplate.queryForList(SELECT_QUERY,String.class);
-        data.forEach(System.out::println);
-        System.out.println("===================");
-        System.out.println(data);
-        System.out.println("====================");
+    public void assertValues(String... values) {
+        Set<String> expected = new HashSet<>(Arrays.asList(values));
+        Set<String> actual = new HashSet<>(jdbcTemplate.queryForList(SELECT_QUERY, String.class));
+        assertThat(actual).containsExactlyElementsOf(expected);
     }
+
+//    public void showAll() {
+////        Entity entity =  jdbcTemplate.query(1);
+//        List<String> data=jdbcTemplate.queryForList(SELECT_QUERY,String.class);
+//        data.forEach(System.out::println);
+//        System.out.println("===================");
+//        System.out.println(data);
+//        System.out.println("====================");
+//    }
 }
