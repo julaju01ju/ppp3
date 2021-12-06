@@ -46,3 +46,7 @@ reputation:
     author_id: 101
     question_id: 101
     sender_id: 101
+
+role:
+  - id: 1
+    name: "ROLE_ADMIN"
