@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.models.entity.question;
 
-import com.javamentor.qa.platform.exception.ConstrainException;
+import com.javamentor.qa.platform.api.exception.ConstrainException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

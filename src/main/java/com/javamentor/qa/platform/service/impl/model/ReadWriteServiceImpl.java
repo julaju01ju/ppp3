@@ -1,8 +1,7 @@
 package com.javamentor.qa.platform.service.impl.model;
 
-import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
-import com.javamentor.qa.platform.exception.ConstrainException;
-import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.api.dao.abstracts.model.ReadWriteDao;
+import com.javamentor.qa.platform.api.exception.ConstrainException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
