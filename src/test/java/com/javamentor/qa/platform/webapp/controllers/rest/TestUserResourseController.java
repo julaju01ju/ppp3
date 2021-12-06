@@ -1,20 +1,18 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.UserDto;
-import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
+import com.github.database.rider.core.api.configuration.DBUnit;
+import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
+import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,25 +21,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-@WebMvcTest(UserResourseController.class)
+@DBRider
+@SpringBootTest(classes = JmApplication.class)
+@TestPropertySource(properties = "test/resources/application-test.properties")
+@AutoConfigureMockMvc
+@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
 public class TestUserResourseController {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private UserDtoService service;
-
     @Test
+    @DataSet(value = "dataset/UserResourceController/users.yml")
     void getUserById() throws Exception {
-        when(service.getUserById(anyLong())).thenReturn(new UserDto());
-
-        mockMvc.perform(get("/api/user/{userId}"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/101"))
+                .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id",equalTo(1)));
-
+                .andExpect(jsonPath("$.id").value(101))
+                .andExpect(jsonPath("$.email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.fullName").value("Constantin"))
+                .andExpect(jsonPath("$.linkImage").value("link"))
+                .andExpect(jsonPath("$.city").value("Moscow"))
+                .andExpect(jsonPath("$.reputation").value(101));
     }
 
 }

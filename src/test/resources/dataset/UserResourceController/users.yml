@@ -1,0 +1,48 @@
+user_entity:
+  - id: 101
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmail@mail.mail"
+    full_name: "Constantin"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "someHardPassword"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1
+
+answer:
+  - id: 101
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 101
+    user_id: 101
+
+question:
+  - id: 101
+    description: "description"
+    is_deleted: false
+    last_redaction_date: 2021-12-06 00:00:00
+    persist_date: 2021-12-06 00:00:00
+    title: "title"
+    user_id: 101
+
+reputation:
+  - id: 101
+    count: 101
+    persist_date: 2021-12-06 00:00:00
+    type: 101
+    answer_id: 101
+    author_id: 101
+    question_id: 101
+    sender_id: 101
