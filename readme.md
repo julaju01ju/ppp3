@@ -500,10 +500,44 @@ Flyway придерживается следующего соглашения о
 - **Repair**. Восстановление таблицы метаданных.
 - **Clean**. Удаление всех объектов в схеме. Не используйте clean в продакшен базах данных!
 
-## Разделение на два профиля: dev и local
+## Разделение на 2 профиля
+Чтобы не вносить свои данные, связанные с базой данных в **application.properties**, необходимо в конфигурации проекта задать свои значения базы данных, которые будут применяться на определенном профиле. Для этого:
+1. Вместо **application.properties** создаем 2 файла (**application-dev.properties** и **application-local.properties**), в каждом из которых будут храниться настройки для определенного профиля (**dev** и **local**).
 
-1. Для каждого профиля создаем отдельный файл по следующему шаблону: **application-profilename.properties**. В итоге получаем два файла: **application-dev.properties** и **application-local.properties**. В них прописываем настройки для каждого профиля.
+Пример для профиля **dev** в файле **application-dev.properties**:
+```
+spring.datasource.url=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?characterEncoding=UTF-8&useUnicode=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=true
+spring.jpa.open-in-view=false
+spring.jpa.properties.hibernate.enable_lazy_load_no_trans=false
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.generate_statistics=true
+spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.jdbc.batch_size=20
+spring.jpa.properties.hibernate.order_inserts=true
+spring.jpa.properties.hibernate.order_updates=true
+spring.jpa.properties.hibernate.jdbc.batch_versioned_data=true
+```
+2. В **IDEA** в настройках проекта (**Run -> Edit Configuration…**) в поле **Active profiles** указываем имя профиля (**dev** или **local**) и переопределяем параметры (**Override parameters**), которые будут использоваться в созданных ранее файлах.
 
-2. В настройках проекта (**Run** → **Edit Configuration…**) в поле **Active profiles** указываем имя профиля (**dev** или **local**).
+|NAME|VALUE|
+|----|-----|
+|DB_USERNAME|postgres|
+|DB_PASSWORD|root|
+|DB_HOST|localhost|
+|DB_NAME|jm|
+|DB_PORT|8091|
 
-3. Запускаем проект. В зависимости от указанного профиля будут использоваться настройки из соответствующего файла (**application-dev.properties** или **application-local.properties**).
+3. Запускаем приложение из **IDEA** обычным способом или из командной строки со своими параметрами:
+```
+java -Dspring.profiles.active=dev -jar app.jar (VM param)
+```
+или
+```
+java -jar app.jar --spring.profiles.active=dev (program param)
+```
+
+
