@@ -32,7 +32,11 @@ public class TestUserResourseController {
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "dataset/UserResourceController/users.yml")
+    @DataSet(value = {"dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"})
     void getUserById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/101"))
                 .andDo(print())
@@ -45,4 +49,16 @@ public class TestUserResourseController {
                 .andExpect(jsonPath("$.reputation").value(101));
     }
 
+    @Test
+    @DataSet(value = {"dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"})
+    void shouldNotGetUserById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/105"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.id").doesNotExist());
+    }
 }
