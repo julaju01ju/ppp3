@@ -1,6 +1,11 @@
 window.addEventListener('load', () => {
     setGlobalStyles();
-    App.appBuildLayout();
+    const appHeader = document.getElementById("app-header");
+    const appSidebar = document.getElementById("app-side-bar");
+    const appFooter = document.getElementById("app-footer");
+    appHeader.innerHTML = `${Header.createHeader()}`;
+    appSidebar.innerHTML = `${SideBar.createSideBar()}`;
+    appFooter.innerHTML = `${Footer.createFooter()}`;
     SideBar.activeStyle();
     console.log("hello!");
 })

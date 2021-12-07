@@ -1,5 +1,5 @@
 class SideBar{
-    static sidebar = `<div class="col-3 nav p-3" style="border-right: 1px solid lightgrey">
+    static sidebar = `<div>
             <ul class="nav flex-column" style="width: 100%">
                 <li class="nav-item" style="border-bottom: 1px solid orange">
                     <a class="nav-link sidebar-menu-item active" aria-current="page" href="#" style="color: #333333">Home</a>
