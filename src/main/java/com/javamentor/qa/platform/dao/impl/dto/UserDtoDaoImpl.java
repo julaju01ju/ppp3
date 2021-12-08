@@ -26,10 +26,6 @@ public class UserDtoDaoImpl implements UserDtoDao {
                         " from Reputation rep where rep.author.id =: id", UserDto.class)
                 .setParameter("id", id).getResultStream().findAny();
 
-
-//        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDto(rep.id, rep.author.email, rep.author.fullName,rep.author.imageLink,rep.author.city,rep.count)" +
-//                        " from Reputation rep where rep.author.id =: id", UserDto.class)
-//                .setParameter("id", id));
     }
 
 }
