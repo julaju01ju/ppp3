@@ -27,11 +27,19 @@ public class TestUserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "datasets/UserControllerTest/user-test.yml")
+    @DataSet(value = {"datasets/UserControllerTest/user_entity.yml", "datasets/UserControllerTest/answer.yml",
+            "datasets/UserControllerTest/question.yml", "datasets/UserControllerTest/reputation.yml," +
+            "datasets/UserControllerTest/role.yml"})
     public void getAllUsers() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/allUsers"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(101));
+                .andExpect(jsonPath("$[0].id").value(101))
+                .andExpect(jsonPath("$[0].about").value("About"))
+                .andExpect(jsonPath("$[0].city").value("City"))
+                .andExpect(jsonPath("$[0].email").value("email@gmail.com"))
+                .andExpect(jsonPath("$[0].fullName").value("Ivan"))
+                .andExpect(jsonPath("$[0].nickname").value("NickName"))
+                .andExpect(jsonPath("$[0].password").value("password"));
     }
 }

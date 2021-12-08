@@ -1,9 +1,7 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDaoTest;
 import com.javamentor.qa.platform.dao.impl.dto.UserDtoDaoImplTest;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.models.entity.user.UserTest;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoServiceTest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

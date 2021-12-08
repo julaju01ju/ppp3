@@ -18,6 +18,8 @@ public class UserDtoDaoImplTest implements UserDtoDaoTest {
     @Transactional
     @Override
     public List<UserDtoTest> getAllUsers() {
-        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDtoTest(tb.id, tb.name) from UserTest as tb").getResultList();
+        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDtoTest" +
+                "(user.id,user.about,user.city,user.email,user.fullName," +
+                "user.nickname,user.password) from User user", UserDtoTest.class).getResultList();
     }
 }
