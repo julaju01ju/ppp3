@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.models.entity.chat;
 
-import com.javamentor.qa.platform.api.exception.ApiRequestException;
+import com.javamentor.qa.platform.exception.ApiRequestException;
 import com.javamentor.qa.platform.models.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

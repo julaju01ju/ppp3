@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.models.entity.question;
 
-import com.javamentor.qa.platform.api.exception.ConstrainException;
+import com.javamentor.qa.platform.exception.ConstrainException;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.UserFavoriteQuestion;

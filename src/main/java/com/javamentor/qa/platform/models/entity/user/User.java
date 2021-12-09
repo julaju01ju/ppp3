@@ -126,4 +126,9 @@ public class User implements UserDetails {
                 Objects.equals(password, user.password) &&
                 Objects.equals(fullName, user.fullName);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, fullName);
+    }
 }
