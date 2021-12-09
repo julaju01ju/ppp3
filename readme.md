@@ -515,11 +515,12 @@ spring.jpa.open-in-view=false
 spring.jpa.properties.hibernate.enable_lazy_load_no_trans=false
 spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.properties.hibernate.generate_statistics=true
-spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.properties.hibernate.jdbc.batch_size=20
 spring.jpa.properties.hibernate.order_inserts=true
 spring.jpa.properties.hibernate.order_updates=true
 spring.jpa.properties.hibernate.jdbc.batch_versioned_data=true
+server.port=8091
 ```
 2. В **IDEA** в настройках проекта (**Run -> Edit Configuration…**) в поле **Active profiles** указываем имя профиля (**dev** или **local**) и переопределяем параметры (**Override parameters**), которые будут использоваться в созданных ранее файлах.
 
@@ -529,7 +530,7 @@ spring.jpa.properties.hibernate.jdbc.batch_versioned_data=true
 |DB_PASSWORD|root|
 |DB_HOST|localhost|
 |DB_NAME|jm|
-|DB_PORT|8091|
+|DB_PORT|5432|
 
 3. Запускаем приложение из **IDEA** обычным способом или из командной строки со своими параметрами:
 ```
