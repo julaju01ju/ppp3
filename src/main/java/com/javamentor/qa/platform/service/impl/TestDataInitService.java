@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
-
 public class TestDataInitService {
 
     private RoleService roleService;
@@ -24,6 +23,7 @@ public class TestDataInitService {
 
     public TestDataInitService() {
     }
+
 
     public void createRole(){
         Role role = new Role("USER");
@@ -52,7 +52,7 @@ public class TestDataInitService {
         }
     }
 
-    public addUsers(){
+    public void addUsers(){
         createRole();
         createUser(50);
     }
