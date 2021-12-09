@@ -18,15 +18,9 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User,Long> implements UserDao 
     private EntityManager entityManager;
 
     @Override
-    public User getUserByEmail(String email){
-        User userOut = null;
+    public Optional<User> getUserByEmail(String email){
         Query query =  entityManager.createQuery("select u from User u where u.email=:email");
-        query.setParameter("email", email);
-        Optional<User> userOptional = (Optional<User>) query.getSingleResult();
-        if(userOptional.isPresent()){
-            userOut = userOptional.get();
-        }
-        return userOut;
+        return (Optional<User>) query.setParameter("email", email).getSingleResult();
     }
 
 }

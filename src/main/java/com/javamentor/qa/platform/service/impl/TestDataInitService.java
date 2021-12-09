@@ -2,8 +2,8 @@ package com.javamentor.qa.platform.service.impl;
 
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.model.RoleService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
-import com.javamentor.qa.platform.service.impl.model.RoleServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 
 public class TestDataInitService {
 
-    private RoleServiceImpl roleService;
+    private RoleService roleService;
     private UserService userService;
 
     @Autowired
-    public TestDataInitService(RoleServiceImpl roleService, UserService userService) {
+    public TestDataInitService(RoleService roleService, UserService userService) {
         this.roleService = roleService;
         this.userService = userService;
     }
@@ -30,8 +30,8 @@ public class TestDataInitService {
         roleService.persist(role);
     }
 
-    public void createUser() {
-        for(int i = 0; i <= 50; i++){
+    public void createUser(int count) {
+        for(int i = 0; i <= count; i++){
             User user = new User();
             user.setEmail(i+"@mail.com");
             user.setPassword("pass"+i);
@@ -50,5 +50,10 @@ public class TestDataInitService {
             user.setRole(roleService.getAll().get(1));
             userService.persist(user);
         }
+    }
+
+    public addUsers(){
+        createRole();
+        createUser(50);
     }
 }
