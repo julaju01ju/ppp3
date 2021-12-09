@@ -9,23 +9,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@Api("Swagger Controller")
-public class ResourceAnswerConetoller {
+@RequestMapping("/api")
+@Api("Rest Contoller to get a Answer by questionID")
+public class ResourceAnswerController {
 
     private final AnswerDtoService answerDtoService;
 
     @Autowired
-    public ResourceAnswerConetoller(AnswerDtoService answerDtoService){
+    public  ResourceAnswerController(AnswerDtoService answerDtoService){
         this.answerDtoService = answerDtoService;
     }
 
 
-    @GetMapping("api/user/question/{questionId}/answer")
+    @GetMapping("/api/user/question/{questionId}/answer")
     @ApiOperation("Получение списка всех ответов по qustionId")
     public ResponseEntity<List<AnswerDto>> getAllAnswerByQuestionId(@PathVariable("questionId") Long id){
         List<AnswerDto> answerDtos = answerDtoService.getAllByQuestionId(id);
