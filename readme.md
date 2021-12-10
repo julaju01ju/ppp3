@@ -522,7 +522,8 @@ spring.jpa.properties.hibernate.order_updates=true
 spring.jpa.properties.hibernate.jdbc.batch_versioned_data=true
 server.port=8091
 ```
-2. В **IDEA** в настройках проекта (**Run -> Edit Configuration…**) в поле **Active profiles** указываем имя профиля (**dev** или **local**) и переопределяем параметры (**Override parameters**), которые будут использоваться в созданных ранее файлах.
+2. В **IDEA** в настройках проекта (**Run -> Edit Configuration…**) в поле **Active profiles** указываем имя профиля
+(**dev** или **local**) и переопределяем параметры (**Override parameters**), которые будут использоваться в созданных ранее файлах.
 
 |NAME|VALUE|
 |----|-----|
