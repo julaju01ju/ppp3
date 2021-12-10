@@ -32,7 +32,7 @@ class AuthenticationResourceControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void returnTokenWithAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -50,7 +50,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void returnTokenWithoutAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -66,7 +66,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void returnTokenWithoutBodyRequest() throws Exception {
 
         mockMvc.perform(
@@ -76,7 +76,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void requestToAdminApiWithAdminRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -101,7 +101,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void requestToUserApiWithUserRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -126,7 +126,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void requestToAdminApiWithUserRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -150,7 +150,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void requestToUserApiWithAdminRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -174,7 +174,7 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "datasets/authenticationResourceControllerTest/user.yml", disableConstraints = true)
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
     void requestToUserApiWithoutToken() throws Exception {
 
         mockMvc.perform(
