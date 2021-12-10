@@ -1,12 +1,13 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDAO;
+import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.security.JWT.JWTUtil;
 import com.javamentor.qa.platform.security.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.security.dto.JWTTokenDTO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,9 +22,9 @@ public class AuthenticationResourceController {
 
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserDAO userDAO;
+    private final UserDao userDAO;
 
-    public AuthenticationResourceController(JWTUtil jwtUtil, AuthenticationManager authenticationManager, UserDAO userDAO) {
+    public AuthenticationResourceController(JWTUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userDAO = userDAO;
@@ -45,5 +46,18 @@ public class AuthenticationResourceController {
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
         }
+    }
+
+
+    @GetMapping("/testuser")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<String> usertest() {
+        return new ResponseEntity<>("API USER TEST", HttpStatus.OK);
+    }
+
+    @GetMapping("/testadmin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> admintest() {
+        return new ResponseEntity<>("API ADMIN TEST", HttpStatus.OK);
     }
 }

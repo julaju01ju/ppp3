@@ -1,5 +1,7 @@
 package com.javamentor.qa.platform.security.JWT;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,12 +35,11 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String token = authorizationHeader.substring("Bearer ".length());
-
-                UsernamePasswordAuthenticationToken authenticationToken = jwtUtil.checkToken(token);
-
+                DecodedJWT decodedJWT = jwtUtil.checkToken(token);
+                UsernamePasswordAuthenticationToken authenticationToken = jwtUtil.getAuthenticationTokenByDecodedJwtToken(decodedJWT);
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
-            } catch (Exception exception) {
+            } catch (JWTDecodeException exception) {
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(403);
                 Map<String, String> error = new HashMap<>();

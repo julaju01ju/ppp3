@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.security.service.impl;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDAO;
+import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,20 +12,21 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserDAO userDAO;
+    private final UserDao userDao;
 
-    public UserDetailsServiceImpl(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserDetailsServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
 
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userDAO.getUserByEmail(username);
+        Optional<User> user = userDao.getUserByEmail(username);
 
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User " + username + " not found");
         }
-        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), user.get().getAuthorities());
+//        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), user.get().getAuthorities());
+        return user.get();
     }
 }
