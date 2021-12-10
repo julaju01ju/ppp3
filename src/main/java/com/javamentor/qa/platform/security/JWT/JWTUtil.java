@@ -9,10 +9,8 @@ import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -22,7 +20,6 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-@PropertySource("classpath:application.properties")
 public class JWTUtil {
 
     @Value("${jwt.secret}")
@@ -37,7 +34,7 @@ public class JWTUtil {
     }
 
     public Algorithm getAlgorithm() {
-        return  Algorithm.HMAC256(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        return Algorithm.HMAC256(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateAccessToken(User user) {
@@ -73,7 +70,7 @@ public class JWTUtil {
         authorities.add(role.get());
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.get(),null, authorities);
+                new UsernamePasswordAuthenticationToken(user.get(), null, authorities);
         return authenticationToken;
     }
 }
