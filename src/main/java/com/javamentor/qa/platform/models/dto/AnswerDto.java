@@ -5,11 +5,10 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Setter
-@Getter
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class AnswerDto {
     private Long id;
     private Long userId;

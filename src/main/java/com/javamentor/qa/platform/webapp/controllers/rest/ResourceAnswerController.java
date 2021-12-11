@@ -28,9 +28,12 @@ public class ResourceAnswerController {
 
     @GetMapping("api/user/question/{questionId}/answer")
     @ApiOperation("Получение списка всех ответов по qustionId")
-    public ResponseEntity<List<AnswerDto>> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
+    public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtos = answerDtoService.getAllAnswersByQuestionId(id);
-        return new ResponseEntity<>(answerDtos, HttpStatus.OK);
+
+        return answerDtos != null && !answerDtos.isEmpty()?
+                new ResponseEntity<>(answerDtos, HttpStatus.OK):
+                new ResponseEntity<>("Answers with id " + id + " not found!", HttpStatus.NOT_FOUND);
     }
 
 }
