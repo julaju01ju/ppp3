@@ -6,13 +6,18 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebConfig
-        implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/resources/**/*")
+                .addResourceLocations("/", "/resources/");
+    }
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("/html/login");
-        registry.addViewController("/").setViewName("forward:/index.html");
+        registry.addViewController("/question/add").setViewName("/html/question/add.html");
+        registry.addViewController("/").setViewName("/html/index.html");
         WebMvcConfigurer.super.addViewControllers(registry);
     }
 }
