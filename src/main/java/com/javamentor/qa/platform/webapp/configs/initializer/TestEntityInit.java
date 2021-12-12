@@ -25,11 +25,12 @@ public class TestEntityInit implements CommandLineRunner {
         return flyway -> {
             flyway.clean();
             flyway.migrate();
+            testDataInitService.addUsers();
         };
     }
 
     @Override
     public void run(String... args) {
-
     }
+
 }
