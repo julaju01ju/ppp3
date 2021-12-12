@@ -28,6 +28,11 @@ public class TestEntityInit implements CommandLineRunner {
         };
     }
 
+//    @Bean
+//    public void addData(){
+//        testDataInitService.addUsers();
+//    }
+
     @Override
     public void run(String... args) {
 

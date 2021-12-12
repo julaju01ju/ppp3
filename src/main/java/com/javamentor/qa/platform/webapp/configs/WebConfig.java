@@ -23,3 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
         WebMvcConfigurer.super.addViewControllers(registry);
     }
 }
+//Привет, добавлять пользователей
+// (правильнее будет сказать всех данных, не только же User там будут )
+// будет это класс, а вызываться метод инициализации будет в
+// config, webapp/config/init...

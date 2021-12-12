@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.github.database.rider.core.api.dataset.DataSet;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +27,7 @@ public class TestResourceAnswerController extends AbstractConrollersTests{
             "dataset/UserResourceController/questions.yml",
             "dataset/UserResourceController/reputations.yml",
             "dataset/UserResourceController/roles.yml",
-            "datasets/ResourceAnswerController/answervote.yml"
+            "dataset/ResourceAnswerController/answervote.yml"
     })
     public void getAllAnswerDtosByQustionId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/101/answer"))
@@ -53,7 +52,7 @@ public class TestResourceAnswerController extends AbstractConrollersTests{
             "dataset/UserResourceController/questions.yml",
             "dataset/UserResourceController/reputations.yml",
             "dataset/UserResourceController/roles.yml",
-            "datasets/ResourceAnswerController/answervote.yml"
+            "dataset/ResourceAnswerController/answervote.yml"
     })
     void shouldNotGetUserById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/105/answer"))
