@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.security.dto;
 
-public class JWTTokenDTO {
+public class JwtTokenDto {
 
     private String token;
 

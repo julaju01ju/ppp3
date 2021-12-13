@@ -1,9 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
-import com.javamentor.qa.platform.security.JWT.JWTUtil;
+import com.javamentor.qa.platform.security.JWT.JwtUtil;
 import com.javamentor.qa.platform.security.dto.AuthenticationRequest;
-import com.javamentor.qa.platform.security.dto.JWTTokenDTO;
+import com.javamentor.qa.platform.security.dto.JwtTokenDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,21 +20,21 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api")
 public class AuthenticationResourceController {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final UserDao userDAO;
 
-    public AuthenticationResourceController(JWTUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
+    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
         this.userDAO = userDAO;
     }
 
     @PostMapping("/auth/token/")
-    @ApiOperation("Возвращает строку токена в виде объекта JWTTokenDTO, на вход получает объект AuthenticationRequest, который содержит username и password")
-    public ResponseEntity<JWTTokenDTO> getToken(@RequestBody AuthenticationRequest request)
+    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username и password")
+    public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
-        JWTTokenDTO jwtTokenDTO = new JWTTokenDTO();
+        JwtTokenDto jwtTokenDTO = new JwtTokenDto();
 
         try {
             Authentication authentication = authenticationManager.authenticate(

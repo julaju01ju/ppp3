@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Service
-public class JWTUtil {
+public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -28,7 +28,7 @@ public class JWTUtil {
     private final UserDao userDao;
     private final RoleDao roleDao;
 
-    public JWTUtil(UserDao userDao, RoleDao roleDao) {
+    public JwtUtil(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
         this.roleDao = roleDao;
     }

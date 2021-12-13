@@ -19,11 +19,11 @@ import java.util.Map;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
-public class JWTFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    public JWTFilter(JWTUtil jwtUtil) {
+    public JwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
