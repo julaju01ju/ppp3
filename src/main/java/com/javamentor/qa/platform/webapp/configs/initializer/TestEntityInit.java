@@ -25,7 +25,7 @@ public class TestEntityInit implements CommandLineRunner {
         return flyway -> {
             flyway.clean();
             flyway.migrate();
-            testDataInitService.addUsers();
+            testDataInitService.init();
         };
     }
 

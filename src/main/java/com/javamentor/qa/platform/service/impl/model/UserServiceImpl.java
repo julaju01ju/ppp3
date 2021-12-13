@@ -14,13 +14,13 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements UserService {
 
-    private PasswordEncoder passwordEncoder;
-    private UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDao userDao;
 
 
     @Autowired
-    public UserServiceImpl(ReadWriteDao<User, Long> readWriteDao, PasswordEncoder passwordEncoder, UserDao userDao) {
-        super(readWriteDao);
+    public UserServiceImpl( PasswordEncoder passwordEncoder, UserDao userDao) {
+        super(userDao);
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
     }
@@ -40,8 +40,4 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
         super.update(user);
     }
 
-    @Override
-    public Optional<User> getUserByEmail(String email) {
-       return userDao.getUserByEmail(email);
-    }
 }

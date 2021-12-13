@@ -7,5 +7,5 @@ import java.util.Optional;
 
 
 public interface UserService extends ReadWriteService<User,Long>{
-    public Optional<User> getUserByEmail(String email);
+
 }

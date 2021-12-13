@@ -14,13 +14,4 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl extends ReadWriteDaoImpl<User,Long> implements UserDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
-    @Override
-    public Optional<User> getUserByEmail(String email){
-        Query query =  entityManager.createQuery("select u from User u where u.email=:email");
-        return (Optional<User>) query.setParameter("email", email).getSingleResult();
-    }
-
 }

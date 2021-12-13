@@ -54,7 +54,7 @@ public class TestDataInitService {
         }
     }
 
-    public void addUsers() {
+    public void init() {
         createRole();
         createUser(50);
     }
