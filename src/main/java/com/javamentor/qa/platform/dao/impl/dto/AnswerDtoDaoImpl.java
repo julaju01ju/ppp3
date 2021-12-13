@@ -29,37 +29,36 @@ public class AnswerDtoDaoImpl
     @Transactional
     public List<AnswerDto> getAllByQuestionId(Long id) {
         List<AnswerDto> answerDtos;
-        String query =
-                "select a.id as id, a.user_id as userId,\n" +
-                        "(select rep.count as userReputation from reputation rep where rep.author_id = a.user_id),\n" +
-                        "a.question_id as questionId,\n" +
-                        "a.html_body as body,\n" +
-                        "a.persist_date as persistDate,\n" +
-                        "a.is_helpful as isHelpful,\n" +
-                        "a.date_accept_time as dateAccept,\n" +
-                        "(select sum (case when va.vote = 'UP_VOTE' then 1 else -1 end ) from votes_on_answers va)\n" +
-                        "as countValuable,\n" +
-                        "(select ue.image_link as image from user_entity ue where ue.id = a.user_id),\n" +
-                        "(select ue.nickname as nickname from user_entity ue where ue.id = a.user_id)\n" +
-                        "from answer a where a.question_id = ?1";
+        String query = "select a.id , a.user.id," +
+                        "(select rep.count from Reputation rep where rep.author.id = a.user.id),"+
+                        "a.question.id, " +
+                        "a.htmlBody,"+
+                        "a.persistDateTime,"+
+                        "a.isHelpful,"+
+                        "a.dateAcceptTime,"+
+                        "(select sum(case va.vote  when 'UP_VOTE' then 1 else -1 end) from VoteAnswer va group by a" +
+                ".id),"+
+                        "(select u.imageLink from User u),"+
+                        "(select u.nickname from User u)"+
+                        "from Answer as a where a.question.id = :id";
 
-        answerDtos = (List<AnswerDto>) entityManager.createNativeQuery(query)
-                .setParameter(1, id)
+        answerDtos = (List<AnswerDto>) entityManager.createQuery(query)
+                .setParameter("id", id)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(
                         new ResultTransformer() {
                             @Override
                             public Object transformTuple(Object[] tuple, String[] aliases) {
                                 return new AnswerDto(
-                                        ((BigInteger) tuple[0]).longValue(),
-                                        ((BigInteger) tuple[1]).longValue(),
+                                        ((Long) tuple[0]).longValue(),
+                                        ((Long) tuple[1]).longValue(),
                                         ((Integer) tuple[2]).longValue(),
-                                        ((BigInteger) tuple[3]).longValue(),
+                                        ((Long) tuple[3]).longValue(),
                                         ((String) tuple[4]),
-                                        ((Timestamp) tuple[5]).toLocalDateTime(),
+                                        ((LocalDateTime) tuple[5]),
                                         ((Boolean) tuple[6]).booleanValue(),
-                                        ((Timestamp) tuple[7]).toLocalDateTime(),
-                                        ((BigInteger) tuple[8]).longValue(),
+                                        ((LocalDateTime) tuple[7]),
+                                        ((Long) tuple[8]).longValue(),
                                         ((String) tuple[9]),
                                         ((String) tuple[10]));
                             }

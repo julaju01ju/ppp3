@@ -7,6 +7,7 @@ import java.util.Objects;
 
 
 @Data
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerDto {
@@ -22,9 +23,4 @@ public class AnswerDto {
     private String image;
     private String nickName;
 
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, userReputation, questionId, body, persistDate, isHelpful, dateAccept, countValuable, image, nickName);
-    }
 }

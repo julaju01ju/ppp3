@@ -1,8 +1,0 @@
-{
-  "properties": [
-    {
-      "name": "decorator.datasource.p6spy.logging",
-      "type": "java.lang.String",
-      "description": "Description for decorator.datasource.p6spy.logging."
-  }
-] }

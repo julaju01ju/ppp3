@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,17 +17,18 @@ import java.util.List;
 
 @RestController
 @Api("get  list answerdto by questionId")
-public class ResourceAnswerController {
+@RequestMapping("api/user/question")
+public class AnswerResourceController {
 
     private final AnswerDtoService answerDtoService;
 
     @Autowired
-    public ResourceAnswerController(AnswerDtoService answerDtoService) {
+    public AnswerResourceController(AnswerDtoService answerDtoService) {
         this.answerDtoService = answerDtoService;
     }
 
 
-    @GetMapping("api/user/question/{questionId}/answer")
+    @GetMapping("/{questionId}/answer")
     @ApiOperation("Получение списка всех ответов по qustionId")
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtos = answerDtoService.getAllAnswersByQuestionId(id);
