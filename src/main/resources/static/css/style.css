@@ -1,11 +1,11 @@
-.main-context, .sidebar-menu-offset {
-    padding-top: 70px;
-}
+/*.main-context, .sidebar-menu-offset {*/
+/*    padding-top: 70px;*/
+/*}*/
 
-.footer {
-    height: 400px;
-    color: white;
-}
+/*.footer {*/
+/*    height: 400px;*/
+/*    color: white;*/
+/*}*/
 
 .user-card {
     display: flex;
