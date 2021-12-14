@@ -1,4 +1,5 @@
-﻿create sequence answer_vote_seq start 1 increment 1;
+﻿create sequence answer_seq start 1 increment 1;
+create sequence answer_vote_seq start 1 increment 1;
 create sequence badge_seq start 1 increment 1;
 create sequence chat_seq start 1 increment 1;
 create sequence comment_seq start 1 increment 1;
