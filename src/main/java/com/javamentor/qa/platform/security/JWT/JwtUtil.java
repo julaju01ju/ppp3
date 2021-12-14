@@ -4,18 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.javamentor.qa.platform.dao.abstracts.model.RoleDao;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
-import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -26,11 +21,9 @@ public class JwtUtil {
     private String SECRET_KEY;
 
     private final UserDao userDao;
-    private final RoleDao roleDao;
 
-    public JwtUtil(UserDao userDao, RoleDao roleDao) {
+    public JwtUtil(UserDao userDao) {
         this.userDao = userDao;
-        this.roleDao = roleDao;
     }
 
     public Algorithm getAlgorithm() {
@@ -61,16 +54,10 @@ public class JwtUtil {
     public UsernamePasswordAuthenticationToken getAuthenticationTokenByDecodedJwtToken(DecodedJWT decodedJWT) {
 
         String username = decodedJWT.getSubject();
-        Long roleId = decodedJWT.getClaim("role").asLong();
-
         Optional<User> user = userDao.getUserByEmail(username);
-        Optional<Role> role = roleDao.getById(roleId);
-
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(role.get());
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user.get(), null, authorities);
+                new UsernamePasswordAuthenticationToken(user.get(), null, user.get().getAuthorities());
         return authenticationToken;
     }
 }
