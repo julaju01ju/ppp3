@@ -3,7 +3,7 @@ class Header{
         <div class="col">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#" style="border-bottom: 2px solid orange">
+                    <a class="navbar-brand" href="/" style="border-bottom: 2px solid orange">
                         <img src="../../images/header-images/icon/kata_academy.jpeg" alt="KataAcademy"
                              style="height: 1.5rem">
                         KataAcademy
@@ -29,7 +29,7 @@ class Header{
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link" th:href="#">
                                     <img src="../../images/header-images/icon/prize.png" alt="prize" style="height:
                                      1.5rem">
                                 </a>
@@ -49,10 +49,10 @@ class Header{
 
                         </ul>
                         <div class="d-flex justify-between align-content-center">
-                            <button type="button" class="btn btn-outline-info">Log In</button>
-                            <button type="button" class="btn btn-info"
-                                    style="color: white; margin-left: .5rem">Registration
-                            </button>
+                            <a href="/login" type="button" class="btn btn-outline-info">Войти</a>
+                            <a href="/registration" type="button" class="btn btn-info"
+                                    style="color: white; margin-left: .5rem">Регистрация
+                            </a>
                         </div>
 
                     </div>
