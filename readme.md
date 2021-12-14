@@ -452,6 +452,26 @@ public class SwaggerController {
 }
 ````
 
+## Работа с JWT токеном через POSTMAN.
+### Получение JWT токена.
+Для получения токена необходимо отправить POST запрос по адресу http://localhost:8091/api/auth/token/.
+В теле запроса указать объект AuthenticationRequest с полями username и password:
+````
+{
+"username" : "user@mail.ru",
+"password" : "USER"
+}
+````
+Если username и password верные будет возвращен объект, содержащий строку token.
+
+![](src/main/resources/static/images/JWT_tutor/jwt_get_token.png)
+
+### Отправка запроса с использованием JWT токена.
+Для отправки запроса с токеном необходимо во вкладке Authorization 
+выбрать Type "Bearer Token". Справа появится поле Token куда вставляется строка токена.
+
+![](src/main/resources/static/images/JWT_tutor/jwt_authorization.png)
+
 ## Миграция базы данных через Flyway
 
 Миграция (migration) – процесс преобразования одной структуры базы данных в другой без потери консистентности, при котором меняется схема (таблицы и их колонки, индексы и пр.).
