@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.security.service.impl;
+package com.javamentor.qa.platform.security.service;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;

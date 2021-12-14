@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.security.JWT;
+package com.javamentor.qa.platform.security.jwt;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;

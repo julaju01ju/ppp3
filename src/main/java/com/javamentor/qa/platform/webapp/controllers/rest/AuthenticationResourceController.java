@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
-import com.javamentor.qa.platform.security.JWT.JwtUtil;
+import com.javamentor.qa.platform.security.jwt.JwtUtil;
 import com.javamentor.qa.platform.security.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.security.dto.JwtTokenDto;
 import io.swagger.annotations.ApiOperation;
