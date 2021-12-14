@@ -20,4 +20,14 @@ public class PageDto<T> {
     private List<T> items;
     private int itemsOnPage;
 
+    @Override
+    public String toString() {
+        return "PageDto{" +
+                "currentPageNumber=" + currentPageNumber +
+                ", totalPageCount=" + totalPageCount +
+                ", totalResultCount=" + totalResultCount +
+                ", items=" + items +
+                ", itemsOnPage=" + itemsOnPage +
+                '}';
+    }
 }
