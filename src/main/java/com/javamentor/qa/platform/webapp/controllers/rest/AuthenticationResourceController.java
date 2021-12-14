@@ -1,9 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
+import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.dto.JwtTokenDto;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
-import com.javamentor.qa.platform.security.dto.AuthenticationRequest;
-import com.javamentor.qa.platform.security.dto.JwtTokenDto;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
