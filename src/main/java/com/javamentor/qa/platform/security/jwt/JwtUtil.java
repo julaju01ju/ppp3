@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.security.JWT;
+package com.javamentor.qa.platform.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

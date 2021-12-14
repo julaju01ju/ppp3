@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.security.dto;
+package com.javamentor.qa.platform.models.dto;
 
 public class JwtTokenDto {
 

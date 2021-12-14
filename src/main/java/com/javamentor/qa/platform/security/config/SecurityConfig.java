@@ -1,6 +1,6 @@
 package com.javamentor.qa.platform.security.config;
 
-import com.javamentor.qa.platform.security.JWT.JwtFilter;
+import com.javamentor.qa.platform.security.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
