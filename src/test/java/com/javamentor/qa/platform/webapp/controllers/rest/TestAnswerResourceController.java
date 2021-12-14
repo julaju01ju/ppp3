@@ -8,7 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TestResourceAnswerController extends AbstractConrollersTests{
+public class TestAnswerResourceController
+        extends AbstractConrollersTests{
 
     @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
