@@ -3,20 +3,26 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class PageDtoServiceImpl<T, P> implements PageDtoService<T, P> {
+import java.util.Map;
 
-    PageDtoDao<T, P> pageDtoDao;
+@Service
+public class PageDtoServiceImpl<T> implements PageDtoService<T> {
 
-    public PageDtoServiceImpl(PageDtoDao<T, P> pageDtoDao) {
-        this.pageDtoDao = pageDtoDao;
+    Map <String, PageDtoDao<T>> pageDtoDaoMap;
+
+    @Autowired
+    public PageDtoServiceImpl(Map < String, PageDtoDao<T>> pageDtoDaoMap) {
+        this.pageDtoDaoMap = pageDtoDaoMap;
     }
 
     @Override
-    public PageDto<T> getPageDto(P param, int currentPageNumber, int itemsOnPage) {
+    public PageDto<T> getPageDto(String pageDtoDaoName,Map<String, Object> params, int currentPageNumber, int itemsOnPage) {
 
-        if (param == null) {
-            throw new IllegalArgumentException("Не получится искать записи, когда параметр == null");
+        if (params.isEmpty()) {
+            throw new IllegalArgumentException("Не получится искать записи, когда параметры == null");
         }
 
         if (itemsOnPage > 0) {
@@ -24,10 +30,12 @@ public class PageDtoServiceImpl<T, P> implements PageDtoService<T, P> {
         }
 
         PageDto<T> pageDto = new PageDto<>();
+        PageDtoDao<T> pageDtoDao = pageDtoDaoMap.get(pageDtoDaoName);
+
         pageDto.setItemsOnPage(itemsOnPage);
         pageDto.setCurrentPageNumber(currentPageNumber);
-        pageDto.setItems(pageDtoDao.getItems(param));
-        pageDto.setTotalResultCount(pageDtoDao.getTotalResultCount(param));
+        pageDto.setItems(pageDtoDao.getItems(params));
+        pageDto.setTotalResultCount(pageDtoDao.getTotalResultCount(params));
         pageDto.setTotalPageCount((int) Math.ceil(pageDto.getTotalResultCount() / itemsOnPage));
 
         if (currentPageNumber > pageDto.getTotalPageCount()) {

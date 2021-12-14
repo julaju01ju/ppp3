@@ -1,10 +1,11 @@
 package com.javamentor.qa.platform.dao.abstracts.dto;
 
 import java.util.List;
+import java.util.Map;
 
-public interface PageDtoDao <T, P>{
+public interface PageDtoDao<T> {
 
-    public abstract List<T> getItems(P param);
+    List<T> getItems(Map<String, Object> params);
 
-    public abstract int getTotalResultCount(P param);
+    int getTotalResultCount(Map<String, Object> params);
 }
