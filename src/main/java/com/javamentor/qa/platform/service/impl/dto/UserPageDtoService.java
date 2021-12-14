@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,7 @@ public class UserPageDtoService {
         this.paginationService = paginationService;
     }
 
+    @Transactional
     public PageDto<UserDtoTest> getPaginationUserTest(Long id, int currentPageNumber, int itemsOnPage) {
         PageDto<UserDtoTest> pageDto;
         Map<String, Object> params = new HashMap<>();

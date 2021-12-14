@@ -27,9 +27,10 @@ public class PaginationUserTest implements PageDtoDao<UserDtoTest> {
             Query query = entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDtoTest" +
                     "(user.id,user.about,user.city,user.email,user.fullName," +
                     "user.nickname,user.password) from User user", UserDtoTest.class);
-            query.setFirstResult((int) params.get("currentPageNumber") * (int) params.get("itemsOnPage"));
+            query.setFirstResult(((int) params.get("currentPageNumber") -1)* (int) params.get("itemsOnPage"));
             query.setMaxResults((int) params.get("itemsOnPage"));
             items = query.getResultList();
+
         }
         return items;
     }
