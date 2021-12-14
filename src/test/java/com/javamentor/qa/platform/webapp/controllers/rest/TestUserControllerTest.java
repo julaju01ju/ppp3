@@ -28,9 +28,9 @@ public class TestUserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = {"datasets/UserControllerTest/user_entity.yml", "datasets/UserControllerTest/answer.yml",
-            "datasets/UserControllerTest/question.yml", "datasets/UserControllerTest/reputation.yml," +
-            "datasets/UserControllerTest/role.yml"})
+    @DataSet(value = {"dataset/UserControllerTest/user_entity.yml", "dataset/UserControllerTest/answer.yml",
+            "dataset/UserControllerTest/question.yml", "dataset/UserControllerTest/reputation.yml," +
+            "dataset/UserControllerTest/role.yml"})
     public void getAllUsers() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/allUsers"))
                 .andDo(print())
