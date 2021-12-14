@@ -4,7 +4,7 @@ class Header{
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#" style="border-bottom: 2px solid orange">
-                        <img src="/static/images/header-images/icon/kata_academy.jpeg" alt="KataAcademy"
+                        <img src="../../images/header-images/icon/kata_academy.jpeg" alt="KataAcademy"
                              style="height: 1.5rem">
                         KataAcademy
                     </a>
@@ -16,7 +16,7 @@ class Header{
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <form class="d-flex input-group" style="width: 65%">
                             <button class="nput-group-text" type="submit" style="border:none">
-                                <img src="/static/images/header-images/icon/search-icon.png" alt="search"
+                                <img src="../../images/header-images/icon/search-icon.png" alt="search"
                                      style="height: 1rem">
                             </button>
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -24,25 +24,25 @@ class Header{
                         <ul class="navbar-nav mb-2 mb-lg-0">
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" href="#">
-                                    <img src="/static/images/header-images/icon/message.png" alt="message"
+                                    <img src="../../images/header-images/icon/message.png" alt="message"
                                          style="height: 1.5rem">
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
-                                    <img src="/static/images/header-images/icon/prize.png" alt="prize" style="height:
+                                    <img src="../../images/header-images/icon/prize.png" alt="prize" style="height:
                                      1.5rem">
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
-                                    <img src="/static/images/header-images/icon/question.png" alt="prize" style="height:
+                                    <img src="../../images/header-images/icon/question.png" alt="prize" style="height:
                                      1.5rem">
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">
-                                    <img src="/static/images/header-images/icon/lists.png" alt="prize" style="height:
+                                    <img src="../../images/header-images/icon/lists.png" alt="prize" style="height:
                                      1.5rem">
                                 </a>
                             </li>

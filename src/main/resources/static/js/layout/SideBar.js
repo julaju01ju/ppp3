@@ -6,7 +6,7 @@ class SideBar{
                 </li>
                 <li class="nav-item">
                     <p style="font-size: 1.2rem; margin-left: 1rem; font-weight: 100;">
-                        <img src="/static/images/header-images/icon/icon_svg/world.svg" alt="world"
+                        <img src="../../images/header-images/icon/icon_svg/world.svg" alt="world"
                              style="height: 1.2rem">
                         Public</p>
                 </li>
