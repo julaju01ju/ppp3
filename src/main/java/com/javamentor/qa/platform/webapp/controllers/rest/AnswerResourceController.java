@@ -4,6 +4,8 @@ import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,12 @@ public class AnswerResourceController {
 
 
     @GetMapping("/{questionId}/answer")
-    @ApiOperation("Получение списка всех ответов по qustionId")
+    @ApiOperation(
+            value = "Returns List of AnswerDtos corresponding questionId",
+            notes = "Returns HTTP 404 if the questionId is not found")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Valid List of AnswerDtos found"),
+            @ApiResponse(code = 404, message = "Answers with id not found")})
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtos = answerDtoService.getAllAnswersByQuestionId(id);
 
