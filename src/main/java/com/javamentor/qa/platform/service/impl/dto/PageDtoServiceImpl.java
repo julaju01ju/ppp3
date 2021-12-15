@@ -5,7 +5,6 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -17,7 +16,6 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
 
     Map<String, PageDtoDao<T>> pageDtoDaoMap;
 
-    @Autowired
     public PageDtoServiceImpl(Map<String, PageDtoDao<T>> pageDtoDaoMap) {
         this.pageDtoDaoMap = pageDtoDaoMap;
     }
