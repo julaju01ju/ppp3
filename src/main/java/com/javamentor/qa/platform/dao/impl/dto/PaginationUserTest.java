@@ -16,28 +16,27 @@ import java.util.Map;
 public class PaginationUserTest implements PageDtoDao<UserDtoTest> {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
-    List<UserDtoTest> items = new LinkedList<>();
+    private List<UserDtoTest> items = new LinkedList<>();
 
 
     @Override
     public List<UserDtoTest> getItems(Map<String, Object> params) {
-        if (items.isEmpty()) {
-            Query query = entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDtoTest" +
-                    "(user.id,user.about,user.city,user.email,user.fullName," +
-                    "user.nickname,user.password) from User user", UserDtoTest.class);
-            query.setFirstResult(((int) params.get("currentPageNumber") -1)* (int) params.get("itemsOnPage"));
+        Query query = entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.UserDtoTest" +
+                "(user.id,user.about,user.city,user.email,user.fullName," +
+                "user.nickname,user.password) from User user", UserDtoTest.class);
+            query.setFirstResult(((int) params.get("currentPageNumber") -1) * (int) params.get("itemsOnPage"));
             query.setMaxResults((int) params.get("itemsOnPage"));
             items = query.getResultList();
-
-        }
         return items;
     }
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
-        return items.isEmpty() ? getItems(params).size() : items.size();
+        Query queryTotal = entityManager.createQuery
+                ("Select count(user.id) from User user");
+        return ((Long) queryTotal.getSingleResult()).intValue();
 
     }
 }
