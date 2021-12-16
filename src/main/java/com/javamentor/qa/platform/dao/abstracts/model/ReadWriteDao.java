@@ -19,5 +19,4 @@ public interface ReadWriteDao<E, K> extends ReadOnlyDao<E, K> {
 
     void deleteById(K id);
 
-
 }
