@@ -3,7 +3,7 @@ class Header{
         <div class="col">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="/" style="border-bottom: 2px solid orange">
+                    <a class="navbar-brand" href="/main" style="border-bottom: 2px solid orange">
                         <img src="../../images/header-images/icon/kata_academy.jpeg" alt="KataAcademy"
                              style="height: 1.5rem">
                         KataAcademy
