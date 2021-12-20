@@ -33,8 +33,8 @@ public class UserControllerTest {
 
     @GetMapping("/paginationExample")
     public ResponseEntity<PageDto<UserDtoTest>> getPageDtoExample(
-                                                  @RequestParam("currentPageNumber") Integer currentPageNumber
-                                                , @RequestParam("itemsOnPage") Integer itemsOnPage) {
+                                                  @RequestParam("currentPageNumber") Integer currentPageNumber,
+                                                  @RequestParam("itemsOnPage") Integer itemsOnPage) {
 
         PageDto<UserDtoTest> pageDto;
         Map<String, Object> params = new HashMap<>();

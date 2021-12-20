@@ -1,5 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,7 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ali Veliev 29.11.2021
@@ -31,5 +37,24 @@ public class UserResourseController {
 
     }
 
+    @GetMapping("/api/user/reputation")
+    @ApiOperation("Получение пагинации пользователей с сортировкой по репутации")
+    public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page
+            , @RequestParam(required = false, name = "items") Integer itemsOnPage) {
 
+        PageDto<UserDto> pageDto;
+        Map<String, Object> params = new HashMap<>();
+
+        if (itemsOnPage == null) {
+            itemsOnPage = 10;
+        }
+
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", itemsOnPage);
+        pageDto = userDtoService.getPageDto("paginationAllUsersSortedByReputation", params);
+
+        return pageDto == null ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(pageDto, HttpStatus.OK);
+    }
 }

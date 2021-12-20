@@ -7,3 +7,19 @@ reputation:
     author_id: 101
     question_id: 101
     sender_id: 101
+  - id: 102
+    count: 101
+    persist_date: 2021-12-06 00:00:00
+    type: 101
+    answer_id: 101
+    author_id: 101
+    question_id: 101
+    sender_id: 101
+  - id: 103
+    count: 101
+    persist_date: 2021-12-06 00:00:00
+    type: 101
+    answer_id: 101
+    author_id: 102
+    question_id: 101
+    sender_id: 101
