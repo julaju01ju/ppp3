@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AnswerDtoDao {
     public List<AnswerDto> getAllByQuestionId(Long id);
+
+    void deleteAnswerByAnswerId(Long id);
 }

@@ -89,4 +89,59 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/answervote.yml"})
+    public void deleteAnswer_OK() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        System.out.println(USER_TOKEN);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/102").header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/answervote.yml"})
+    public void deleteAnswer_t() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        System.out.println(USER_TOKEN);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/t").header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.id").doesNotExist());
+    }
+
 }
