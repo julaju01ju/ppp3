@@ -1,0 +1,5 @@
+tag:
+  - id: 101
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:00

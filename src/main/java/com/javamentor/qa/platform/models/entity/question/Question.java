@@ -58,6 +58,7 @@ public class Question implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags = new ArrayList<>();
 
+
     @Column(name = "last_redaction_date", nullable = false)
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     @UpdateTimestamp
