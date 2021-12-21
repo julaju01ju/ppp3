@@ -39,8 +39,8 @@ public abstract class QuestionConverter {
     @Mapping(source = "question.user.id", target = "authorId")
     @Mapping(source = "question.user.nickname", target = "authorName")
     @Mapping(source = "question.user.imageLink", target = "authorImage")
-    @Mapping(expression = "java(answerDao.getCountAnswer(question))", target = "countAnswer")
-    @Mapping(expression = "java(questionDao.getCountValuable(question))", target = "countValuable")
+    @Mapping(expression = "java(answerDao.getCountAnswer(question.getId()))", target = "countAnswer")
+    @Mapping(expression = "java(questionDao.getCountValuable(question.getId()))", target = "countValuable")
     @Mapping(constant = "0", target = "viewCount")
     public abstract QuestionDto questionToQuestionDto(Question question);
 }

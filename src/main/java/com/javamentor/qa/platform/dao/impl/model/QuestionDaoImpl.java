@@ -18,14 +18,14 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
     private EntityManager entityManager;
 
     @Override
-    public int getCountValuable(Question question) {
+    public int getCountValuable(Long question_id) {
         String sql = "select CAST(COALESCE(sum(case when voteQuestion.vote = 'UP_VOTE' then 1" +
                 " when voteQuestion.vote = 'DOWN_VOTE' then -1" +
                 " end),0) as int) AS countValuable" +
                 " from VoteQuestion voteQuestion" +
-                " where voteQuestion.question =: question";
+                " where voteQuestion.question.id =: question_id";
 
-        Query query = entityManager.createQuery(sql).setParameter("question", question);
+        Query query = entityManager.createQuery(sql).setParameter("question_id", question_id);
         return (int) query.getResultStream().findFirst().get();
     }
 

@@ -4,6 +4,6 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 
 public interface AnswerDao extends ReadWriteDao<Answer, Long> {
-    int getCountAnswer(Question question);
+    int getCountAnswer(Long question_id);
 
 }

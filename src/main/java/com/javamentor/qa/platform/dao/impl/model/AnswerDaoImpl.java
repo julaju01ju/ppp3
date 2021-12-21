@@ -16,10 +16,10 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer, Long> implements Ans
     private EntityManager entityManager;
 
     @Override
-    public int getCountAnswer(Question question) {
+    public int getCountAnswer(Long question_id) {
         String sql = "select CAST(COALESCE(count(answer),0) as int) AS countAnswer" +
-                " from Answer answer where answer.question =: question";
-        Query query = entityManager.createQuery(sql).setParameter("question", question);
+                " from Answer answer where answer.question.id =: question_id";
+        Query query = entityManager.createQuery(sql).setParameter("question_id", question_id);
         return (int) query.getResultStream().findFirst().get();
     }
 }

@@ -16,7 +16,7 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
     }
 
     @Override
-    public int getCountAnswer(Question question) {
-        return answerDao.getCountAnswer(question);
+    public int getCountAnswer(Long question_id) {
+        return answerDao.getCountAnswer(question_id);
     }
 }
