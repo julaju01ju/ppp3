@@ -28,7 +28,8 @@ public class PaginationAllUsersSortedByReputation implements PageDtoDao<UserDto>
                         "u.imageLink, " +
                         "u.city, " +
                         "coalesce(CAST(sum(rep.count) as integer), 0)) " +
-                        "from User u left join Reputation rep on u.id = rep.author.id group by u.id,rep.author.id " +
+                        "from User u left join Reputation rep on u.id = rep.author.id " +
+                        "group by u.id,rep.author.id " +
                         "order by sum(rep.count) desc", UserDto.class);
         query.setFirstResult((page -1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
@@ -42,7 +43,3 @@ public class PaginationAllUsersSortedByReputation implements PageDtoDao<UserDto>
         return ((Long) queryTotal.getSingleResult()).intValue();
     }
 }
-//    Query query = entityManager.createQuery("select " +
-//            "u.id, u.email, u.fullName, u.imageLink, u.city, " +
-//            " coalesce(sum(rep.count), 0) from Reputation rep where rep.author.id = u.id" +
-//            " from User u order by reputation", UserDto.class);
