@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.converters;
 
+import com.javamentor.qa.platform.dao.abstracts.model.AnswerDao;
 import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
@@ -8,11 +9,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(uses = {UserDao.class, QuestionDao.class}, componentModel = "spring")
+@Mapper(uses = {UserDao.class, QuestionDao.class, AnswerDao.class}, componentModel = "spring")
 public abstract class QuestionConverter {
 
-    UserDao userDao;
-    QuestionDao questionDao;
+    protected UserDao userDao;
+    protected QuestionDao questionDao;
+    protected AnswerDao answerDao;
 
     @Autowired
     public void setQuestionDao(QuestionDao questionDao) {
@@ -24,6 +26,11 @@ public abstract class QuestionConverter {
         this.userDao = userDao;
     }
 
+    @Autowired
+    public void setAnswerDao(AnswerDao answerDao) {
+        this.answerDao = answerDao;
+    }
+
     @Mapping(source = "listTagDto", target = "tags")
     @Mapping(expression = "java(userDao.getById(questionDto.getAuthorId()).get())", target = "user")
     public abstract Question questionDtoToQuestion(QuestionDto questionDto);
@@ -32,9 +39,8 @@ public abstract class QuestionConverter {
     @Mapping(source = "question.user.id", target = "authorId")
     @Mapping(source = "question.user.nickname", target = "authorName")
     @Mapping(source = "question.user.imageLink", target = "authorImage")
-    @Mapping(expression = "java(questionDao.getCountAnswer(question))", target = "countAnswer")
+    @Mapping(expression = "java(answerDao.getCountAnswer(question))", target = "countAnswer")
     @Mapping(expression = "java(questionDao.getCountValuable(question))", target = "countValuable")
     @Mapping(constant = "0", target = "viewCount")
     public abstract QuestionDto questionToQuestionDto(Question question);
-
 }

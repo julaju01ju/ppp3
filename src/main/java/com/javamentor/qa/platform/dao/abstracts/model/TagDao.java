@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface TagDao extends ReadWriteDao<Tag, Long> {
     Optional<Tag> getTagByName(String name);
 
+    Tag findTag(Long id);
 }

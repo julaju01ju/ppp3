@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -43,21 +44,10 @@ public class QuestionResourceController {
             "Если хотя бы одно поле не заполнено возвращается HttpStatus.BAD_REQUEST." +
             "Проверяет есть ли присланный Tag в базе. Если нет - создает.")
     @Transactional
-    public ResponseEntity<?> createQuestion(@RequestBody QuestionCreateDto questionCreateDto) {
+    public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
 
-        if (questionCreateDto.getTitle() == null || questionCreateDto.getTitle().isEmpty()) {
-            return new ResponseEntity<>("Field Title must be is not empty", HttpStatus.BAD_REQUEST);
-        }
-
-        if (questionCreateDto.getDescription() == null || questionCreateDto.getDescription().isEmpty()) {
-            return new ResponseEntity<>("Field Description must be is not empty", HttpStatus.BAD_REQUEST);
-        }
-
-        if (questionCreateDto.getTags() == null || questionCreateDto.getTags().isEmpty()) {
-            return new ResponseEntity<>("Field Tag must be is not empty", HttpStatus.BAD_REQUEST);
-        }
-
-        List<Tag> listTag = tagService.createTagIfNotExist(questionCreateDto.getTags());
+        List<Tag> listTag = tagConverter.listTagDtoToListTag(questionCreateDto.getTags());
+        listTag = tagService.getListTagForCreateQuestion(listTag);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -15,11 +15,6 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     }
 
     @Override
-    public int getCountAnswer(Question question) {
-        return questionDao.getCountAnswer(question);
-    }
-
-    @Override
     public int getCountValuable(Question question) {
         return questionDao.getCountValuable(question);
     }

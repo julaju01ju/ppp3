@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.TagDao;
 import com.javamentor.qa.platform.models.converters.TagConverter;
-import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import org.springframework.stereotype.Service;
@@ -28,18 +27,23 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
     }
 
     @Override
-    public List<Tag> createTagIfNotExist(List<TagDto> listTagDto) {
-        List<Tag> listTag = new ArrayList<>();
-        for (TagDto tagDto : listTagDto) {
-            Optional<Tag> tagChecked = getTagByName(tagDto.getName());
-            if (tagChecked.isEmpty()) {
-                persist(tagConverter.tagDtoToTag(tagDto));
-                listTag.add(getTagByName(tagDto.getName()).get());
-            } else {
-                listTag.add(tagChecked.get());
-            }
+    public List<Tag> getListTagForCreateQuestion(List<Tag> listTag) {
+
+        List<Tag> listTagForQuestion = new ArrayList<>();
+        for (Tag tag : listTag) {
+            listTagForQuestion.add(checkExistsTagAndCreateTagIfNotExistOrFindTag(tag));
         }
-        return listTag;
+        return listTagForQuestion;
+    }
+
+    @Override
+    public Tag checkExistsTagAndCreateTagIfNotExistOrFindTag(Tag tag) {
+        Optional<Tag> tagChecked = getTagByName(tag.getName());
+        if (tagChecked.isEmpty()) {
+            persist(tag);
+        } else {
+            tag = tagDao.findTag(tagChecked.get().getId());
+        }
+        return tag;
     }
 }
-
