@@ -14,7 +14,6 @@ public class QuestionDaoImpl implements QuestionDao {
     @Override
     public Long getQuestionCount() {
         Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM question WHERE is_deleted = false");
-        Object count = query.getResultList().get(0);
-        return ((Number) count).longValue();
+        return ((Number) query.getResultList().get(0)).longValue();
     }
 }
