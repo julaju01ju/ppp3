@@ -1,5 +1,7 @@
 package com.javamentor.qa.platform.dao.abstracts.model;
 
-public interface QuestionDao {
+import com.javamentor.qa.platform.models.entity.question.Question;
+
+public interface QuestionDao extends ReadWriteDao<Question,Long> {
     Long getQuestionCount();
 }
