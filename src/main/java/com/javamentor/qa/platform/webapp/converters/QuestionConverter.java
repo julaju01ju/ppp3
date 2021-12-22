@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.models.converters;
+package com.javamentor.qa.platform.webapp.converters;
 
 import com.javamentor.qa.platform.dao.abstracts.model.AnswerDao;
 import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;

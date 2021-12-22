@@ -9,4 +9,6 @@ public interface QuestionDao extends ReadWriteDao<Question, Long> {
     int getCountValuable(Long question_id);
 
     Optional<Question> getQuestionByDescriptionAndTitle(String description, String title);
+
+    Long getQuestionCount();
 }

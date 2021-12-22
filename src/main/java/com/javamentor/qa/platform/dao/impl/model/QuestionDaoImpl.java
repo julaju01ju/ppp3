@@ -41,5 +41,8 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-
+    public Long getQuestionCount() {
+        Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM question WHERE is_deleted = false");
+        return ((Number) query.getResultList().get(0)).longValue();
+    }
 }
