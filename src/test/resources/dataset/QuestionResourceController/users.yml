@@ -12,6 +12,6 @@ user_entity:
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "someHardPassword"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
     persist_date: 2021-12-06 00:00:00
     role_id: 1
