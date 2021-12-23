@@ -1,7 +1,11 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,27 +26,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/user/question")
 public class QuestionResourceController {
 
-    @Autowired
     private ReputationService reputationService;
-    public QuestionResourceController(ReputationService reputationService){
+    private QuestionService questionService;
+    private VoteOnQuestionService voteOnQuestionService;
+
+    @Autowired
+    public QuestionResourceController(ReputationService reputationService, QuestionService questionService, VoteOnQuestionService voteOnQuestionService) {
         this.reputationService = reputationService;
+        this.questionService = questionService;
+        this.voteOnQuestionService = voteOnQuestionService;
     }
 
+
     @PostMapping("/{questionId}/upVote")
-    @ApiOperation("увеличение репутации автора вопроса на +10")
+    @ApiOperation("запись в БД голосования за вопрос со значением UP")
     public ResponseEntity<?> insertUpVote(@PathVariable("questionId") Long questionId) {
 
-        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Question question = questionService.getById(questionId).get();
 
-        return null;
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.UP_VOTE))) {
+
+            reputationService.increaseReputationByQuestionVoteUp(question, sender);
+
+            voteOnQuestionService.insertUpVoteQuestion(question, sender);
+        }
+        return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
     }
 
     @PostMapping("/{questionId}/downVote")
-    @ApiOperation("снижение репутации автора вопроса на -5")
+    @ApiOperation("запись в БД голосования за вопрос со значением DOWN")
     public ResponseEntity<?> insertDownVote(@PathVariable("questionId") Long questionId) {
 
-        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Question question = questionService.getById(questionId).get();
 
-        return null;
-    }
-}
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.DOWN_VOTE))) {
+
+            reputationService.decreaseReputationByQuestionVoteDown(question, sender);
+
+            voteOnQuestionService.insertDownVoteQuestion(question, sender);
+        }
+        return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
+}}

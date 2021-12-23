@@ -1,0 +1,20 @@
+#votes_on_questions:
+#  - id: 102
+#    persist_date: 2021-12-06 00:00:00
+#    vote: UP_VOTE
+#    question_id: 103
+#    user_id: 102
+#
+#  - id: 103
+#    persist_date: 2021-12-06 11:11:11
+#    vote: DOWN_VOTE
+#    question_id: 101
+#    user_id: 102
+#
+#  - id: 104
+#    persist_date: 2021-12-06 11:11:11
+#    vote: UP_VOTE
+#    question_id: 103
+#    user_id: 102
+
+
