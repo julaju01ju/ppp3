@@ -34,19 +34,25 @@ public class AnswerResourceController {
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtos = answerDtoService.getAllAnswersByQuestionId(id);
 
-        return  answerDtos.isEmpty()?
-                new ResponseEntity<>("Answers with id " + id + " not found!", HttpStatus.NOT_FOUND):
+        return answerDtos.isEmpty() ?
+                new ResponseEntity<>("Answers with id " + id + " not found!", HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(answerDtos, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Удаление ответа answerId")
-    @DeleteMapping("/{questionId}/answer/{answerId}")
-    public ResponseEntity<?> deleteAnswerById(@ApiParam(name = "answerId") @PathVariable Long answerId) {
-        if (answerId == null) {
-            return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
-        }
-        answerDtoService.deleteAnswerByAnswerId(answerId);
-        return ResponseEntity.ok().build();
-    }
 
+    @DeleteMapping("/{questionId}/answer/{answerId}")
+    @ApiOperation(value = "Удаление ответа answerId")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Valid  Answer ID found"),
+            @ApiResponse(code = 404, message = "Answer ID with id not found"),
+            @ApiResponse(code = 400, message = "Invalid Answer ID entry")})
+    public ResponseEntity<?> deleteAnswerById(@ApiParam(name = "answerId") @PathVariable Long answerId) {
+        if (answerDtoService.getById(answerId) == null) {
+            return new ResponseEntity("Answer Id " + answerId + " not found!", HttpStatus.NOT_FOUND);
+        } else if (answerId != null) {
+            answerDtoService.deleteAnswerByAnswerId(answerId);
+            return ResponseEntity.ok().build();
+        } else
+        return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
+    }
 }
