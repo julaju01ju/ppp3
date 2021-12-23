@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
-import com.javamentor.qa.platform.dao.abstracts.model.QuestionDao;
-import com.javamentor.qa.platform.dao.abstracts.model.TagDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.entity.question.Question;
-import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +19,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,22 +34,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
 @TestPropertySource(properties = "test/resources/application.properties")
-class QuestionResourceControllerTest {
+class TestQuestionResourceController {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private TagDao tagDao;
-
-    @Autowired
-    private QuestionDao questionDao;
+    private EntityManager entityManager;
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTitle() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -86,8 +82,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -124,8 +119,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -157,8 +151,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTitle() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -196,8 +189,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -235,8 +227,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -270,8 +261,7 @@ class QuestionResourceControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -305,14 +295,20 @@ class QuestionResourceControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
 
-        Assertions.assertTrue(tagDao.getTagByName("TAG100").get().getId() == 100);
+        String sqlCount = "select CAST(count(tag.id) as int) from Tag tag where tag.name = 'TAG100'";
+        int rowCount = (int) entityManager.createQuery(sqlCount).getSingleResult();
+        Assertions.assertTrue(rowCount == 1);
+
+
+        String sql = "select tag.id from Tag tag where tag.name = 'TAG100'";
+        Long tagId = (long) entityManager.createQuery(sql).getSingleResult();
+        Assertions.assertTrue(tagId == 100L);
     }
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -346,14 +342,16 @@ class QuestionResourceControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
 
-        Assertions.assertTrue(tagDao.getById(1L).get().getName().equals("Test"));
+        String sqlCount = "select CAST(count(tag.id) as int) from Tag tag where tag.name = 'Test'";
+        int rowCount = (int) entityManager.createQuery(sqlCount).getSingleResult();
+        Assertions.assertTrue(rowCount == 1);
+
     }
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -385,25 +383,27 @@ class QuestionResourceControllerTest {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(
+        String questionDtoJsonString = mockMvc.perform(
                         post("/api/user/question/")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
-        Question question = questionDao.getQuestionByDescriptionAndTitle(questionCreateDto.getDescription(), questionCreateDto.getTitle()).get();
-        Assertions.assertTrue(question.getUser().getId() == 101L);
-        Assertions.assertTrue(question.getDescription().equals(questionCreateDto.getDescription()));
-        Assertions.assertTrue(question.getTitle().equals(questionCreateDto.getTitle()));
+        Integer id = JsonPath.read(questionDtoJsonString, "$.id");
+
+
+        String sql = "select CAST(count(question.id) as int) from Question question where question.id =: questionDtoId";
+        int rowCount = (int) entityManager.createQuery(sql).setParameter("questionDtoId", id.longValue()).getSingleResult();
+        Assertions.assertTrue(rowCount == 1);
     }
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
             "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml",
-            "dataset/QuestionResourceControllerTest/question.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated_CheckTagList() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -435,23 +435,24 @@ class QuestionResourceControllerTest {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(
+        String questionDtoJsonString = mockMvc.perform(
                         post("/api/user/question/")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(questionCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
 
-        Question question = questionDao.getQuestionByDescriptionAndTitle(questionCreateDto.getDescription(), questionCreateDto.getTitle()).get();
-        List<Tag> listTagQuestion = question.getTags();
+        Integer id = JsonPath.read(questionDtoJsonString, "$.id");
+        List<HashMap> tagListQuestionDto = JsonPath.read(questionDtoJsonString, "$.listTagDto");
+        List<Integer> listId = tagListQuestionDto.stream().map(list -> (int) list.get("id")).collect(Collectors.toList());
 
-        List<Tag> listTag = new ArrayList<>();
+        String sql = "select CAST(question_has_tag.tag_id as int)" +
+                " from question_has_tag where question_has_tag.question_id = ?";
+        List<Integer> listTag = entityManager.createNativeQuery(sql).setParameter(1, id).getResultList();
 
-        listTag.add(tagDao.getTagByName("Test").get());
-        listTag.add(tagDao.findTag(100L));
-        listTag.add(tagDao.findTag(101L));
+        Assertions.assertArrayEquals(listTag.toArray(), listId.toArray());
 
-        Assertions.assertEquals(listTag, listTagQuestion);
     }
 }

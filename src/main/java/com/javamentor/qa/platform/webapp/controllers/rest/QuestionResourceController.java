@@ -1,13 +1,14 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.converters.QuestionConverter;
-import com.javamentor.qa.platform.models.converters.TagConverter;
+
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
+import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Api("Rest Contoller for Question")
@@ -47,7 +50,10 @@ public class QuestionResourceController {
     public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
 
         List<Tag> listTag = tagConverter.listTagDtoToListTag(questionCreateDto.getTags());
-        listTag = tagService.getListTagForCreateQuestion(listTag);
+
+        List<String> listTagName = listTag.stream().map(tag -> tag.getName()).collect(Collectors.toList());
+
+        listTag = tagService.getListTagForCreateQuestionAndCreateTagIfNotExist(listTagName);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -56,6 +62,8 @@ public class QuestionResourceController {
         question.setUser((User) authentication.getPrincipal());
         question.setDescription(questionCreateDto.getDescription());
         question.setTags(listTag);
+        question.setPersistDateTime(LocalDateTime.now());
+        question.setLastUpdateDateTime(LocalDateTime.now());
 
         questionService.persist(question);
 
