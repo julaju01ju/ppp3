@@ -8,6 +8,6 @@ import java.util.Optional;
  * @author Ali Veliev 01.12.2021
  */
 
-public interface UserDtoService extends PageDtoService <UserDto>{
+public interface UserDtoService extends PageDtoService<UserDto> {
     Optional<UserDto> getUserById(Long id);
 }
