@@ -43,13 +43,12 @@ public class UserResourseController {
     public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page
             , @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
 
-        PageDto<UserDto> pageDto;
         Map<String, Object> params = new HashMap<>();
 
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
-        pageDto = userDtoService.getPageDto("paginationAllUsersSortedByReputation", params);
 
-        return new ResponseEntity<>(pageDto, HttpStatus.OK);
+        return new ResponseEntity<>(userDtoService.getPageDto(
+                "paginationAllUsersSortedByReputation", params), HttpStatus.OK);
     }
 }
