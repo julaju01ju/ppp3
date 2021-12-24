@@ -95,7 +95,7 @@ public class TestUserResourceController {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/105")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/120")
                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
