@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,5 +69,12 @@ public class QuestionResourceController {
         questionService.persist(question);
 
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
+    }
+
+    @GetMapping("/count")
+    @ApiOperation("Получение количества вопросов в базе данных")
+    public ResponseEntity<?> getQuestionCount() {
+
+        return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
     }
 }
