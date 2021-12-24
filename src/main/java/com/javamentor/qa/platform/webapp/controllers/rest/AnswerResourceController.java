@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,12 @@ import java.util.List;
 public class AnswerResourceController {
 
     private final AnswerDtoService answerDtoService;
+    private final AnswerService answerService;
 
     @Autowired
-    public AnswerResourceController(AnswerDtoService answerDtoService) {
+    public AnswerResourceController(AnswerDtoService answerDtoService, AnswerService answerService) {
         this.answerDtoService = answerDtoService;
+        this.answerService = answerService;
     }
 
 
@@ -47,12 +50,12 @@ public class AnswerResourceController {
             @ApiResponse(code = 404, message = "Answer ID with id not found"),
             @ApiResponse(code = 400, message = "Invalid Answer ID entry")})
     public ResponseEntity<?> deleteAnswerById(@ApiParam(name = "answerId") @PathVariable Long answerId) {
-        if (answerDtoService.getById(answerId) == null) {
-            return new ResponseEntity("Answer Id " + answerId + " not found!", HttpStatus.NOT_FOUND);
-        } else if (answerId != null) {
+        if (answerId == null) {
+            return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
+        } if (answerService.existsById(answerId)) {
             answerDtoService.deleteAnswerByAnswerId(answerId);
             return ResponseEntity.ok().build();
-        } else
-        return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
+        }
+        return new ResponseEntity("Answer Id " + answerId + " not found!", HttpStatus.NOT_FOUND);
     }
 }

@@ -12,6 +12,4 @@ public interface AnswerDtoService {
 
     void deleteAnswerByAnswerId(Long id);
 
-    Answer getById(Long id);
-
 }

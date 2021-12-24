@@ -83,8 +83,4 @@ public class AnswerDtoDaoImpl
                 .executeUpdate();
     }
 
-    public Answer getByAnswerId(Long id) {
-        Answer answer = entityManager.find(Answer.class, id);
-        return answer;
-    }
 }
