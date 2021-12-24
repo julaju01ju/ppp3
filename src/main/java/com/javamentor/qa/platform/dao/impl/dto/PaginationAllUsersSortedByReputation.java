@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

@@ -121,15 +121,15 @@ public class TestUserResourseController {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(6))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
                 .andExpect(jsonPath("$.items[0].id").value(101))
                 .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
                 .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].linkImage").value("link"))
                 .andExpect(jsonPath("$.items[0].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[0].reputation").value(202));
+                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items.size()").value(5));
     }
-
 }

@@ -41,21 +41,15 @@ public class UserResourseController {
     @GetMapping("/api/user/reputation")
     @ApiOperation("Получение пагинации пользователей с сортировкой по репутации")
     public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page
-            , @RequestParam(required = false, name = "items") Integer itemsOnPage) {
+            , @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
 
         PageDto<UserDto> pageDto;
         Map<String, Object> params = new HashMap<>();
-
-        if (itemsOnPage == null) {
-            itemsOnPage = 10;
-        }
 
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
         pageDto = userDtoService.getPageDto("paginationAllUsersSortedByReputation", params);
 
-        return pageDto == null ?
-                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(pageDto, HttpStatus.OK);
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 }
