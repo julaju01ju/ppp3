@@ -51,4 +51,18 @@ public class UserResourceController {
         PageDto<UserDto> pageDto = userDtoService.getPageDto("paginationAllUsersSortingByPersistDate", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
+
+    @GetMapping("/api/user/reputation")
+    @ApiOperation("Получение списка всех пользователей с пагинацией, отсортированных по репутации")
+    public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page
+            , @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
+
+        Map<String, Object> params = new HashMap<>();
+
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", itemsOnPage);
+
+        return new ResponseEntity<>(userDtoService.getPageDto(
+                "paginationAllUsersSortedByReputation", params), HttpStatus.OK);
+    }
 }
