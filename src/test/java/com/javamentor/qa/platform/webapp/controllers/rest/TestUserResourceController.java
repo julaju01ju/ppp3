@@ -259,4 +259,42 @@ public class TestUserResourceController {
         Assertions.assertTrue((int) list.get(3).get("id") == 103);
         Assertions.assertTrue((int) list.get(4).get("id") == 104);
     }
+
+    @Test
+    @DataSet(value = {"dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"})
+    public void getPageAllUserSortedByReputation() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/reputation?page=1&items=5")
+                        .header(AUTHORIZATION, USER_TOKEN).header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(7))
+                .andExpect(jsonPath("$.itemsOnPage").value(5))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items.size()").value(5));
+    }
 }
