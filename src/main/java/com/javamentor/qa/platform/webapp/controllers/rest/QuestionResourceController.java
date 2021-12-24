@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 /**
  * @author Maksim Solovev 16.12.2021.
  */
@@ -41,33 +43,34 @@ public class QuestionResourceController {
     @PostMapping("/{questionId}/upVote")
     @ApiOperation("запись в БД голосования за вопрос со значением UP")
     public ResponseEntity<?> insertUpVote(@PathVariable("questionId") Long questionId) {
-
-        Question question = questionService.getById(questionId).get();
-
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<Question> optionalQuestion = questionService.getById(questionId);
 
-        if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.UP_VOTE))) {
-
-            reputationService.increaseReputationByQuestionVoteUp(question, sender);
-
-            voteOnQuestionService.insertUpVoteQuestion(question, sender);
+        if (optionalQuestion.isPresent()) {
+            Question question = optionalQuestion.get();
+            if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.UP_VOTE))) {
+                reputationService.increaseReputationByQuestionVoteUp(question, sender);
+                voteOnQuestionService.insertUpVoteQuestion(question, sender);
+                return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
+        return new ResponseEntity<>("Такой question не найден", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/{questionId}/downVote")
     @ApiOperation("запись в БД голосования за вопрос со значением DOWN")
     public ResponseEntity<?> insertDownVote(@PathVariable("questionId") Long questionId) {
-
-        Question question = questionService.getById(questionId).get();
-
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<Question> optionalQuestion = questionService.getById(questionId);
 
-        if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.DOWN_VOTE))) {
-
-            reputationService.decreaseReputationByQuestionVoteDown(question, sender);
-
-            voteOnQuestionService.insertDownVoteQuestion(question, sender);
+        if (optionalQuestion.isPresent()) {
+            Question question = optionalQuestion.get();
+            if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId(), VoteType.DOWN_VOTE))) {
+                reputationService.decreaseReputationByQuestionVoteDown(question, sender);
+                voteOnQuestionService.insertDownVoteQuestion(question, sender);
+                return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
+            }
         }
-        return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
-}}
+        return new ResponseEntity<>("Такой question не найден", HttpStatus.NOT_FOUND);
+    }
+}
