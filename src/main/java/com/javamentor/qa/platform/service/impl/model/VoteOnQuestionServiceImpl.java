@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * @author Maksim Solovev 23.12.2021.
- */
 
 @Service
 @Transactional
@@ -37,8 +34,8 @@ public class VoteOnQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion
     }
 
     @Override
-    public Boolean getIfNotExists(Long questionId, Long userId, VoteType voteType) {
-        return voteOnQuestionDao.getIfNotExists(questionId, userId, voteType);
+    public Boolean getIfNotExists(Long questionId, Long userId) {
+        return voteOnQuestionDao.getIfNotExists(questionId, userId);
     }
 
     @Override

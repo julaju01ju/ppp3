@@ -5,9 +5,6 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 
-/**
- * @author Maksim Solovev 23.12.2021.
- */
 
 public interface VoteOnQuestionService extends ReadWriteService<VoteQuestion, Long> {
 
@@ -15,7 +12,7 @@ public interface VoteOnQuestionService extends ReadWriteService<VoteQuestion, Lo
 
     void insertDownVoteQuestion(Question question, User user);
 
-    Boolean getIfNotExists(Long questionId, Long userId, VoteType voteType);
+    Boolean getIfNotExists(Long questionId, Long userId);
 
     Long getCountOfVotes(Long questionId);
 }

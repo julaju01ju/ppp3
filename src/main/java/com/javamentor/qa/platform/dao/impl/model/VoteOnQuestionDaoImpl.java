@@ -14,11 +14,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-
-/**
- * @author Maksim Solovev 23.12.2021.
- */
-
 @Repository
 public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> implements VoteOnQuestionDao {
 
@@ -37,13 +32,12 @@ public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> 
     }
 
     @Override
-    public Boolean getIfNotExists(Long questionId, Long userId, VoteType voteType) {
+    public Boolean getIfNotExists(Long questionId, Long userId) {
         TypedQuery<VoteQuestion> typedQuery = entityManager.createQuery(
-                        "select vq from VoteQuestion vq where vq.question.id = :questionId and vq.user.id = :userId and vq.vote = :voteType",
+                        "select vq from VoteQuestion vq where vq.question.id = :questionId and vq.user.id = :userId",
                         VoteQuestion.class
                 ).setParameter("questionId", questionId)
-                .setParameter("userId", userId)
-                .setParameter("voteType", voteType);
+                .setParameter("userId", userId);
         return SingleResultUtil.getSingleResultOrNull(typedQuery).isPresent();
     }
 
@@ -62,7 +56,6 @@ public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> 
     public Long getCountOfVotes(Long questionId) {
         Query query = entityManager.createQuery("select count(vq.vote) from VoteQuestion vq where vq.question.id = :questionId group by vq.question.id", Long.class)
                 .setParameter("questionId", questionId);
-        return ((Number) query.getResultList().get(0)).longValue();
+        return ((Number) query.getSingleResult()).longValue();
     }
-
 }
