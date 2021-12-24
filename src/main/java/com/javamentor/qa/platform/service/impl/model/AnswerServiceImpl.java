@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implements AnswerService {
 
-    private AnswerDao answerDao;
+    private final AnswerDao answerDao;
 
     @Autowired
     public AnswerServiceImpl(AnswerDao answerDao) {
         super(answerDao);
+        this.answerDao = answerDao;
     }
 }
