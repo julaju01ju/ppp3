@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Api("Rest controller to get a question count from DB")
 @RequestMapping("/api/user/question")
-public class QuestionController {
+public class QuestionResourceController {
 
     private final QuestionService questionService;
 
-    public QuestionController(QuestionService questionService) {
+    public QuestionResourceController(QuestionService questionService) {
         this.questionService = questionService;
     }
 
