@@ -16,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -28,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Api("Rest Contoller for Question")
+@RequestMapping("/api/user/question")
 public class QuestionResourceController {
 
     private final TagService tagService;
@@ -42,7 +40,7 @@ public class QuestionResourceController {
         this.tagConverter = tagConverter;
     }
 
-    @PostMapping("/api/user/question/")
+    @PostMapping("/")
     @ApiOperation("API создания вопроса. Получает объект QuestionCreateDto. " +
             "Возвращет объект QuestionDto. Поля Title, Description, Tag должны быть заполнены." +
             "Если хотя бы одно поле не заполнено возвращается HttpStatus.BAD_REQUEST." +

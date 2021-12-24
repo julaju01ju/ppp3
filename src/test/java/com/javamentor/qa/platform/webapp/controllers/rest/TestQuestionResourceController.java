@@ -46,9 +46,9 @@ class TestQuestionResourceController {
     private EntityManager entityManager;
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTitle() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -83,9 +83,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -120,9 +120,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -152,9 +152,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTitle() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -190,9 +190,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyDescription() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -228,9 +228,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTags() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -262,9 +262,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -309,9 +309,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -352,9 +352,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -404,9 +404,9 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceControllerTest/role.yml",
-            "dataset/QuestionResourceControllerTest/user_entity.yml",
-            "dataset/QuestionResourceControllerTest/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+            "dataset/QuestionResourceController/user_entity.yml",
+            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated_CheckTagList() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -460,7 +460,8 @@ class TestQuestionResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"}, disableConstraints = true)
+    @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"},
+            disableConstraints = true, cleanBefore = true)
 
     public void getQuestionCount() throws Exception {
 
