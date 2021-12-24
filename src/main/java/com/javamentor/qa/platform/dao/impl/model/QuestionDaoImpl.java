@@ -14,18 +14,6 @@ public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public int getCountValuable(Long question_id) {
-        String sql = "select CAST(COALESCE(sum(case when voteQuestion.vote = 'UP_VOTE' then 1" +
-                " when voteQuestion.vote = 'DOWN_VOTE' then -1" +
-                " end),0) as int) AS countValuable" +
-                " from VoteQuestion voteQuestion" +
-                " where voteQuestion.question.id =: question_id";
-
-        Query query = entityManager.createQuery(sql).setParameter("question_id", question_id);
-        return (int) query.getResultStream().findFirst().get();
-    }
-
     public Long getQuestionCount() {
         Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM question WHERE is_deleted = false");
         return ((Number) query.getResultList().get(0)).longValue();
