@@ -25,8 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = "test/resources/application.properties")
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-public class TestQuestionController {
-
+public class TestQuestionResourceController {
     @Autowired
     private MockMvc mockMvc;
 
@@ -53,64 +52,6 @@ public class TestQuestionController {
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.content().string("8"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
-            "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
-            disableConstraints = true, transactional = true, cleanBefore = true)
-
-    public void postUpVoteQuestion() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        post("/api/user/question/101/upVote")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().string("1"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
-            "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
-            disableConstraints = true, transactional = true, cleanBefore = true)
-
-    public void postDownVoteQuestion() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        post("/api/user/question/101/downVote")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().string("1"))
                 .andExpect(status().isOk());
     }
 }
