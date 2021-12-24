@@ -23,7 +23,7 @@ import java.util.Map;
 
 @RestController
 @Api("Rest Contoller to get a User by ID")
-public class UserResourseController {
+public class UserResourceController {
 
     @Autowired
     private UserDtoService userDtoService;
@@ -48,9 +48,7 @@ public class UserResourseController {
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
 
-        PageDto<UserDto> pageDto = userDtoService.getPageDto("paginationUser", params);
-        return pageDto != null && !pageDto.getItems().isEmpty()
-                ? new ResponseEntity<>(pageDto, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        PageDto<UserDto> pageDto = userDtoService.getPageDto("paginationAllUsersSortingByPersistDate", params);
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 }

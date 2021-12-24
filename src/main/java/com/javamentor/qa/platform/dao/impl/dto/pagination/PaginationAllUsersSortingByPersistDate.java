@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.dao.impl.dto;
+package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
@@ -12,12 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PaginationUser implements PageDtoDao<UserDto> {
+public class PaginationAllUsersSortingByPersistDate implements PageDtoDao<UserDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    private List<UserDto> items = new LinkedList<>();
 
     @Override
     public List<UserDto> getItems(Map<String, Object> params) {
@@ -29,8 +27,7 @@ public class PaginationUser implements PageDtoDao<UserDto> {
                 " order by user.persistDateTime", UserDto.class);
         query.setFirstResult(((int) params.get("currentPageNumber") - 1) * (int) params.get("itemsOnPage"));
         query.setMaxResults((int) params.get("itemsOnPage"));
-        items = query.getResultList();
-        return items;
+        return query.getResultList();
     }
 
     @Override
