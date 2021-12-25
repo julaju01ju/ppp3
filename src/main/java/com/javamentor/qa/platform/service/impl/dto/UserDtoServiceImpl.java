@@ -14,7 +14,7 @@ import java.util.Optional;
  */
 
 @Service
-public class UserDtoServiceImpl implements UserDtoService {
+public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements UserDtoService {
 
     @Autowired
     private UserDtoDao userDtoDao;
