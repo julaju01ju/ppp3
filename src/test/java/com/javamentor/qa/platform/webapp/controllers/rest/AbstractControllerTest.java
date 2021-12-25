@@ -1,11 +1,11 @@
-package com.javamentor.qa.platform.webapp.configs;
+package com.javamentor.qa.platform.webapp.controllers.rest;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
-import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
-import org.junit.jupiter.api.Test;
+import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,51 +27,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
 @TestPropertySource(properties = "test/resources/application.properties")
-public abstract class AbstractTest {
+abstract public class AbstractControllerTest {
 
     @Autowired
-    private MockMvc mockMvc;
+    public MockMvc mockMvc;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    public void requestToAdminApiWithAdminRole() throws Exception {
-
+    private AuthenticationRequest setUserAuth(String userName, String password){
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("admin@mail.ru");
-
-        String ADMIN_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
-
+        authenticationRequest.setPassword(password);
+        authenticationRequest.setUsername(userName);
+        return authenticationRequest;
     }
 
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    public void requestToUserApiWithUserRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
+    public String getToken(String userName, String password) throws Exception {
         String USER_TOKEN = mockMvc.perform(
                         post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .content(new ObjectMapper().writeValueAsString(this.setUserAuth(userName,password)))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
+        return  USER_TOKEN;
     }
-
 
 }
