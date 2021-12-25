@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -18,8 +19,22 @@ import org.springframework.web.bind.annotation.RestController;
 @Api("Rest Contoller to get a Question by ID")
 public class QuestionResourceController {
 
+
     @Autowired
     private QuestionDtoService questionDtoService;
+
+    private final QuestionService questionService;
+
+    public QuestionResourceController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    @GetMapping("/count")
+    @ApiOperation("Получение количества вопросов в базе данных")
+    public ResponseEntity<?> getQuestionCount() {
+
+        return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
+    }
 
     @GetMapping("/api/user/question/{id}")
     @ApiOperation("Возвращает вопрос и тэги относящиеся к этому вопросу, по ИД вопроса.")
