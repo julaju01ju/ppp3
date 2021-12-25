@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -39,6 +41,7 @@ public class TestQuestionResourceContoller {
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionById() throws Exception {
@@ -56,9 +59,53 @@ public class TestQuestionResourceContoller {
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/101")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/101")
                         .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(101))
+                .andExpect(jsonPath("$.title").value("title"))
+                .andExpect(jsonPath("$.authorId").value(101))
+                .andExpect(jsonPath("$.authorReputation").value(101))
+                .andExpect(jsonPath("$.authorName").value("Constantin"))
+                .andExpect(jsonPath("$.authorImage").value("link"))
+                .andExpect(jsonPath("$.description").value("description"))
+                .andExpect(jsonPath("$.viewCount").value(0))
+                .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.countValuable").value(1))
+                .andExpect(jsonPath("$.persistDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-06T03:00:00"));
+    }
 
-                .andExpect(status().isOk());
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void shouldNotGetQuestionById() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/105")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.id").doesNotExist());
     }
 }
