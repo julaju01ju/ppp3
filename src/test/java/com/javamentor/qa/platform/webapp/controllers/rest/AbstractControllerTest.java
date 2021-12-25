@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
 @TestPropertySource(properties = "test/resources/application.properties")
-abstract public class AbstractControllerTest {
+public abstract class AbstractControllerTest {
 
     @Autowired
     public MockMvc mockMvc;
