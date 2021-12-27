@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
+@RequestMapping("/api/user/question")
 @Api("Rest Contoller to get a Question by ID")
 public class QuestionResourceController {
 
@@ -29,14 +31,15 @@ public class QuestionResourceController {
         this.questionService = questionService;
     }
 
-    @GetMapping("/api/user/question/count")
+    @GetMapping("/count")
     @ApiOperation("Получение количества вопросов в базе данных")
     public ResponseEntity<?> getQuestionCount() {
 
         return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
+
     }
 
-    @GetMapping("/api/user/question/{id}")
+    @GetMapping("/{id}")
     @ApiOperation("Возвращает вопрос и тэги относящиеся к этому вопросу, по ИД вопроса.")
     public ResponseEntity<?> getQuestionById(@PathVariable("id") Long id) {
 
@@ -45,5 +48,4 @@ public class QuestionResourceController {
                 new ResponseEntity<>(questionDtoService.getQuestionById(id), HttpStatus.OK);
 
     }
-
 }
