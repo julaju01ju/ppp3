@@ -50,7 +50,7 @@ public class TestDataInitService {
     }
 
     public void createRole() {
-        Role role = new Role("USER");
+        Role role = new Role("ROLE_USER");
         roleService.persist(role);
     }
 
