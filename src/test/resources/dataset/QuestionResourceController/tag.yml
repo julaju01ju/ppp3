@@ -1,6 +1,7 @@
 tag:
-<<<<<<< HEAD
-  - id: 101
+  - id: 100
+    name: "TAG100"
+  - id: 107
     description: "Some text here"
     name: "Some name here"
     persist_date: 2021-12-06 00:00:00
@@ -24,9 +25,5 @@ tag:
     description: "Some another text here"
     name: "Some another name here"
     persist_date: 2021-12-06 00:00:00
-=======
-  - id: 100
-    name: "TAG100"
   - id: 101
     name: "TAG101"
->>>>>>> dev
