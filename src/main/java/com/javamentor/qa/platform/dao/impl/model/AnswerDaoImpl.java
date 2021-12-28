@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer,Long> implements AnswerDao {
-
 }

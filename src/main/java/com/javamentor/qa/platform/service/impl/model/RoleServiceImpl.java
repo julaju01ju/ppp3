@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl extends ReadWriteServiceImpl<Role, Long> implements RoleService{
 
-        @Autowired
-        public RoleServiceImpl(RoleDao roleDao){
+    @Autowired
+    public RoleServiceImpl(RoleDao roleDao){
         super(roleDao);
-        }
-        }
+    }
+}
