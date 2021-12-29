@@ -18,7 +18,6 @@ public class UserDtoDaoImpl implements UserDtoDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public Optional<UserDto> getUserById(Long id){
 
@@ -27,5 +26,4 @@ public class UserDtoDaoImpl implements UserDtoDao {
                 .setParameter("id", id).getResultStream().findAny();
 
     }
-
 }

@@ -7,13 +7,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * @author Ali Veliev 10.12.2021
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionDto {
+
     private Long id;
     private String title;
     private Long authorId;
+    private Long authorReputation;
     private String authorName;
     private String authorImage;
     private String description;
@@ -23,4 +29,5 @@ public class QuestionDto {
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
+
 }
