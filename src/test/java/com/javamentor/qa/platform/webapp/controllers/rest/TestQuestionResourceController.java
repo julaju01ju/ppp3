@@ -637,7 +637,7 @@ public class TestQuestionResourceController {
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"},
-            disableConstraints = true, transactional = true, cleanBefore = true)
+            disableConstraints = true, transactional = true)
 
     public void postUpVoteQuestion() throws Exception {
 
@@ -665,7 +665,7 @@ public class TestQuestionResourceController {
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"},
-            disableConstraints = true, transactional = true, cleanBefore = true)
+            disableConstraints = true, transactional = true)
 
     public void postDownVoteQuestion() throws Exception {
 
@@ -721,7 +721,8 @@ public class TestQuestionResourceController {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            "dataset/QuestionResourceController/voteQuestionApi.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"},
             disableConstraints = true, transactional = true)
 
     public void repeatVotingForQuestion() throws Exception {

@@ -34,6 +34,7 @@ public class VoteOnQuestionServiceImpl extends ReadWriteServiceImpl<VoteQuestion
     }
 
     @Override
+    @Transactional
     public Boolean getIfNotExists(Long questionId, Long userId) {
         return voteOnQuestionDao.getIfNotExists(questionId, userId);
     }

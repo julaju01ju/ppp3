@@ -2,11 +2,13 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
@@ -32,6 +34,7 @@ import java.util.Optional;
 @Api("Rest Contoller for Question")
 public class QuestionResourceController {
 
+    private TagService tagService;
     private QuestionDtoService questionDtoService;
     private QuestionConverter questionConverter;
     private TagConverter tagConverter;
@@ -40,10 +43,13 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
 
     @Autowired
-
-    public QuestionResourceController(ReputationService reputationService, QuestionService questionService, VoteOnQuestionService voteOnQuestionService) {
+    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService) {
+        this.tagService = tagService;
+        this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
         this.questionService = questionService;
+        this.questionConverter = questionConverter;
+        this.tagConverter = tagConverter;
         this.voteOnQuestionService = voteOnQuestionService;
     }
 

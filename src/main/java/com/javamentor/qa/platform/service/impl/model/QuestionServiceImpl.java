@@ -23,10 +23,6 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
     @Autowired
     public QuestionServiceImpl(QuestionDao questionDao, TagDao tagDao) {
         super(questionDao);
-    }
-
-    public QuestionServiceImpl(QuestionDao questionDao) {
-        super(questionDao);
         this.questionDao = questionDao;
         this.tagDao = tagDao;
     }
