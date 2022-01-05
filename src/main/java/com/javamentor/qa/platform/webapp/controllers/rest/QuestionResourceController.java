@@ -5,9 +5,7 @@ import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
-import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
@@ -28,42 +26,36 @@ import java.util.Optional;
 /**
  * @author Ali Veliev 10.12.2021
  */
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/question")
 @Api("Rest Contoller for Question")
 public class QuestionResourceController {
 
-    @Autowired
     private QuestionDtoService questionDtoService;
-
-    private final QuestionService questionService;
-    private final QuestionConverter questionConverter;
-    private final TagConverter tagConverter;
+    private QuestionConverter questionConverter;
+    private TagConverter tagConverter;
     private ReputationService reputationService;
     private QuestionService questionService;
     private VoteOnQuestionService voteOnQuestionService;
 
-    public QuestionResourceController(QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter) {
     @Autowired
-    public QuestionResourceController(ReputationService reputationService, QuestionService questionService, VoteOnQuestionService voteOnQuestionService) {
-        this.reputationService = reputationService;
+    public QuestionResourceController(QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter) {
         this.questionService = questionService;
         this.questionConverter = questionConverter;
         this.tagConverter = tagConverter;
+    }
+
+    public QuestionResourceController(ReputationService reputationService, QuestionService questionService, VoteOnQuestionService voteOnQuestionService) {
+        this.reputationService = reputationService;
+        this.questionService = questionService;
         this.voteOnQuestionService = voteOnQuestionService;
     }
 
     @GetMapping("/count")
     @ApiOperation("Получение количества вопросов в базе данных")
     public ResponseEntity<?> getQuestionCount() {
-
         return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
-
     }
 
     @GetMapping("/{id}")
@@ -74,7 +66,6 @@ public class QuestionResourceController {
         return questionDto.isEmpty()
                 ? new ResponseEntity<>("Wrong Question ID!", HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(questionDto, HttpStatus.OK);
-
     }
 
     @PostMapping("/{questionId}/upVote")
@@ -114,8 +105,6 @@ public class QuestionResourceController {
         }
         return new ResponseEntity<>("Такого question не существует", HttpStatus.NOT_FOUND);
     }
-}
-
 
     @PostMapping("/")
     @ApiOperation("API создания вопроса. Получает объект QuestionCreateDto. " +
