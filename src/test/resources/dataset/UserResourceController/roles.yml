@@ -1,5 +1,5 @@
 role:
   - id: 1
     name: "ROLE_ADMIN"
-  - id: 101
+  - id: 1
     name: "ROLE_USER"

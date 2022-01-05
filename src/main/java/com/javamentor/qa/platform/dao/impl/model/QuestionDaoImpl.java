@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 @Repository
-public class QuestionDaoImpl extends ReadWriteDaoImpl<Question, Long> implements QuestionDao {
+public class QuestionDaoImpl extends ReadWriteDaoImpl<Question,Long>implements QuestionDao {
 
     @PersistenceContext
     private EntityManager entityManager;
