@@ -117,7 +117,6 @@ public class TestQuestionResourceController {
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"));
-
     }
 
     @Test

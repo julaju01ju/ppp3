@@ -40,11 +40,6 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
 
     @Autowired
-    public QuestionResourceController(QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter) {
-        this.questionService = questionService;
-        this.questionConverter = questionConverter;
-        this.tagConverter = tagConverter;
-    }
 
     public QuestionResourceController(ReputationService reputationService, QuestionService questionService, VoteOnQuestionService voteOnQuestionService) {
         this.reputationService = reputationService;
