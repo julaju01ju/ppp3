@@ -1,7 +1,9 @@
 package com.javamentor.qa.platform.service.impl;
 
+import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.Tag;
+import com.javamentor.qa.platform.models.entity.question.TrackedTag;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -30,6 +32,10 @@ public class TestDataInitService {
 
     private TagService tagService;
 
+    private TrackedTagService trackedTagService;
+
+    private IgnoredTagService ignoredTagService;
+
 
     public TestDataInitService() {
     }
@@ -40,13 +46,17 @@ public class TestDataInitService {
                                @Lazy AnswerService answerService,
                                @Lazy QuestionService questionService,
                                @Lazy ReputationService reputationService,
-                               @Lazy TagService tagService) {
+                               @Lazy TagService tagService,
+                               @Lazy TrackedTagService trackedTagService,
+                               @Lazy IgnoredTagService ignoredTagService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
         this.questionService = questionService;
         this.reputationService = reputationService;
         this.tagService = tagService;
+        this.trackedTagService = trackedTagService;
+        this.ignoredTagService = ignoredTagService;
     }
 
     public void createRole() {
@@ -178,6 +188,41 @@ public class TestDataInitService {
         }
     }
 
+    public void createTrackedTag() {
+        List<User> userList = userService.getAll();
+
+        // У User'a c id=1 нет TrackedTag
+        for (int i = 1; i < userList.size(); i++) {
+            int random = (int) (Math.random() * 4);
+
+            for (int j = 1; j <= random; j++) {
+                TrackedTag trackedTag = new TrackedTag();
+                trackedTag.setPersistDateTime(LocalDateTime.of(2022, 01, 06, 12, 30, 00));
+                trackedTag.setTrackedTag(tagService.getAll().get(j));
+                trackedTag.setUser(userService.getAll().get(i));
+                trackedTagService.persist(trackedTag);
+            }
+        }
+    }
+
+    public void createIgnoredTag() {
+        List<User> userList = userService.getAll();
+
+        // У User'a c id=1 нет IgnoredTag
+        for (int i = 1; i < userList.size(); i++) {
+            int random = (int) (Math.random() * 4);
+
+            for (int j = 1; j <= random; j++) {
+                IgnoredTag ignoredTag = new IgnoredTag();
+                ignoredTag.setPersistDateTime(LocalDateTime.of(2022, 01, 06, 12, 30, 00));
+                ignoredTag.setIgnoredTag(tagService.getAll().get(j));
+                ignoredTag.setUser(userService.getAll().get(i));
+                ignoredTagService.persist(ignoredTag);
+            }
+        }
+    }
+
+
     public void init() {
         createRole();
         createUser(50);
@@ -185,5 +230,7 @@ public class TestDataInitService {
         createQuestion(50);
         createAnswer();
         createReputation();
+        createTrackedTag();
+        createIgnoredTag();
     }
 }
