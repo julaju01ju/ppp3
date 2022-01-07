@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 
 @Service
-public class QuestionDtoServiceImpl implements QuestionDtoService {
+public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionDto> implements QuestionDtoService {
 
     @Autowired
     private QuestionDtoDao questionDtoDao;

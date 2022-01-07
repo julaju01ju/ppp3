@@ -8,6 +8,6 @@ import java.util.Optional;
  * @author Ali Veliev 10.12.2021
  */
 
-public interface QuestionDtoService {
+public interface QuestionDtoService extends PageDtoService<QuestionDto> {
     Optional<QuestionDto> getQuestionById(Long id);
 }
