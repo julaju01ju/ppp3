@@ -12,7 +12,7 @@ import java.util.List;
 public class TagDtoDaoImpl implements TagDtoDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
     @Override
     public List<TagDto> getIgnoredTags(Long userId) {
         return entityManager.createQuery(

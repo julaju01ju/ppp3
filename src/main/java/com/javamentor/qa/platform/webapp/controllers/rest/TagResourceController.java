@@ -48,7 +48,6 @@ public class TagResourceController {
     @ApiResponses(value =
         @ApiResponse(code = 200, message = "Get all ignored tags"))
     @GetMapping("/ignored")
-    @Transactional
     public ResponseEntity<List<TagDto>> getAllIgnoredTags() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         List<TagDto> tagDtos = tagDtoService.getIgnoredTags(userId);
