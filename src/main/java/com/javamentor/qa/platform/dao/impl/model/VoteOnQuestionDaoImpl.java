@@ -20,16 +20,6 @@ public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public void insertUpVoteQuestion(Question question, User user) {
-
-        VoteQuestion voteUp = new VoteQuestion();
-        voteUp.setQuestion(question);
-        voteUp.setUser(user);
-        voteUp.setVote(VoteType.UP_VOTE);
-
-        super.persist(voteUp);
-    }
 
     @Override
     public Boolean getIfNotExists(Long questionId, Long userId) {
@@ -39,17 +29,6 @@ public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> 
                 ).setParameter("questionId", questionId)
                 .setParameter("userId", userId);
         return SingleResultUtil.getSingleResultOrNull(typedQuery).isPresent();
-    }
-
-    @Override
-    public void insertDownVoteQuestion(Question question, User user) {
-
-        VoteQuestion voteDown = new VoteQuestion();
-        voteDown.setQuestion(question);
-        voteDown.setUser(user);
-        voteDown.setVote(VoteType.DOWN_VOTE);
-
-        super.persist(voteDown);
     }
 
     @Override

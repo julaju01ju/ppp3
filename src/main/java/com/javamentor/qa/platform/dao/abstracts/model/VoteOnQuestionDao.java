@@ -8,10 +8,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 
 public interface VoteOnQuestionDao extends ReadWriteDao<VoteQuestion, Long> {
 
-    void insertUpVoteQuestion(Question question, User user);
-
-    void insertDownVoteQuestion(Question question, User user);
-
     Boolean getIfNotExists(Long questionId, Long userId);
 
     Long getCountOfVotes(Long questionId);
