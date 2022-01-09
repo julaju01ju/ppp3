@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
@@ -31,23 +30,22 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
         List<Long> questionIdList = (List<Long>) em.createNativeQuery(
                         "SELECT " +
                                 "DISTINCT q.id FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "WHERE " +
-                                "CASE " +
-                                "WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
-                                "when -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
-                                "when -1 IN :trackedTag THEN q.id NOT IN " +
-                                "(" +
-                                "   SELECT q_ign.id FROM question q_ign " +
-                                "   JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "   WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                ") " +
-                                "ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
-                                "(" +
-                                "   SELECT q_ign.id FROM question q_ign " +
-                                "   JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "   WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                ") " +
-                                "END " +
+                                "WHERE CASE " +
+                                "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
+                                "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
+                                "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
+                                "   (" +
+                                "       SELECT q_ign.id FROM question q_ign " +
+                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+                                "   ) " +
+                                "   ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
+                                "   (" +
+                                "       SELECT q_ign.id FROM question q_ign " +
+                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+                                "   ) " +
+                                "   END " +
                                 "ORDER BY q.id")
                 .setParameter("ignoredTag", ignoredTag)
                 .setParameter("trackedTag", trackedTag)
@@ -57,23 +55,28 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
 
         return em.createNativeQuery(
                         "SELECT " +
-                                "q.id, " +
+                                "q.id AS q_id, " +
                                 "q.title, " +
                                 "q.description, " +
                                 "q.last_redaction_date, " +
                                 "q.persist_date, " +
-                                "u.id, " +
+                                "u.id , " +
                                 "u.full_name, " +
                                 "u.image_link, " +
-                                "(SELECT sum(r.count) FROM reputation r WHERE r.author_id = u.id) AS reputation, " +
-                                "(SELECT count(up.vote) FROM votes_on_questions up WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
+                                "(SELECT coalesce(sum(r.count),0) FROM reputation r " +
+                                "   WHERE r.author_id = u.id) AS reputation, " +
+                                "(SELECT coalesce(count(up.vote), 0) FROM votes_on_questions up " +
+                                "   WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
                                 "- " +
-                                "(SELECT count(down.vote) FROM votes_on_questions down WHERE down.vote = 'DOWN_VOTE' AND down.question_id = q.id) AS votes, " +
-                                "(SELECT count(a.id) FROM answer a WHERE a.question_id = q.id) AS answers, " +
+                                "(SELECT coalesce(count(down.vote), 0) FROM votes_on_questions down " +
+                                "   WHERE down.vote = 'DOWN_VOTE' AND down.question_id = q.id) AS votes, " +
+                                "(SELECT coalesce(count(a.id),0) FROM answer a " +
+                                "   WHERE a.question_id = q.id) AS answers, " +
                                 "t.id AS t_id, " +
                                 "t.name AS t_name, " +
                                 "t.description AS t_desc " +
-                                "FROM question q JOIN user_entity u ON u.id = q.user_id " +
+                                "FROM question q " +
+                                "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "JOIN tag t ON qht.tag_id = t.id " +
                                 "WHERE " +
@@ -91,22 +94,21 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
         return (int)em.createNativeQuery(
                         "SELECT " +
                                 "DISTINCT q.id FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "WHERE " +
-                                "CASE " +
-                                "WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
-                                "WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
-                                "WHEN -1 IN :trackedTag THEN q.id NOT IN " +
-                                "(" +
-                                "   SELECT q_ign.id FROM question q_ign " +
-                                "   JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "   WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                ") " +
-                                "ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
-                                "(" +
-                                "   SELECT q_ign.id FROM question q_ign " +
-                                "   JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "   WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                ") " +
+                                "WHERE CASE " +
+                                "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
+                                "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
+                                "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
+                                "   (" +
+                                "       SELECT q_ign.id FROM question q_ign " +
+                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+                                "   ) " +
+                                "   ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
+                                "   (" +
+                                "       SELECT q_ign.id FROM question q_ign " +
+                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+                                "   ) " +
                                 "END ")
                 .setParameter("ignoredTag", ignoredTag)
                 .setParameter("trackedTag", trackedTag)

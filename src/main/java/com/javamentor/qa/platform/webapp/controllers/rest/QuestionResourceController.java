@@ -84,6 +84,14 @@ public class QuestionResourceController {
 
 
     @GetMapping("")
+    @ApiOperation("Получение пагинации QuestionDto с тэгами. " +
+            "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
+            "page - обязательный параметр" +
+            "items - не обязательный на фронте, по умолчанию на бэк 10" +
+            "trackedTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых есть хотя бы один из переданных тэгов" +
+            "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых нет данных тэгов.")
     public ResponseEntity<PageDto<QuestionDto>> getQuestions(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
