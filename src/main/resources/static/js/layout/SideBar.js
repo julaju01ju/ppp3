@@ -17,6 +17,10 @@ class SideBar{
                             Вопросы</a>
                         </li>
                         <li class="nav-item">
+                         <a class="nav-link sidebar-menu-item" href="/tags"  style="color: #333333">
+                            Тэги</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link sidebar-menu-item" href="#" style="color: #333333">Метки</a>
                         </li> 
                          <li class="nav-item">
