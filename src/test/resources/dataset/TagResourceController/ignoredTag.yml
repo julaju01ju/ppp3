@@ -1,0 +1,11 @@
+tag_ignore:
+  - id: 100
+    persist_date: 2021-12-06 00:00:00
+    ignored_tag_id: 100
+    user_id: 102
+
+
+  - id: 101
+    persist_date: 2021-12-06 00:00:00
+    ignored_tag_id: 101
+    user_id: 102
