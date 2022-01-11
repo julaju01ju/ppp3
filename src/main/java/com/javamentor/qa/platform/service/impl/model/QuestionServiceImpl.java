@@ -56,4 +56,6 @@ public class QuestionServiceImpl extends ReadWriteServiceImpl<Question, Long> im
         question.setTags(listTagForQuestion);
         super.persist(question);
     }
+
+
 }

@@ -14,6 +14,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -30,14 +31,15 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
 
-        Optional<QuestionDto> questionDto = SingleResultUtil.getSingleResultOrNull(entityManager.createNativeQuery("select q.id as q_id, q.title, q.description,  q.last_redaction_date,  q.persist_date,  u.id as u_id,  u.full_name,  u.image_link, " +
-                        "(select sum(r.count) from reputation r where r.author_id = u.id) as reputation, " +
-                        "(select count(up.vote) from votes_on_questions up where up.vote = 'UP_VOTE' and up.question_id = q.id) - (select count(down.vote)   from votes_on_questions down   where down.vote = 'DOWN_VOTE' and down.question_id = q.id)      as votes, " +
-                        "(select count(a.id) from answer a where a.question_id = q.id)    as answers, " +
-                        "t.id as t_id, t.name as t_name, t.description as t_desc " +
-                        "from question q join user_entity u on u.id = q.user_id " +
-                        "join question_has_tag qht on q.id = qht.question_id " +
-                        "join tag t on qht.tag_id = t.id where q.id =:id")
+        Optional<QuestionDto> questionDto = SingleResultUtil.getSingleResultOrNull(entityManager.createNativeQuery(
+                        "select q.id as q_id, q.title, q.description,  q.last_redaction_date,  q.persist_date,  u.id as u_id,  u.full_name,  u.image_link, " +
+                                "(select sum(r.count) from reputation r where r.author_id = u.id) as reputation, " +
+                                "(select count(up.vote) from votes_on_questions up where up.vote = 'UP_VOTE' and up.question_id = q.id) - (select count(down.vote) from votes_on_questions down where down.vote = 'DOWN_VOTE' and down.question_id = q.id) as votes, " +
+                                "(select count(a.id) from answer a where a.question_id = q.id)    as answers, " +
+                                "t.id as t_id, t.name as t_name, t.description as t_desc " +
+                                "from question q join user_entity u on u.id = q.user_id " +
+                                "join question_has_tag qht on q.id = qht.question_id " +
+                                "join tag t on qht.tag_id = t.id where q.id =:id")
                 .setParameter("id", id)
                 .unwrap(Query.class)
                 .setResultTransformer(new ResultTransformer() {

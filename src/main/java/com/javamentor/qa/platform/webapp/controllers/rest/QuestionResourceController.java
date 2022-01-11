@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -18,7 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -26,7 +27,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/question")
-@Api("Rest Contoller for Question")
+@Api("Rest Controller for Question")
 public class QuestionResourceController {
 
     @Autowired
@@ -63,7 +64,7 @@ public class QuestionResourceController {
 
     @PostMapping("/")
     @ApiOperation("API создания вопроса. Получает объект QuestionCreateDto. " +
-            "Возвращет объект QuestionDto. Поля Title, Description, Tag должны быть заполнены." +
+            "Возвращает объект QuestionDto. Поля Title, Description, Tag должны быть заполнены." +
             "Если хотя бы одно поле не заполнено возвращается HttpStatus.BAD_REQUEST." +
             "Проверяет есть ли присланный Tag в базе. Если нет - создает.")
     public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
@@ -79,5 +80,32 @@ public class QuestionResourceController {
         questionService.persist(question);
 
         return new ResponseEntity<>(questionConverter.questionToQuestionDto(question), HttpStatus.OK);
+    }
+
+
+    @GetMapping()
+    @ApiOperation("Получение пагинации QuestionDto с тэгами. " +
+            "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
+            "page - обязательный параметр" +
+            "items - не обязательный на фронте, по умолчанию на бэк 10" +
+            "trackedTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых есть хотя бы один из переданных тэгов" +
+            "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых нет данных тэгов.")
+    public ResponseEntity<PageDto<QuestionDto>> getQuestions(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationQuestionsWithGivenTags" ,params), HttpStatus.OK);
     }
 }

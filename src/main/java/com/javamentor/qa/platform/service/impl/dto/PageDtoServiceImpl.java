@@ -50,7 +50,9 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
         pageDto.setItems(pageDtoDao.getItems(params));
         pageDto.setTotalResultCount(pageDtoDao.getTotalResultCount(params));
         pageDto.setTotalPageCount((int) (Math.ceil(((double)pageDto.getTotalResultCount() / (int)params.get("itemsOnPage")))));
-
+        if (pageDto.getTotalPageCount() == 0) {
+            pageDto.setTotalPageCount(1);
+        }
         if ((int)params.get("currentPageNumber") > pageDto.getTotalPageCount()) {
             throw new IllegalArgumentException("Страницы под номером "
                     + params.get("currentPageNumber") + " пока не существует");
