@@ -1,7 +1,10 @@
 package com.javamentor.qa.platform.service.abstracts.dto;
 
+import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -10,4 +13,6 @@ import java.util.Optional;
 
 public interface QuestionDtoService extends PageDtoService<QuestionDto> {
     Optional<QuestionDto> getQuestionById(Long id);
+
+    PageDto<QuestionDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params);
 }

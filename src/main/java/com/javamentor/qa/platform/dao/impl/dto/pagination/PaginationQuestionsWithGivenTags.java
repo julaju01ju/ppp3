@@ -11,25 +11,41 @@ import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
     private EntityManager em;
-    private List<Long> ignoredTag;
-    private List<Long> trackedTag;
 
     @Override
     public List<QuestionDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
-        getTagsFromParams(params);
-
-        List<Long> questionIdList = (List<Long>) em.createNativeQuery(
+        return em.createNativeQuery(
                         "SELECT " +
-                                "DISTINCT q.id FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "distinct q.id AS q_id, " +
+                                "q.title, " +
+                                "q.description, " +
+                                "q.last_redaction_date, " +
+                                "q.persist_date, " +
+                                "u.id , " +
+                                "u.full_name, " +
+                                "u.image_link, " +
+                                "(SELECT coalesce(sum(r.count),0) FROM reputation r " +
+                                "   WHERE r.author_id = u.id) AS reputation, " +
+                                "(SELECT coalesce(count(up.vote), 0) FROM votes_on_questions up " +
+                                "   WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
+                                "- " +
+                                "(SELECT coalesce(count(down.vote), 0) FROM votes_on_questions down " +
+                                "   WHERE down.vote = 'DOWN_VOTE' AND down.question_id = q.id) AS votes, " +
+                                "(SELECT coalesce(count(a.id),0) FROM answer a " +
+                                "   WHERE a.question_id = q.id) AS answers " +
+                                "FROM question q " +
+                                "JOIN user_entity u ON u.id = q.user_id " +
+                                "JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
@@ -47,41 +63,10 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
                                 "   ) " +
                                 "   END " +
                                 "ORDER BY q.id")
-                .setParameter("ignoredTag", ignoredTag)
-                .setParameter("trackedTag", trackedTag)
+                .setParameter("ignoredTag", params.get("ignoredTag"))
+                .setParameter("trackedTag", params.get("trackedTag"))
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
-                .getResultList();
-
-        return em.createNativeQuery(
-                        "SELECT " +
-                                "q.id AS q_id, " +
-                                "q.title, " +
-                                "q.description, " +
-                                "q.last_redaction_date, " +
-                                "q.persist_date, " +
-                                "u.id , " +
-                                "u.full_name, " +
-                                "u.image_link, " +
-                                "(SELECT coalesce(sum(r.count),0) FROM reputation r " +
-                                "   WHERE r.author_id = u.id) AS reputation, " +
-                                "(SELECT coalesce(count(up.vote), 0) FROM votes_on_questions up " +
-                                "   WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
-                                "- " +
-                                "(SELECT coalesce(count(down.vote), 0) FROM votes_on_questions down " +
-                                "   WHERE down.vote = 'DOWN_VOTE' AND down.question_id = q.id) AS votes, " +
-                                "(SELECT coalesce(count(a.id),0) FROM answer a " +
-                                "   WHERE a.question_id = q.id) AS answers, " +
-                                "t.id AS t_id, " +
-                                "t.name AS t_name, " +
-                                "t.description AS t_desc " +
-                                "FROM question q " +
-                                "JOIN user_entity u ON u.id = q.user_id " +
-                                "JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "JOIN tag t ON qht.tag_id = t.id " +
-                                "WHERE " +
-                                "q.id IN :questionId ORDER BY q.id")
-                .setParameter("questionId", questionIdList)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new QuestionResultTransformer()).getResultList();
     }
@@ -89,11 +74,10 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
 
-        getTagsFromParams(params);
 
-        return (int)em.createNativeQuery(
+        return ((BigInteger) em.createNativeQuery(
                         "SELECT " +
-                                "DISTINCT q.id FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
@@ -110,15 +94,11 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
                                 "END ")
-                .setParameter("ignoredTag", ignoredTag)
-                .setParameter("trackedTag", trackedTag)
-                .getResultList().stream().count();
+                .setParameter("ignoredTag", params.get("ignoredTag"))
+                .setParameter("trackedTag", params.get("trackedTag"))
+                .getSingleResult()).intValue();
     }
 
-    private void getTagsFromParams(Map<String, Object> params) {
-        ignoredTag = (List<Long>) params.get("ignoredTag");
-        trackedTag = (List<Long>) params.get("trackedTag");
-    }
 }
 
 class QuestionResultTransformer implements ResultTransformer {
@@ -150,12 +130,6 @@ class QuestionResultTransformer implements ResultTransformer {
                     return questionDtoTemp;
                 }
         );
-
-        TagDto tagDto = new TagDto();
-        tagDto.setId(((BigInteger) tuple[11]).longValue());
-        tagDto.setName((String) tuple[12]);
-        tagDto.setDescription((String) tuple[13]);
-        questionDto.getListTagDto().add(tagDto);
 
         return questionDto;
     }

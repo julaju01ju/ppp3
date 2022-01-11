@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -104,8 +105,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
 
-        return new ResponseEntity<>(
-                questionDtoService.getPageDto(
-                        "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags("paginationQuestionsWithGivenTags" ,params), HttpStatus.OK);
     }
 }
