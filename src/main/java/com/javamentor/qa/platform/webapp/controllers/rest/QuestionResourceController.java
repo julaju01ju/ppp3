@@ -84,7 +84,7 @@ public class QuestionResourceController {
     }
 
 
-    @GetMapping("")
+    @GetMapping()
     @ApiOperation("Получение пагинации QuestionDto с тэгами. " +
             "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
             "page - обязательный параметр" +
