@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,5 +65,18 @@ public class UserResourceController {
 
         return new ResponseEntity<>(userDtoService.getPageDto(
                 "paginationAllUsersSortedByReputation", params), HttpStatus.OK);
+    }
+
+    @GetMapping("api/user/vote")
+    @ApiOperation("Получение всех пользователей с пагинацией отсортированных по сумме голосов, полученных за ответы и вопросы")
+    public ResponseEntity<PageDto<UserDto>> getPageAllUsersSortedByVote(@RequestParam(value = "page") Integer currentPageNumber,
+                                                                        @RequestParam(value = "items", required = false,
+                                                                                defaultValue = "10") Integer itemsOnPage) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", currentPageNumber);
+        params.put("itemsOnPage", itemsOnPage);
+
+        return new ResponseEntity<>(userDtoService.getPageDto(
+                "paginationAllUsersSortedByVote", params), HttpStatus.OK);
     }
 }
