@@ -5,7 +5,6 @@ import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionDto> impl
     @Override
     public PageDto<QuestionDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params) {
 
-        PageDto<QuestionDto> pageDto = getPageDto(pageDtoDaoName, params);
+        PageDto<QuestionDto> pageDto = super.getPageDto(pageDtoDaoName, params);
         List ids = pageDto.getItems().stream().map(
                 questionDto -> questionDto.getId()).collect(Collectors.toList());
         Map<Long, List<TagDto>> tags = tagDtoDao.getTagsByQuestionIds(ids);
