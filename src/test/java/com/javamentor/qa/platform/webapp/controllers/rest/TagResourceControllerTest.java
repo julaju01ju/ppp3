@@ -31,6 +31,22 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$[0].description").value("description1"));
     }
 
-
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/ignoredTag.yml",
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+    }, disableConstraints = true, cleanBefore = true, transactional = false)
+    public void getAllIgnoredTags() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        get("/api/user/tag/ignored")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(100))
+                .andExpect(jsonPath("$[0].name").value("tagname1"))
+                .andExpect(jsonPath("$[0].description").value("description1"));
+    }
 
 }

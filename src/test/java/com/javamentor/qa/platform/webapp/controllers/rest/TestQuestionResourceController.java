@@ -8,7 +8,6 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
-import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -52,7 +50,6 @@ public class TestQuestionResourceController {
 
     @Test
     @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"}, disableConstraints = true)
-
     public void getQuestionCount() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -118,6 +115,7 @@ public class TestQuestionResourceController {
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"));
+
     }
 
     @Test
@@ -633,6 +631,154 @@ public class TestQuestionResourceController {
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countValuable"));
     }
 
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithoutTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.items[1].listTagDto.size()").value("3"))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].title").value("title"))
+                .andExpect(jsonPath("$.items[0].description").value("description to 101"))
+                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].authorId").value(101))
+                .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].authorImage").value("link"))
+                .andExpect(jsonPath("$.items[0].authorReputation").value(50))
+                .andExpect(jsonPath("$.items[0].viewCount").value(0))
+                .andExpect(jsonPath("$.items[0].countValuable").value(2))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+
+    }
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(104));
+    }
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=102&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(102))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithIgnoredTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&ignoredTag=102&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
+                ;
+    }
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
