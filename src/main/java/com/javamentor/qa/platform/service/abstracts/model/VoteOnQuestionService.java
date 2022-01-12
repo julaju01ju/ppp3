@@ -8,4 +8,8 @@ public interface VoteOnQuestionService extends ReadWriteService<VoteQuestion, Lo
     Boolean getIfNotExists(Long questionId, Long userId);
 
     Long getCountOfVotes(Long questionId);
+
+    @Override
+    void persist(VoteQuestion voteQuestion);
+    //
 }

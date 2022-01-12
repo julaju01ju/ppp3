@@ -8,6 +8,7 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -656,9 +657,13 @@ public class TestQuestionResourceController {
         mockMvc.perform(
                         post("/api/user/question/101/upVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().string("1"))
-                .andExpect(status().isOk());
+//                .andDo(print())
+//                .andExpect(MockMvcResultMatchers.content().string("1"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
     }
 
     @Test
@@ -685,9 +690,13 @@ public class TestQuestionResourceController {
         mockMvc.perform(
                         post("/api/user/question/101/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().string("1"))
-                .andExpect(status().isOk());
+//                .andDo(print())
+//                .andExpect(MockMvcResultMatchers.content().string("1"))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
     }
 
     @Test

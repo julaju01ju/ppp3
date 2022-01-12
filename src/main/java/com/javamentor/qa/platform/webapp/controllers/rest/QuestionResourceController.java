@@ -81,23 +81,11 @@ public class QuestionResourceController {
         if (optionalQuestion.isPresent()) {
             Question question = optionalQuestion.get();
             if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId()))) {
-
-                int countUpVote = 10;
                 VoteQuestion upVoteQuestion = new VoteQuestion(sender, question, VoteType.UP_VOTE);
                 voteOnQuestionService.persist(upVoteQuestion);
-
-                Reputation reputationUp = new Reputation();
-                reputationUp.setType(ReputationType.VoteQuestion);
-                reputationUp.setQuestion(question);
-                reputationUp.setAuthor(question.getUser());
-                reputationUp.setSender(sender);
-                reputationUp.setCount(countUpVote);
-                reputationService.persist(reputationUp);
-
                 return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
-
         }
         return new ResponseEntity<>("Такого question не существует", HttpStatus.NOT_FOUND);
     }
@@ -111,23 +99,11 @@ public class QuestionResourceController {
         if (optionalQuestion.isPresent()) {
             Question question = optionalQuestion.get();
             if (!(voteOnQuestionService.getIfNotExists(question.getId(), sender.getId()))) {
-
-                int countDownVote = 5;
                 VoteQuestion downVoteQuestion = new VoteQuestion(sender, question, VoteType.DOWN_VOTE);
                 voteOnQuestionService.persist(downVoteQuestion);
-
-                Reputation reputationDown = new Reputation();
-                reputationDown.setType(ReputationType.VoteQuestion);
-                reputationDown.setQuestion(question);
-                reputationDown.setAuthor(question.getUser());
-                reputationDown.setSender(sender);
-                reputationDown.setCount(countDownVote);
-                reputationService.persist(reputationDown);
-
                 return new ResponseEntity<>(voteOnQuestionService.getCountOfVotes(questionId), HttpStatus.OK);
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
-
         }
         return new ResponseEntity<>("Такого question не существует", HttpStatus.NOT_FOUND);
     }
