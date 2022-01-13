@@ -36,7 +36,6 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$[0].description").value("description1"));
     }
 
-
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)

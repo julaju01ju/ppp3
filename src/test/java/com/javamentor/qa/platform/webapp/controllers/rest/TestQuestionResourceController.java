@@ -8,6 +8,7 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -66,8 +67,8 @@ public class TestQuestionResourceController {
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                get("/api/user/question/count")
-                        .header(AUTHORIZATION, USER_TOKEN))
+                        get("/api/user/question/count")
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.content().string("8"))
                 .andExpect(status().isOk());
@@ -631,4 +632,270 @@ public class TestQuestionResourceController {
         Assertions.assertEquals(0, (int) JsonPath.read(questionDtoJsonString, "$.countValuable"));
     }
 
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithoutTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.items[1].listTagDto.size()").value("3"))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].title").value("title"))
+                .andExpect(jsonPath("$.items[0].description").value("description to 101"))
+                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].authorId").value(101))
+                .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].authorImage").value("link"))
+                .andExpect(jsonPath("$.items[0].authorReputation").value(50))
+                .andExpect(jsonPath("$.items[0].viewCount").value(0))
+                .andExpect(jsonPath("$.items[0].countValuable").value(2))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+
+    }
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(104));
+    }
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=102&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(102))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithIgnoredTagsInParams() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&ignoredTag=102&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
+                ;
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void postUpVoteQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/upVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void postDownVoteQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true, cleanBefore = true)
+
+    public void postWrongIdQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/333/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void repeatVotingForQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }

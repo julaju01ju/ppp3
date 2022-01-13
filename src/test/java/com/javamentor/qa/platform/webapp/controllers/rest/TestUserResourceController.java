@@ -96,7 +96,7 @@ public class TestUserResourceController {
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/120")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.id").doesNotExist());
@@ -296,5 +296,91 @@ public class TestUserResourceController {
                 .andExpect(jsonPath("$.items[0].city").value("Moscow"))
                 .andExpect(jsonPath("$.items[0].reputation").value(202))
                 .andExpect(jsonPath("$.items.size()").value(5));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/users.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/reputations.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/questions.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/answers.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_questions.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_answers.yml"
+            }, disableConstraints = true, cleanBefore = true)
+    void GetPageAllUsersSortedByVoteCheckSortingDESCWithPage1Items5() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/vote?page=1&items=5")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
+                .andExpect(jsonPath("$.itemsOnPage").value(5))
+                .andReturn().getResponse().getContentAsString();
+
+        List<HashMap> list = JsonPath.read(pageUsers, "$.items");
+        System.out.println(list.size());
+        Assertions.assertTrue((int) list.get(0).get("id") == 105);
+        Assertions.assertTrue((int) list.get(1).get("id") == 104);
+        Assertions.assertTrue((int) list.get(2).get("id") == 103);
+        Assertions.assertTrue((int) list.get(3).get("id") == 102);
+        Assertions.assertTrue((int) list.get(4).get("id") == 101);
+    }
+
+    @Test
+    @DataSet(value = {"dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/users.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/reputations.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/questions.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/answers.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_questions.yml",
+            "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_answers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    void GetPageAllUsersSortedByVoteCheckSortingASCWithPage4Items5() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/vote?page=4&items=5")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(4))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
+                .andExpect(jsonPath("$.itemsOnPage").value(5))
+                .andReturn().getResponse().getContentAsString();
+
+        List<HashMap> list = JsonPath.read(pageUsers, "$.items");
+        System.out.println(list.size());
+        Assertions.assertTrue((int) list.get(4).get("id") == 106);
+        Assertions.assertTrue((int) list.get(3).get("id") == 107);
+        Assertions.assertTrue((int) list.get(2).get("id") == 108);
+        Assertions.assertTrue((int) list.get(1).get("id") == 109);
+        Assertions.assertTrue((int) list.get(0).get("id") == 110);
     }
 }

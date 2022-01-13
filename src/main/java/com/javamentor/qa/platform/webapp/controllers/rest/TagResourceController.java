@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.TagDtoPagination;
+import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.TagDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.TrackedTagDtoService;
@@ -62,4 +63,5 @@ public class TagResourceController {
         PageDto<TagDtoPagination> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
+
 }

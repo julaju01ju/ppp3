@@ -22,6 +22,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
+            "dataset/QuestionResourceController/voteForAQuestion.yml"
     },  disableConstraints = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
