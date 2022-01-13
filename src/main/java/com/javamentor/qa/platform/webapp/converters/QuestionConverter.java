@@ -15,5 +15,6 @@ public abstract class QuestionConverter {
     @Mapping(constant = "0", target = "countAnswer")
     @Mapping(constant = "0", target = "countValuable")
     @Mapping(constant = "0", target = "viewCount")
+
     public abstract QuestionDto questionToQuestionDto(Question question);
 }

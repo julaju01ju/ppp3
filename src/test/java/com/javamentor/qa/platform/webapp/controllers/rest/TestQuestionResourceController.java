@@ -8,6 +8,7 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -778,5 +779,123 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 ;
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void postUpVoteQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/upVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void postDownVoteQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andExpect(status().isOk())
+                .andReturn();
+        Assertions.assertNotNull(entityManager.createQuery("select vp from VoteQuestion vp WHERE vp.question.id =:questionId and vp.user.id =: userId", VoteQuestion.class)
+                .setParameter("questionId", 101L)
+                .setParameter("userId", 101L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            disableConstraints = true, transactional = true, cleanBefore = true)
+
+    public void postWrongIdQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/333/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/voteQuestionApi.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml"},
+            disableConstraints = true, transactional = true)
+
+    public void repeatVotingForQuestion() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
