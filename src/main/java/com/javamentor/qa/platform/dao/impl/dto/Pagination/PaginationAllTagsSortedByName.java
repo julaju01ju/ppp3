@@ -24,10 +24,11 @@ public class PaginationAllTagsSortedByName implements PageDtoDao<TagDtoPaginatio
                 "select new com.javamentor.qa.platform.models.dto.TagDtoPagination (" +
                         "t.id, " +
                         "t.name, " +
-                        "t.description," +
-                        "t.persistDateTime)" +
+                        "t.description, " +
+                        "t.persistDateTime, " +
+                        "t.questions.size) " +
                         "from Tag t " +
-                        "order by t.name", TagDtoPagination.class);
+                        "order by length(t.name), t.name ", TagDtoPagination.class);
         query.setFirstResult((page - 1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
         return query.getResultList();

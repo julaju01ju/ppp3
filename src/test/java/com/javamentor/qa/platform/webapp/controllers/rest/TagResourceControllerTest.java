@@ -38,6 +38,7 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutPageParam() throws Exception {
 
