@@ -19,7 +19,6 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
     @Autowired
     Map<String, PageDtoDao<T>> pageDtoDaoMap;
 
-
     public PageDtoServiceImpl(Map<String, PageDtoDao<T>> pageDtoDaoMap) {
         this.pageDtoDaoMap = pageDtoDaoMap;
     }
