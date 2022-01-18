@@ -26,7 +26,7 @@ public class PaginationAllTagsSortedByName implements PageDtoDao<TagDtoPaginatio
                         "t.name, " +
                         "t.description, " +
                         "t.persistDateTime, " +
-                        "t.questions.size) " +
+                        "cast(t.questions.size as long)) " +
                         "from Tag t " +
                         "order by length(t.name), t.name ", TagDtoPagination.class);
         query.setFirstResult((page - 1) * itemsOnPage);

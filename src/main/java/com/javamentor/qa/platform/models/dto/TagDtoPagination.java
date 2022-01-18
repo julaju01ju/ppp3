@@ -16,5 +16,5 @@ public class TagDtoPagination {
     private String name;
     private String description;
     private LocalDateTime persistDateTime;
-    private int questionsCount;
+    private Long questionsCount;
 }
