@@ -78,41 +78,47 @@ public class TagResourceController {
 
     @ApiOperation(
             value = "Add Tag into TrackedTag table")
-    @ApiResponses(value =
-    @ApiResponse(code = 200, message = "Successfully added Tag into TrackedTag table"))
+    @ApiResponses(value = {
+    @ApiResponse(code = 404, message = "Tag not found")})
     @PostMapping("/{id}/tracked")
     public ResponseEntity<?> addTrackedTag(@PathVariable("id") Long tagId) {
-        TagDto tagDto = null;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if(optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            TrackedTag trackedTag = new TrackedTag();
-            trackedTag.setTrackedTag(tag);
-            trackedTag.setUser(user);
-            trackedTagService.persist(trackedTag);
-            tagDto = tagConverter.tagToTagDto(tag);
+            if (!(trackedTagService.getTagIfNotExist(tagId, user.getId()))) {
+                TrackedTag trackedTag = new TrackedTag();
+                trackedTag.setTrackedTag(tag);
+                trackedTag.setUser(user);
+                trackedTagService.persist(trackedTag);
+            }
+            TagDto tagDto = tagConverter.tagToTagDto(tag);
+            return new ResponseEntity<>(tagDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 
     @ApiOperation(
             value = "Add Tag into IgnoredTag table")
-    @ApiResponses(value =
-    @ApiResponse(code = 200, message = "Successfully added Tag into IgnoredTag table"))
+    @ApiResponses(value = {
+    @ApiResponse(code = 404, message = "Tag not found")})
     @PostMapping("/{id}/ignored")
     public ResponseEntity<?> addIgnoredTag(@PathVariable("id") Long tagId) {
-        TagDto tagDto = null;
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if(optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            IgnoredTag ignoredTag = new IgnoredTag();
-            ignoredTag.setIgnoredTag(tag);
-            ignoredTag.setUser(user);
-            ignoredTagService.persist(ignoredTag);
-            tagDto = tagConverter.tagToTagDto(tag);
+            if (!(ignoredTagService.getTagIfNotExist(tagId, user.getId()))) {
+                IgnoredTag ignoredTag = new IgnoredTag();
+                ignoredTag.setIgnoredTag(tag);
+                ignoredTag.setUser(user);
+                ignoredTagService.persist(ignoredTag);
+            }
+            TagDto tagDto = tagConverter.tagToTagDto(tag);
+            return new ResponseEntity<>(tagDto, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(tagDto, HttpStatus.OK);
     }
 }
