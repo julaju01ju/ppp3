@@ -48,6 +48,16 @@ public class TagResourceController {
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Get all authorized user's ignored tags")
+    @ApiResponses(value =
+    @ApiResponse(code = 200, message = "Get all ignored tags"))
+    @GetMapping("/ignored")
+    public ResponseEntity<List<TagDto>> getAllIgnoredTags() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        List<TagDto> tagDtos = tagDtoService.getIgnoredTags(userId);
+        return new ResponseEntity<>(tagDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/name")
     @ApiOperation("API получение всех тегов, отсортированных по имени, с пагинацией. " +
             "Принимает параметры: page(обязательный) - текущая страница и " +
