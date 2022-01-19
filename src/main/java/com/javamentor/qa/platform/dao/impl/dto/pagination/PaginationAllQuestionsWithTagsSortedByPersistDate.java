@@ -3,29 +3,28 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.dao.impl.dto.pagination.ResultTransformer.QuestionResultTransformer;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.TagDto;
-import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
 
 @Repository
-public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto> {
+public class PaginationAllQuestionsWithTagsSortedByPersistDate implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
+
 
     @Override
     public List<QuestionDto> getItems(Map<String, Object> params) {
+
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
-        return em.createNativeQuery(
+        return entityManager.createNativeQuery(
                         "SELECT " +
                                 "distinct q.id AS q_id, " +
                                 "q.title, " +
@@ -63,7 +62,7 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
                                 "   END " +
-                                "ORDER BY q.id")
+                                "ORDER BY q.persist_date DESC")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setFirstResult((page - 1) * itemsOnPage)
@@ -76,7 +75,7 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
     public int getTotalResultCount(Map<String, Object> params) {
 
 
-        return ((BigInteger) em.createNativeQuery(
+        return ((BigInteger) entityManager.createNativeQuery(
                         "SELECT " +
                                 "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +
@@ -99,5 +98,4 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .getSingleResult()).intValue();
     }
-
 }
