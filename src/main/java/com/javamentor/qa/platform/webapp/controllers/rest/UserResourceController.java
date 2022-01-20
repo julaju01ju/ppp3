@@ -2,18 +2,17 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +25,14 @@ import java.util.Map;
 @Api("Rest Contoller to get a User by ID")
 public class UserResourceController {
 
-    @Autowired
     private UserDtoService userDtoService;
+    private UserService userservice;
+
+    @Autowired
+    public UserResourceController(UserDtoService userDtoService, UserService userservice) {
+        this.userDtoService = userDtoService;
+        this.userservice = userservice;
+    }
 
     @GetMapping("/api/user/{userId}")
     @ApiOperation("Получение пользователя по ID")
@@ -78,5 +83,21 @@ public class UserResourceController {
 
         return new ResponseEntity<>(userDtoService.getPageDto(
                 "paginationAllUsersSortedByVote", params), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/user/change/password")
+    @ApiOperation("Смена пароля с шифрованием")
+    public String updatePassword(User user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String currentPass = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+
+        String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
+        if (user.getPassword().matches(pat) && !user.getPassword().equals(currentPass)) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userservice.update(user);
+            return "users";
+        } else {
+            return "invalidpass";
+        }
     }
 }
