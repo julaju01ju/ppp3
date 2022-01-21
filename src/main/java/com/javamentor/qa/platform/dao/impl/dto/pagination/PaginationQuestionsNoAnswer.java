@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.dao.impl.dto.pagination;
+package com.javamentor.qa.platform.dao.impl.dto.Pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
@@ -8,10 +8,11 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Repository
-public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto> {
+public class PaginationQuestionsNoAnswer implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
     private EntityManager em;
@@ -23,7 +24,7 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
 
         return em.createNativeQuery(
                         "SELECT " +
-                                "distinct q.id AS q_id, " +
+                                "DISTINCT q.id AS q_id, " +
                                 "q.title, " +
                                 "q.description, " +
                                 "q.last_redaction_date, " +
@@ -43,7 +44,8 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "WHERE CASE " +
+                                "WHERE q.id NOT IN(SELECT a.question_id FROM answer a WHERE a.question_id = q.id) " +
+                                "AND CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
                                 "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
@@ -75,7 +77,8 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto>
         return ((BigInteger) em.createNativeQuery(
                         "SELECT " +
                                 "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "WHERE CASE " +
+                                "WHERE q.id NOT IN(SELECT a.question_id FROM answer a WHERE a.question_id = q.id) " +
+                                "AND CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
                                 "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
