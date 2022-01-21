@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.dao.impl.dto.pagination.ResultTransformer.QuestionResultTransformer;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionDtoResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -68,7 +68,7 @@ public class PaginationAllQuestionsWithTagsSortedByPersistDate implements PageDt
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new QuestionResultTransformer()).getResultList();
+                .setResultTransformer(new QuestionDtoResultTransformer()).getResultList();
     }
 
     @Override
