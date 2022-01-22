@@ -3,12 +3,9 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
-import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
@@ -154,5 +151,30 @@ public class QuestionResourceController {
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags" ,params), HttpStatus.OK);
+    }
+
+    @GetMapping("/noAnswer")
+    @ApiOperation("Получение пагинации QuestionDto, где не на один вопрос не был дан ответ с тэгами. " +
+            "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
+            "page - обязательный параметр" +
+            "items - не обязательный на фронте, по умолчанию на бэк 10" +
+            "trackedTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых есть хотя бы один из переданных тэгов" +
+            "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
+            " в которых нет данных тэгов.")
+    public ResponseEntity<PageDto<QuestionDto>> getQuestionsNoAnswer(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationQuestionsNoAnswer" ,params), HttpStatus.OK);
     }
 }

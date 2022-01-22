@@ -1,6 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
+import com.javamentor.qa.platform.models.dto.TagDtoPagination;
+import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
@@ -20,10 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -68,12 +72,28 @@ public class TagResourceController {
 
     @ApiOperation(value = "Get all authorized user's ignored tags")
     @ApiResponses(value =
-        @ApiResponse(code = 200, message = "Get all ignored tags"))
+    @ApiResponse(code = 200, message = "Get all ignored tags"))
     @GetMapping("/ignored")
     public ResponseEntity<List<TagDto>> getAllIgnoredTags() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         List<TagDto> tagDtos = tagDtoService.getIgnoredTags(userId);
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/name")
+    @ApiOperation("API получение всех тегов, отсортированных по имени, с пагинацией. " +
+            "Принимает параметры: page(обязательный) - текущая страница и " +
+            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
+    public ResponseEntity<PageDto<TagDtoPagination>> getAllTagsOrderByNamePagination(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "items", required = false,
+                    defaultValue = "10") Integer items) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+
+        PageDto<TagDtoPagination> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 
     @ApiOperation(
