@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -26,12 +28,12 @@ import java.util.Map;
 public class UserResourceController {
 
     private UserDtoService userDtoService;
-    private UserService userservice;
+    private UserService userService;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userservice) {
+    public UserResourceController(UserDtoService userDtoService, UserService userService) {
         this.userDtoService = userDtoService;
-        this.userservice = userservice;
+        this.userService = userService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -85,19 +87,24 @@ public class UserResourceController {
                 "paginationAllUsersSortedByVote", params), HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/change/password")
+    @PutMapping("/api/{userId}/change/password")
     @ApiOperation("Смена пароля с шифрованием")
-    public String updatePassword(User user) {
+    public ResponseEntity<?> updatePassword(@PathVariable("userId") long userId, @RequestParam(value = "password") String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String currentPass = SecurityContextHolder.getContext().getAuthentication().getCredentials().toString();
+        Optional<User> optionalUser = userService.getById(userId);
 
-        String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
-        if (user.getPassword().matches(pat) && !user.getPassword().equals(currentPass)) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userservice.update(user);
-            return "users";
-        } else {
-            return "invalidpass";
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            String currentPass = user.getPassword();
+
+            String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
+            if (password.matches(pat) && !password.equals(currentPass)) {
+                user.setPassword(passwordEncoder.encode(password));
+                userService.update(user);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
         }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

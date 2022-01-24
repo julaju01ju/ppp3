@@ -5,6 +5,7 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.dto.UserDtoTest;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
@@ -382,5 +383,55 @@ public class TestUserResourceController {
         Assertions.assertTrue((int) list.get(2).get("id") == 108);
         Assertions.assertTrue((int) list.get(1).get("id") == 109);
         Assertions.assertTrue((int) list.get(0).get("id") == 110);
+    }
+
+    @Test
+    @DataSet(value = {"dataset/UserResourceController/updatePassword/users.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithPage2Items1() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        UserDtoTest userDtoTest = new UserDtoTest();
+        userDtoTest.setId(101L);
+        userDtoTest.setPassword(authenticationRequest.getPassword());
+
+        // the same password
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+                        .param("password", "USER")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        // password is not correct(too short)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+                        .param("password", "3Tt")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        // password is not correct(wrong symbols)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+                        .param("password", "1111111111111111111111")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        // password is correct
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+                        .param("password", "3Tt###")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                  .andDo(print())
+                  .andExpect(status().isOk());
     }
 }
