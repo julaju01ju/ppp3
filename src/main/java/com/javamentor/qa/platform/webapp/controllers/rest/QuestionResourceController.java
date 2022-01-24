@@ -177,4 +177,30 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsNoAnswer" ,params), HttpStatus.OK);
     }
+
+    @GetMapping("/new")
+    @ApiOperation("Получение всех QuestionDto с тэгами, отсортированное по дате добавление, сначала самые новые. " +
+            "В качестве параметров принимает page, items, список trackedTag и ignoredTag " +
+            "page - обязателен параметр " +
+            "items - не обязательный на фронте, по умолчанию на бэк 10 " +
+            "trackedTag - не обязательный параметр, " +
+            "если что-то передали то мы должны отдавать те вопросы в которых есть хотя бы один из переданных тэгов " +
+            "ignoredTag - не обязательный параметр, " +
+            "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
+    public ResponseEntity<PageDto<QuestionDto>> getAllQuestionDtoSortedByPersistDate(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items",defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsWithTagsSortedByPersistDate", params), HttpStatus.OK);
+
+    }
 }
