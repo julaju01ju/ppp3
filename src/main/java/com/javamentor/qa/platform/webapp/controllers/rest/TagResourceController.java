@@ -74,4 +74,12 @@ public class TagResourceController {
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 
+    @GetMapping("/latter")
+    @ApiOperation("API поиск тегов по букве или слову. " +
+    "В качестве параметров передается searchString - строка или буква.")
+    public ResponseEntity<List<TagDto>> getAllFoundTags(@RequestParam(value = "searchString")String searchString) {
+        List<TagDto> tagDtos = tagDtoService.getFoundTags(searchString);
+        return new ResponseEntity<>(tagDtos, HttpStatus.OK);
+    }
+
 }

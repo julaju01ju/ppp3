@@ -65,4 +65,11 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
         return list.get(0);
     }
+
+    @Override
+    public List<TagDto> getFoundTags(String searchString) {
+        String sql = "SELECT NEW com.javamentor.qa.platform.models.dto.TagDto(t.id, t.name, t.description) "+
+                "FROM Tag t WHERE t.name LIKE '" + searchString + "%' OR t.name LIKE '%" + searchString +"' OR t.name LIKE '%" + searchString + "%'";
+        return entityManager.createQuery(sql, TagDto.class).getResultList();
+    }
 }
