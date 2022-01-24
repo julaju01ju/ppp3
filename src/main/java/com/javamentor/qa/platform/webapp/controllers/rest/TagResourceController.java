@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.TagDtoPagination;
-import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
@@ -18,7 +17,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +60,7 @@ public class TagResourceController {
     @ApiOperation(value = "Get all authorized user's tracked tags")
     @ApiResponses(value =
     @ApiResponse(code = 200, message = "Get all tracked tags"))
-    @GetMapping( "/tracked")
+    @GetMapping("/tracked")
     public ResponseEntity<List<TagDto>> getAllTrackedTags() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
@@ -99,14 +97,15 @@ public class TagResourceController {
     @ApiOperation(
             value = "Add Tag into TrackedTag table")
     @ApiResponses(value = {
-    @ApiResponse(code = 404, message = "Tag not found")})
+            @ApiResponse(code = 404, message = "Tag not found")})
     @PostMapping("/{id}/tracked")
     public ResponseEntity<?> addTrackedTag(@PathVariable("id") Long tagId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
-        if(optionalTag.isPresent()) {
+        if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (!(trackedTagService.getTagIfNotExist(tagId, user.getId()))) {
+            if (!(trackedTagService.getTagIfNotExist(tagId, user.getId())) &&
+                    !(ignoredTagService.getTagIfNotExist(tagId, user.getId()))) {
                 TrackedTag trackedTag = new TrackedTag();
                 trackedTag.setTrackedTag(tag);
                 trackedTag.setUser(user);
@@ -114,22 +113,22 @@ public class TagResourceController {
             }
             TagDto tagDto = tagConverter.tagToTagDto(tag);
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
     }
 
     @ApiOperation(
             value = "Add Tag into IgnoredTag table")
     @ApiResponses(value = {
-    @ApiResponse(code = 404, message = "Tag not found")})
+            @ApiResponse(code = 404, message = "Tag not found")})
     @PostMapping("/{id}/ignored")
     public ResponseEntity<?> addIgnoredTag(@PathVariable("id") Long tagId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
-        if(optionalTag.isPresent()) {
+        if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (!(ignoredTagService.getTagIfNotExist(tagId, user.getId()))) {
+            if (!(ignoredTagService.getTagIfNotExist(tagId, user.getId())) &&
+                    !(trackedTagService.getTagIfNotExist(tagId, user.getId()))) {
                 IgnoredTag ignoredTag = new IgnoredTag();
                 ignoredTag.setIgnoredTag(tag);
                 ignoredTag.setUser(user);
@@ -137,8 +136,7 @@ public class TagResourceController {
             }
             TagDto tagDto = tagConverter.tagToTagDto(tag);
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
     }
 }
