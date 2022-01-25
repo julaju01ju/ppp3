@@ -1,9 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
-import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -14,10 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 
 /**
@@ -30,13 +32,11 @@ public class UserResourceController {
 
     private UserDtoService userDtoService;
     private UserService userService;
-    private UserDao userDao;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userService, UserDao userDao) {
+    public UserResourceController(UserDtoService userDtoService, UserService userService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
-        this.userDao = userDao;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -94,20 +94,20 @@ public class UserResourceController {
     @ApiOperation("Смена пароля с шифрованием")
     public ResponseEntity<?> updatePassword(@PathVariable("userId") long userId, @RequestParam(value = "password") String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Optional<User> optionalUser = userDao.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        if (user.getEmail().equals(userService.getById(userId).get().getEmail())) {
             String currentPass = user.getPassword();
+            String newPassword = passwordEncoder.encode(password);
 
             String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
-            if (password.matches(pat) && !password.equals(currentPass)) {
-                user.setPassword(passwordEncoder.encode(password));
+            if (password.matches(pat) && !newPassword.equals(currentPass)) {
+                user.setPassword(newPassword);
                 userService.update(user);
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>("Пароль изменён",HttpStatus.OK);
             }
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Пароль не соответствует требованиям", HttpStatus.BAD_REQUEST);
     }
 }
