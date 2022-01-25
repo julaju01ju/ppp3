@@ -40,4 +40,8 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
         super.update(user);
     }
 
+    @Override
+    public void updatePassword(String username, String password) {
+        userDao.updatePassword(username, password);
+    }
 }

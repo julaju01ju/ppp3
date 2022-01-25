@@ -96,14 +96,14 @@ public class UserResourceController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (user.getEmail().equals(userService.getById(userId).get().getEmail())) {
+        if (user.getId().equals(userId)) {
             String currentPass = user.getPassword();
             String newPassword = passwordEncoder.encode(password);
 
             String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
             if (password.matches(pat) && !newPassword.equals(currentPass)) {
                 user.setPassword(newPassword);
-                userService.update(user);
+                userService.updatePassword(user.getEmail(), newPassword);
                 return new ResponseEntity<>("Пароль изменён",HttpStatus.OK);
             }
         }
