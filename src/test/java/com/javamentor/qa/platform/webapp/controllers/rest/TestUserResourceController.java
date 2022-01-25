@@ -387,7 +387,7 @@ public class TestUserResourceController {
 
     @Test
     @DataSet(value = {"dataset/UserResourceController/updatePassword/users.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllTagsOrderByNamePaginationWithPage2Items1() throws Exception {
+    void updatePassword() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
