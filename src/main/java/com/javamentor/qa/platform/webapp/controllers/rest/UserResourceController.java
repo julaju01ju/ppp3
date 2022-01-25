@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -29,11 +30,13 @@ public class UserResourceController {
 
     private UserDtoService userDtoService;
     private UserService userService;
+    private UserDao userDao;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userService) {
+    public UserResourceController(UserDtoService userDtoService, UserService userService, UserDao userDao) {
         this.userDtoService = userDtoService;
         this.userService = userService;
+        this.userDao = userDao;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -91,7 +94,7 @@ public class UserResourceController {
     @ApiOperation("Смена пароля с шифрованием")
     public ResponseEntity<?> updatePassword(@PathVariable("userId") long userId, @RequestParam(value = "password") String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        Optional<User> optionalUser = userService.getById(userId);
+        Optional<User> optionalUser = userDao.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
