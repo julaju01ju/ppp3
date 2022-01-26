@@ -15,4 +15,9 @@ public class IgnoredTagServiceImpl extends ReadWriteServiceImpl<IgnoredTag, Long
         super(ignoredTagDao);
         this.ignoredTagDao = ignoredTagDao;
     }
+
+    @Override
+    public Boolean getTagIfNotExist(Long tagId, Long userId) {
+        return ignoredTagDao.getTagIfNotExist(tagId, userId);
+    }
 }
