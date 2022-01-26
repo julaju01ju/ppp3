@@ -2,7 +2,7 @@
 document.getElementById("handleFormSubmit").addEventListener("click", async e => {
     e.preventDefault();
 
-    const response = await fetch("http://localhost:8091/api/auth/token/", {
+    const response = await fetch("/api/auth/token/" , {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -10,11 +10,16 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
             password: document.getElementById("inputPassword").value
         })
     });
-    if (response.ok === true) {
+    if (response.ok) {
         const token = await response.json();
-        document.cookie = "token=;max-age=-1";
+        if (document.cookie.split(';').filter((item) => item.trim().startsWith('token=')).length) {
+            document.cookie = "token=;max-age=-1";
+        }
         document.cookie = `token = ${token}`;
+
         window.location.href = '/main';
     }
-    document.getElementById("errorCode").hidden=false;
+    if(!response.ok) {
+        document.getElementById("errorCode").hidden=false;
+    }
 });
