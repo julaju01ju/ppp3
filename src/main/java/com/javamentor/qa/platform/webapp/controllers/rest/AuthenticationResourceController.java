@@ -62,7 +62,7 @@ public class AuthenticationResourceController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).location(URI.create("/login")).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
@@ -70,7 +70,7 @@ public class AuthenticationResourceController {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).location(URI.create("/access_denied")).build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
     @GetMapping("/testuser")
