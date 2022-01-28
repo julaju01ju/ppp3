@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -104,13 +105,13 @@ public class UserResourceController {
 
             String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
             if (password.matches(pat) && !passwordEncoder.matches(password, currentPass)) {
-                user.setPassword(passwordEncoder.encode(password));
                 userService.updatePasswordByEmail(user.getEmail(), passwordEncoder.encode(password));
 
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication != null) {
-                    return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
-                }
+                SecurityContext sc = SecurityContextHolder.getContext();
+                sc.setAuthentication(authentication);
+
+                return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
             }
         }
 
