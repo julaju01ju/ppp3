@@ -255,19 +255,19 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
-    public void searchByTheBeginningOrEndingLettersOfTheTag() throws Exception {
+    public void searchByTheBeginningOrEndingLettersOfTheTagOrderByTop() throws Exception {
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=s")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(103))
-                .andExpect(jsonPath("$[0].[1]").value("postgres"))
-                .andExpect(jsonPath("$[0].[2]").value("description4"))
-                .andExpect(jsonPath("$[1].[0]").value(100))
-                .andExpect(jsonPath("$[1].[1]").value("spring"))
-                .andExpect(jsonPath("$[1].[2]").value("description1"));
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].name").value("postgres"))
+                .andExpect(jsonPath("$[0].description").value("description4"))
+                .andExpect(jsonPath("$[1].id").value(100))
+                .andExpect(jsonPath("$[1].name").value("spring"))
+                .andExpect(jsonPath("$[1].description").value("description1"));
     }
 
     @Test
@@ -275,22 +275,22 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
-    public void searchByLetterFromTheMiddleOfTheTag() throws Exception {
+    public void searchByLetterFromTheMiddleOfTheTagOrderByTop() throws Exception {
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=a")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(104))
-                .andExpect(jsonPath("$[0].[1]").value("maven"))
-                .andExpect(jsonPath("$[0].[2]").value("description5"))
-                .andExpect(jsonPath("$[1].[0]").value(101))
-                .andExpect(jsonPath("$[1].[1]").value("hibernate"))
-                .andExpect(jsonPath("$[1].[2]").value("description2"))
-                .andExpect(jsonPath("$[2].[0]").value(102))
-                .andExpect(jsonPath("$[2].[1]").value("flyway"))
-                .andExpect(jsonPath("$[2].[2]").value("description3"));
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].name").value("maven"))
+                .andExpect(jsonPath("$[0].description").value("description5"))
+                .andExpect(jsonPath("$[1].id").value(101))
+                .andExpect(jsonPath("$[1].name").value("hibernate"))
+                .andExpect(jsonPath("$[1].description").value("description2"))
+                .andExpect(jsonPath("$[2].id").value(102))
+                .andExpect(jsonPath("$[2].name").value("flyway"))
+                .andExpect(jsonPath("$[2].description").value("description3"));
     }
 
     @Test
@@ -305,9 +305,9 @@ public class TagResourceControllerTest
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(100))
-                .andExpect(jsonPath("$[0].[1]").value("spring"))
-                .andExpect(jsonPath("$[0].[2]").value("description1"));
+                .andExpect(jsonPath("$[0].id").value(100))
+                .andExpect(jsonPath("$[0].name").value("spring"))
+                .andExpect(jsonPath("$[0].description").value("description1"));
     }
 
     @Test
@@ -322,9 +322,9 @@ public class TagResourceControllerTest
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(102))
-                .andExpect(jsonPath("$[0].[1]").value("flyway"))
-                .andExpect(jsonPath("$[0].[2]").value("description3"));
+                .andExpect(jsonPath("$[0].id").value(102))
+                .andExpect(jsonPath("$[0].name").value("flyway"))
+                .andExpect(jsonPath("$[0].description").value("description3"));
     }
 
     @Test
@@ -339,9 +339,9 @@ public class TagResourceControllerTest
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(101))
-                .andExpect(jsonPath("$[0].[1]").value("hibernate"))
-                .andExpect(jsonPath("$[0].[2]").value("description2"));
+                .andExpect(jsonPath("$[0].id").value(101))
+                .andExpect(jsonPath("$[0].name").value("hibernate"))
+                .andExpect(jsonPath("$[0].description").value("description2"));
     }
 
     @Test
@@ -356,9 +356,9 @@ public class TagResourceControllerTest
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(103))
-                .andExpect(jsonPath("$[0].[1]").value("postgres"))
-                .andExpect(jsonPath("$[0].[2]").value("description4"));
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].name").value("postgres"))
+                .andExpect(jsonPath("$[0].description").value("description4"));
     }
 
     @Test
@@ -373,8 +373,8 @@ public class TagResourceControllerTest
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].[0]").value(104))
-                .andExpect(jsonPath("$[0].[1]").value("maven"))
-                .andExpect(jsonPath("$[0].[2]").value("description5"));
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].name").value("maven"))
+                .andExpect(jsonPath("$[0].description").value("description5"));
     }
 }

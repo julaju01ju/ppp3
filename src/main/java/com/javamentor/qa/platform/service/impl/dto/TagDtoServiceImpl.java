@@ -27,8 +27,8 @@ public class TagDtoServiceImpl extends PageDtoServiceImpl<TagDtoPagination> impl
     }
 
     @Override
-    public List<TagDto> getFoundTags(String searchString) {
-       return tagDtoDao.getFoundTags(searchString);
+    public List<TagDto> getTop10FoundTags(String searchString) {
+       return tagDtoDao.getTop10FoundTags(searchString);
     }
 
 

@@ -46,11 +46,11 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         List<TagDto> tagDtoList = map.computeIfAbsent(
                                 ((BigInteger) objects[0]).longValue(),
                                 id -> new ArrayList<>());
-                            tagDtoList.add(new TagDto(
-                                    ((BigInteger) objects[1]).longValue(),
-                                    (String) objects[2],
-                                    (String) objects[3]
-                            ));
+                        tagDtoList.add(new TagDto(
+                                ((BigInteger) objects[1]).longValue(),
+                                (String) objects[2],
+                                (String) objects[3]
+                        ));
                         return map;
                     }
 
@@ -67,14 +67,13 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public List<TagDto> getFoundTags(String searchString) {
-        return entityManager.createNativeQuery("SELECT t.id, t.name, t.description "+
-                "FROM tag t JOIN question_has_tag qht on t.id = qht.tag_id " +
-                "GROUP BY qht.tag_id, t.id " +
-                        "HAVING t.name LIKE :searchString " +
-                        "ORDER BY COUNT(qht.tag_id) DESC " +
-                        "LIMIT 10")
+    public List<TagDto> getTop10FoundTags(String searchString) {
+        return entityManager.createQuery("SELECT new com.javamentor.qa.platform.models.dto.TagDto (t.id, t.name, t.description) " +
+                        "FROM Tag t " +
+                        "WHERE t.name LIKE :searchString " +
+                        "ORDER BY t.questions.size DESC", TagDto.class)
                 .setParameter("searchString", "%" + searchString + "%")
+                .setMaxResults(10)
                 .getResultList();
     }
 }

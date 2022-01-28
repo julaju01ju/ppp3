@@ -142,9 +142,10 @@ public class TagResourceController {
 
         @GetMapping("/latter")
     @ApiOperation("API поиск тегов по букве или слову. " +
+            "Выдается 10 самых популярных тегов для текущего поиска. " +
             "В качестве параметров передается searchString - строка или буква.")
-    public ResponseEntity<List<TagDto>> getAllFoundTags(@RequestParam(value = "searchString")String searchString) {
-        List<TagDto> tagDtos = tagDtoService.getFoundTags(searchString);
+    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString")String searchString) {
+        List<TagDto> tagDtos = tagDtoService.getTop10FoundTags(searchString);
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
 }
