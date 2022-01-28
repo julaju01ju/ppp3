@@ -68,8 +68,12 @@ public class TagDtoDaoImpl implements TagDtoDao {
 
     @Override
     public List<TagDto> getFoundTags(String searchString) {
-        return entityManager.createQuery("SELECT NEW com.javamentor.qa.platform.models.dto.TagDto(t.id, t.name, t.description) "+
-                "FROM Tag t WHERE t.name LIKE :searchString", TagDto.class)
+        return entityManager.createNativeQuery("SELECT t.id, t.name, t.description "+
+                "FROM tag t JOIN question_has_tag qht on t.id = qht.tag_id " +
+                "GROUP BY qht.tag_id, t.id " +
+                        "HAVING t.name LIKE :searchString " +
+                        "ORDER BY COUNT(qht.tag_id) DESC " +
+                        "LIMIT 10")
                 .setParameter("searchString", "%" + searchString + "%")
                 .getResultList();
     }
