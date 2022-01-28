@@ -7,5 +7,5 @@ import java.util.Optional;
 
 
 public interface UserService extends ReadWriteService<User,Long>{
-    void updatePassword(String username, String password);
+    void updatePasswordByEmail(String email, String password);
 }

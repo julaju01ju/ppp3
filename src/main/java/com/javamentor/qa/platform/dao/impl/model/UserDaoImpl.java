@@ -24,12 +24,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @Transactional
-    public void updatePassword (String username, String password) {
-        String hql = "update User u set u.password = :password " + "where u.email = :username";
+    public void updatePasswordByEmail (String email, String password) {
+        String hql = "update User u set u.password = :password where u.email = :email";
         entityManager.createQuery(hql)
                 .setParameter("password", password)
-                .setParameter("username", username).executeUpdate();
+                .setParameter("email", email).executeUpdate();
     }
 
 }

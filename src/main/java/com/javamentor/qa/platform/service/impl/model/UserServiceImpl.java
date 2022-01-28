@@ -7,10 +7,11 @@ import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-
+@Transactional
 @Service
 public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements UserService {
 
@@ -41,7 +42,7 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
     }
 
     @Override
-    public void updatePassword(String username, String password) {
-        userDao.updatePassword(username, password);
+    public void updatePasswordByEmail(String email, String password) {
+        userDao.updatePasswordByEmail(email, password);
     }
 }

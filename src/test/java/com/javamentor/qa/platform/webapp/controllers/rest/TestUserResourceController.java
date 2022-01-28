@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashMap;
 import java.util.List;
@@ -404,32 +405,35 @@ public class TestUserResourceController {
 
         UserDtoTest userDtoTest = new UserDtoTest();
         userDtoTest.setId(101L);
-        userDtoTest.setPassword(authenticationRequest.getPassword());
+        userDtoTest.setPassword("USER");
 
         // the same password
         mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
-                        .param("password", "USER")
+                        .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
         // password is not correct(too short)
+        userDtoTest.setPassword("Ty55");
         mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
-                        .param("password", "3Tt")
+                        .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
         // password is not correct(wrong symbols)
+        userDtoTest.setPassword("111111111111111111");
         mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
-                        .param("password", "1111111111111111111111")
+                        .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
         // password is correct
+        userDtoTest.setPassword("3Tt###");
         mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
-                        .param("password", "3Tt###")
+                        .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                   .andDo(print())
                   .andExpect(status().isOk());

@@ -10,11 +10,14 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -92,19 +95,22 @@ public class UserResourceController {
 
     @PutMapping("/api/{userId}/change/password")
     @ApiOperation("Смена пароля с шифрованием")
-    public ResponseEntity<?> updatePassword(@PathVariable("userId") long userId, @RequestParam(value = "password") String password) {
+    public ResponseEntity<?> updatePasswordByEmail(@PathVariable("userId") long userId, @RequestBody String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (user.getId().equals(userId)) {
             String currentPass = user.getPassword();
-            String newPassword = passwordEncoder.encode(password);
 
             String pat = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@#$%]).{6,}";
-            if (password.matches(pat) && !newPassword.equals(currentPass)) {
-                user.setPassword(newPassword);
-                userService.updatePassword(user.getEmail(), newPassword);
-                return new ResponseEntity<>("Пароль изменён",HttpStatus.OK);
+            if (password.matches(pat) && !passwordEncoder.matches(password, currentPass)) {
+                user.setPassword(passwordEncoder.encode(password));
+                userService.updatePasswordByEmail(user.getEmail(), passwordEncoder.encode(password));
+
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null) {
+                    return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
+                }
             }
         }
 
