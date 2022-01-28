@@ -3,7 +3,7 @@ $(document).ready(function() {
 })
 
 function checkAuthorization() {
-    const response = fetch("http://localhost:8091/api/user/", {
+    const response = fetch("http://localhost:8091/api/user/check_auth/", {
         method: "GET",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
     });
