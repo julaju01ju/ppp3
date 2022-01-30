@@ -1,4 +1,4 @@
-package com.javamentor.qa.platform.service.impl;
+package com.javamentor.qa.platform.models.service.impl;
 
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -9,6 +9,14 @@ import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
+import com.javamentor.qa.platform.models.service.abstracts.model.AnswerService;
+import com.javamentor.qa.platform.models.service.abstracts.model.IgnoredTagService;
+import com.javamentor.qa.platform.models.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.models.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.models.service.abstracts.model.RoleService;
+import com.javamentor.qa.platform.models.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.models.service.abstracts.model.TrackedTagService;
+import com.javamentor.qa.platform.models.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.abstracts.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

@@ -1,8 +1,8 @@
-package com.javamentor.qa.platform.service.impl.dto;
+package com.javamentor.qa.platform.models.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TrackedTagDtoDao;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.service.abstracts.dto.TrackedTagDtoService;
+import com.javamentor.qa.platform.models.service.abstracts.dto.TrackedTagDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

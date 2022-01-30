@@ -1,11 +1,11 @@
-package com.javamentor.qa.platform.service.impl.model;
+package com.javamentor.qa.platform.models.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.ReputationDao;
 import com.javamentor.qa.platform.dao.abstracts.model.VoteOnQuestionDao;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
-import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
+import com.javamentor.qa.platform.models.service.abstracts.model.VoteOnQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

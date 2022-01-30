@@ -1,8 +1,8 @@
-package com.javamentor.qa.platform.service.impl.dto;
+package com.javamentor.qa.platform.models.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
+import com.javamentor.qa.platform.models.service.abstracts.dto.PageDtoService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
