@@ -1,8 +1,8 @@
-package com.javamentor.qa.platform.models.service.impl.model;
+package com.javamentor.qa.platform.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.models.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

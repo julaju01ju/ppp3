@@ -1,11 +1,11 @@
-package com.javamentor.qa.platform.models.service.impl.dto;
+package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.service.abstracts.dto.QuestionDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
