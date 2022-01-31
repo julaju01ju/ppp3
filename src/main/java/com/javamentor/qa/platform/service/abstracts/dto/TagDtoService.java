@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TagDtoService extends PageDtoService<TagDtoPagination>{
     List<TagDto> getIgnoredTags(Long userId);
+    List<TagDto> getTop10FoundTags(String searchString);
 }

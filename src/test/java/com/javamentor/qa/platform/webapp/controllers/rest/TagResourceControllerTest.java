@@ -32,7 +32,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void getAllTrackedTags() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -134,7 +134,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true, transactional = false)
     public void getAllIgnoredTags() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/ignored")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -248,5 +248,133 @@ public class TagResourceControllerTest
         sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 100";
         List<Long> ttId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(ttId.size() == 1);
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByTheBeginningOrEndingLettersOfTheTagOrderByTop() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=s")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].name").value("postgres"))
+                .andExpect(jsonPath("$[0].description").value("description4"))
+                .andExpect(jsonPath("$[1].id").value(100))
+                .andExpect(jsonPath("$[1].name").value("spring"))
+                .andExpect(jsonPath("$[1].description").value("description1"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByLetterFromTheMiddleOfTheTagOrderByTop() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=a")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].name").value("maven"))
+                .andExpect(jsonPath("$[0].description").value("description5"))
+                .andExpect(jsonPath("$[1].id").value(101))
+                .andExpect(jsonPath("$[1].name").value("hibernate"))
+                .andExpect(jsonPath("$[1].description").value("description2"))
+                .andExpect(jsonPath("$[2].id").value(102))
+                .andExpect(jsonPath("$[2].name").value("flyway"))
+                .andExpect(jsonPath("$[2].description").value("description3"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByFullTagName1() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=spring")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(100))
+                .andExpect(jsonPath("$[0].name").value("spring"))
+                .andExpect(jsonPath("$[0].description").value("description1"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByFullTagName2() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=flyway")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(102))
+                .andExpect(jsonPath("$[0].name").value("flyway"))
+                .andExpect(jsonPath("$[0].description").value("description3"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByPartOfTheTagName1() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=hib")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(101))
+                .andExpect(jsonPath("$[0].name").value("hibernate"))
+                .andExpect(jsonPath("$[0].description").value("description2"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByPartOfTheTagName2() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=post")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(103))
+                .andExpect(jsonPath("$[0].name").value("postgres"))
+                .andExpect(jsonPath("$[0].description").value("description4"));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/getAllFoundTags/tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void searchByPartOfTheTagName3() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        mockMvc.perform(
+                        get("/api/user/tag/latter?searchString=ma")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(104))
+                .andExpect(jsonPath("$[0].name").value("maven"))
+                .andExpect(jsonPath("$[0].description").value("description5"));
     }
 }
