@@ -197,18 +197,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml"})
     public void postUpVoteAnswerStatusOk() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/question/102/answer/103/upVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -226,18 +215,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml"})
     public void postDownVoteAnswerStatusOk() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/question/102/answer/102/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
