@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -227,4 +228,16 @@ public class TestAnswerResourceController
                 .setParameter("userId", 102L));
     }
 
+    @Test@DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml"})
+    public void checkReVoteTheAnswer() throws Exception{
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(post("/api/user/question/102/answer/103/upVote")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }
