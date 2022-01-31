@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http.authorizeRequests().antMatchers("/js/**").permitAll();
         http.authorizeRequests().antMatchers("/css/**").permitAll();
 
-        http.formLogin().permitAll();
+        http.formLogin().loginPage("/login").permitAll();
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

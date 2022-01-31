@@ -25,4 +25,11 @@ public class TagDtoServiceImpl extends PageDtoServiceImpl<TagDtoPagination> impl
     public List<TagDto> getIgnoredTags(Long userId) {
         return tagDtoDao.getIgnoredTags(userId);
     }
+
+    @Override
+    public List<TagDto> getTop10FoundTags(String searchString) {
+       return tagDtoDao.getTop10FoundTags(searchString);
+    }
+
+
 }
