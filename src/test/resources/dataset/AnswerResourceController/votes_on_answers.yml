@@ -1,0 +1,8 @@
+votes_on_answers:
+
+  - id: 102
+    persist_date: 2021-12-06 00:00:00
+    vote: "UP_VOTE"
+    answer_id: 103
+    user_id: 102
+
