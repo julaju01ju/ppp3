@@ -1,15 +1,27 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.javamentor.qa.platform.models.entity.question.answer.VoteType.DOWN_VOTE;
+import static com.javamentor.qa.platform.models.entity.question.answer.VoteType.UP_VOTE;
 
 
 @RestController
@@ -19,13 +31,24 @@ public class AnswerResourceController {
 
     private final AnswerDtoService answerDtoService;
     private final AnswerService answerService;
+    private final UserDtoService userDtoService;
+    private final QuestionService questionService;
+    private final VoteOnAnswerService voteOnAnswerService;
+    private final ReputationService reputationService;
 
     @Autowired
-    public AnswerResourceController(AnswerDtoService answerDtoService, AnswerService answerService) {
+    public AnswerResourceController(
+            AnswerDtoService answerDtoService,
+            AnswerService answerService,
+            UserDtoService userDtoService,
+            QuestionService questionService, VoteOnAnswerService voteOnAnswerService, ReputationService reputationService) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
+        this.userDtoService = userDtoService;
+        this.questionService = questionService;
+        this.voteOnAnswerService = voteOnAnswerService;
+        this.reputationService = reputationService;
     }
-
 
     @GetMapping("/{questionId}/answer")
     @ApiOperation(
@@ -42,7 +65,6 @@ public class AnswerResourceController {
                 new ResponseEntity<>(answerDtos, HttpStatus.OK);
     }
 
-
     @DeleteMapping("/{questionId}/answer/{answerId}")
     @ApiOperation(value = "Удаление ответа answerId")
     @ApiResponses(value = {
@@ -58,4 +80,47 @@ public class AnswerResourceController {
         }
         return new ResponseEntity("Answer Id " + answerId + " not found!", HttpStatus.NOT_FOUND);
     }
+
+    @PostMapping("/{questionId}/answer/{id}/upVote")
+    @ApiOperation(value = "Запись в БД голосования за ответ со значением UP")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Поднятие репутации прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования")})
+    public ResponseEntity<?> insertUpVote(@PathVariable("questionId") Long questionId, @PathVariable("id") Long answerId) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        Optional<Answer> optionalAnswer = answerService.getById(answerId);
+        if (optionalAnswer.isPresent()) {
+            Answer answer = optionalAnswer.get();
+            if (!(voteOnAnswerService.getIfNotExists(answer.getId(), sender.getId()))) {
+                VoteAnswer upVoteAnswer = new VoteAnswer(sender, answer, UP_VOTE);
+                voteOnAnswerService.persist(upVoteAnswer);
+                return new ResponseEntity<>(voteOnAnswerService.getCountOfVotes(answerId), HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Такого answer не существует", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/{questionId}/answer/{id}/downVote")
+    @ApiOperation(value = "Запись в БД голосования за ответ со значением Down")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Вычитание репутации прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования")})
+    public ResponseEntity<?> insertDownVote(@PathVariable("questionId") Long questionId, @PathVariable("id") Long answerId) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        Optional<Answer> optionalAnswer = answerService.getById(answerId);
+        if (optionalAnswer.isPresent()) {
+            Answer answer = optionalAnswer.get();
+            if (!(voteOnAnswerService.getIfNotExists(answer.getId(), sender.getId()))) {
+                VoteAnswer downVoteAnswer = new VoteAnswer(sender, answer, DOWN_VOTE);
+                voteOnAnswerService.persist(downVoteAnswer);
+                return new ResponseEntity<>(voteOnAnswerService.getCountOfVotes(answerId), HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Такого answer не существует", HttpStatus.NOT_FOUND);
+    }
+
 }

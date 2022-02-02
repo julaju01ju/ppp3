@@ -1,19 +1,42 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
+import com.javamentor.qa.platform.webapp.configs.JmApplication;
+import org.junit.Ignore;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import javax.persistence.EntityManager;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@DBRider
+@SpringBootTest(classes = JmApplication.class)
+@TestPropertySource(properties = "spring.config.location = src/test/resources/application-test.properties")
+@AutoConfigureMockMvc
+@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
+@Ignore
 public class TestAnswerResourceController
         extends AbstractControllerTest {
+
+    @Autowired
+    private EntityManager entityManager;
+
 
     @Test
     @DataSet(value = {
@@ -168,4 +191,52 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml"})
+    public void postUpVoteAnswerStatusOk() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        post("/api/user/question/102/answer/103/upVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.content().string("1"))
+                .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
+                .setParameter("answerId", 103L)
+                .setParameter("userId", 102L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml"})
+    public void postDownVoteAnswerStatusOk() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        post("/api/user/question/102/answer/102/downVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.content().string("1"))
+                .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
+                .setParameter("answerId", 102L)
+                .setParameter("userId", 102L));
+    }
+
+    @Test@DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml"})
+    public void checkReVoteTheAnswer() throws Exception{
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(post("/api/user/question/102/answer/103/upVote")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }
