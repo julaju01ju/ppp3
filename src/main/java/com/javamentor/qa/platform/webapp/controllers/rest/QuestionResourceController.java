@@ -4,16 +4,14 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.service.abstracts.model.*;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
-import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
-import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -42,9 +41,10 @@ public class QuestionResourceController {
     private ReputationService reputationService;
     private QuestionService questionService;
     private VoteOnQuestionService voteOnQuestionService;
+    private QuestionViewedService questionViewedService;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService) {
+    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -52,6 +52,25 @@ public class QuestionResourceController {
         this.questionConverter = questionConverter;
         this.tagConverter = tagConverter;
         this.voteOnQuestionService = voteOnQuestionService;
+        this.questionViewedService = questionViewedService;
+    }
+
+    @PostMapping("/{id}/view")
+    @ApiOperation("добавление авторизованного пользователя в QuestionViewed, при заходе не вопрос")
+    public ResponseEntity<?> insertUserToQuestionViewed(@PathVariable("id") Long id) {
+        User userPrincipal = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<Question> question = questionService.getById(id);
+        if (question.isPresent()) {
+
+        }
+
+        QuestionViewed questionViewed = new QuestionViewed();
+        questionViewed.setQuestion(question.get());
+        questionViewed.setUser(userPrincipal);
+        questionViewed.setLocalDateTime(LocalDateTime.now());
+        questionViewedService.persist(questionViewed);
+
+        return new ResponseEntity<>("Отлично", HttpStatus.OK);
     }
 
     @GetMapping("/count")
