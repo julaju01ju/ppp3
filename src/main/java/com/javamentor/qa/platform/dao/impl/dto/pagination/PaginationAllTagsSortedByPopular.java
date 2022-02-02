@@ -12,11 +12,13 @@ import java.util.Map;
 
 @Repository
 public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagDtoPagination> {
+    
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public List<TagDtoPagination> getItems(Map<String, Object> params) {
+
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
         Query query = entityManager.createQuery(
@@ -35,6 +37,7 @@ public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagDtoPagina
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+
         Query queryTotal = entityManager.createQuery
                 ("Select CAST(count(tag.id) as int) AS countTags from Tag tag");
         return (int) queryTotal.getSingleResult();
