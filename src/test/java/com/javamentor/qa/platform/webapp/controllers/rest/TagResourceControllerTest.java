@@ -249,4 +249,32 @@ public class TagResourceControllerTest
         List<Long> ttId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(ttId.size() == 1);
     }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByPopularPagination() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=1&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
 }
