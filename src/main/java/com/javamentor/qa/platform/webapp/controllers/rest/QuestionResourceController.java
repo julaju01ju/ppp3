@@ -14,6 +14,8 @@ import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,21 +58,27 @@ public class QuestionResourceController {
     }
 
     @PostMapping("/{id}/view")
-    @ApiOperation("добавление авторизованного пользователя в QuestionViewed, при заходе не вопрос")
-    public ResponseEntity<?> insertUserToQuestionViewed(@PathVariable("id") Long id) {
+    @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Вопрос просмотрен впервые"),
+            @ApiResponse(code = 404, message = "Вопрос с id не найден"),
+            @ApiResponse(code = 400, message = "Вопрос уже был просмотрен")
+    })
+    public ResponseEntity<?> insertAuthUserToQuestionViewedByQuestionId(@PathVariable("id") Long id) {
         User userPrincipal = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Optional<Question> question = questionService.getById(id);
-        if (question.isPresent()) {
 
+        if (!question.isPresent()) {
+            return new ResponseEntity<>("Вопрос с id " + id + " не найден", HttpStatus.NOT_FOUND);
         }
 
-        QuestionViewed questionViewed = new QuestionViewed();
-        questionViewed.setQuestion(question.get());
-        questionViewed.setUser(userPrincipal);
-        questionViewed.setLocalDateTime(LocalDateTime.now());
-        questionViewedService.persist(questionViewed);
+        if (!questionViewedService.getListOfUsersIdFromQuestionViewedByQuestionIdCache(id).contains(userPrincipal.getId())) {
+            questionViewedService.persist(new QuestionViewed(null, userPrincipal, question.get(), LocalDateTime.now()));
+            questionViewedService.refreshCache(id);
+            return new ResponseEntity<>("Вопрос просмотрен впервые", HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>("Отлично", HttpStatus.OK);
+        return new ResponseEntity<>("Вопрос уже был просмотрен", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/count")
@@ -169,7 +177,7 @@ public class QuestionResourceController {
 
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
-                "paginationQuestionsWithGivenTags" ,params), HttpStatus.OK);
+                "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
     }
 
     @GetMapping("/noAnswer")
@@ -194,7 +202,7 @@ public class QuestionResourceController {
         params.put("ignoredTag", ignoredTag);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
-                "paginationQuestionsNoAnswer" ,params), HttpStatus.OK);
+                "paginationQuestionsNoAnswer", params), HttpStatus.OK);
     }
 
     @GetMapping("/new")
@@ -208,7 +216,7 @@ public class QuestionResourceController {
             "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
     public ResponseEntity<PageDto<QuestionDto>> getAllQuestionDtoSortedByPersistDate(
             @RequestParam("page") Integer page,
-            @RequestParam(value = "items",defaultValue = "10") Integer items,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
