@@ -6,8 +6,10 @@ import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements UserService {
 
     private final PasswordEncoder passwordEncoder;
