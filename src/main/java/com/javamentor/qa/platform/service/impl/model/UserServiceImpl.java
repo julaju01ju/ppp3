@@ -45,4 +45,9 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
     public void updatePasswordByEmail(String email, String password) {
         userDao.updatePasswordByEmail(email, password);
     }
+
+    @Override
+    public void disableUserByEmail(String username) {
+        userDao.disableUserByEmail(username);
+    }
 }
