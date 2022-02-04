@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,9 +24,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @Override
-    public void disableUserByEmail(String username) {
-        String hql = "update User u set u.isEnabled = false where u.email = :username";
-        entityManager.createQuery(hql).setParameter("username", username).executeUpdate();
+    public void updatePasswordByEmail (String email, String password) {
+        String hql = "update User u set u.password = :password where u.email = :email";
+        entityManager.createQuery(hql)
+                .setParameter("password", password)
+                .setParameter("email", email).executeUpdate();
     }
+
 }

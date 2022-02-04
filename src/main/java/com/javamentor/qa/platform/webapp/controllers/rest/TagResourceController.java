@@ -139,4 +139,30 @@ public class TagResourceController {
         }
         return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
     }
+
+        @GetMapping("/latter")
+    @ApiOperation("API поиск тегов по букве или слову. " +
+            "Выдается 10 самых популярных тегов для текущего поиска. " +
+            "В качестве параметров передается searchString - строка или буква.")
+    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString")String searchString) {
+        List<TagDto> tagDtos = tagDtoService.getTop10FoundTags(searchString);
+        return new ResponseEntity<>(tagDtos, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/popular")
+    @ApiOperation("API получение всех тегов, с пагинацией по популярности (популярность - количество вопросов за тегом)" +
+            "Принимает параметры: page(обязательный) - текущая страница и " +
+            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
+    public ResponseEntity<PageDto<TagDtoPagination>> getAllTagsOrderByPopularPagination(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "items", required = false,
+                    defaultValue = "10") Integer items) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+
+        PageDto<TagDtoPagination> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
+    }
 }
