@@ -9,7 +9,11 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.*;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
@@ -61,7 +65,7 @@ public class QuestionResourceController {
     @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Вопрос просмотрен впервые"),
-            @ApiResponse(code = 404, message = "Вопрос с id не найден"),
+            @ApiResponse(code = 404, message = "Вопрос с id =* не найден"),
             @ApiResponse(code = 400, message = "Вопрос уже был просмотрен")
     })
     public ResponseEntity<?> insertAuthUserToQuestionViewedByQuestionId(@PathVariable("id") Long id) {
@@ -69,12 +73,11 @@ public class QuestionResourceController {
         Optional<Question> question = questionService.getById(id);
 
         if (!question.isPresent()) {
-            return new ResponseEntity<>("Вопрос с id " + id + " не найден", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Вопрос с id = " + id + " не найден", HttpStatus.NOT_FOUND);
         }
 
-        if (!questionViewedService.getListOfUsersIdFromQuestionViewedByQuestionIdCache(id).contains(userPrincipal.getId())) {
-            questionViewedService.persist(new QuestionViewed(null, userPrincipal, question.get(), LocalDateTime.now()));
-            questionViewedService.refreshCache(id);
+        if (questionViewedService.checkHasUserViewedQuestionCache(userPrincipal.getEmail(), question.get().getId()) == Boolean.FALSE) {
+            questionViewedService.persist(new QuestionViewed(userPrincipal, question.get(), LocalDateTime.now()));
             return new ResponseEntity<>("Вопрос просмотрен впервые", HttpStatus.OK);
         }
 

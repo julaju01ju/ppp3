@@ -6,7 +6,6 @@ import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class QuestionViewedServiceImpl extends ReadWriteServiceImpl<QuestionViewed, Long> implements QuestionViewedService {
@@ -19,12 +18,12 @@ public class QuestionViewedServiceImpl extends ReadWriteServiceImpl<QuestionView
     }
 
     @Override
-    public List<Long> getListOfUsersIdFromQuestionViewedByQuestionIdCache(Long questionId) {
-        return questionViewedDao.getListOfUsersIdFromQuestionViewedByQuestionIdCache(questionId);
+    public Boolean checkHasUserViewedQuestionCache(String email, Long questionId) {
+        return questionViewedDao.checkHasUserViewedQuestionCache(email, questionId);
     }
 
     @Override
-    public List<Long> refreshCache(Long questionId) {
-        return  questionViewedDao.refreshCache(questionId);
+    public void persist(QuestionViewed questionViewed) {
+         questionViewedDao.persist(questionViewed);
     }
 }
