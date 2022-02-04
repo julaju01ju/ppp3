@@ -6,5 +6,5 @@ import com.javamentor.qa.platform.models.entity.user.User;
 public interface UserService extends ReadWriteService<User,Long>{
     void updatePasswordByEmail(String email, String password);
 
-    void disableUserByEmail(String username);
+    void disableUserByEmail(String email);
 }

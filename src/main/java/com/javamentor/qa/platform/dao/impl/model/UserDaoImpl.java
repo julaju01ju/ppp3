@@ -32,8 +32,8 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
-    public void disableUserByEmail(String username) {
-        String hql = "update User u set u.isEnabled = false where u.email = :username";
-        entityManager.createQuery(hql).setParameter("username", username).executeUpdate();
+    public void disableUserByEmail(String email) {
+        String hql = "update User u set u.isEnabled = false where u.email = :email";
+        entityManager.createQuery(hql).setParameter("email", email).executeUpdate();
     }
 }

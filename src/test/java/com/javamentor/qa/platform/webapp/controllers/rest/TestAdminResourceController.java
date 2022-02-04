@@ -89,7 +89,7 @@ public class TestAdminResourceController extends AbstractControllerTest {
                         get("/api/user/100")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

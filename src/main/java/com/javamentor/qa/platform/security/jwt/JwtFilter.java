@@ -47,15 +47,20 @@ public class JwtFilter extends OncePerRequestFilter {
                     throw new DisabledException("User is disabled");
                 }
                 filterChain.doFilter(request, response);
-            } catch (JWTDecodeException | DisabledException exception) {
+            } catch (JWTDecodeException exception) {
                 response.setHeader("error", exception.getMessage());
                 response.setStatus(403);
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", exception.getMessage());
                 response.setContentType("application/json");
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
-
-
+            } catch (DisabledException exception) {
+                response.setHeader("error", exception.getMessage());
+                response.setStatus(401);
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message", exception.getMessage());
+                response.setContentType("application/json");
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         } else {
             filterChain.doFilter(request, response);
