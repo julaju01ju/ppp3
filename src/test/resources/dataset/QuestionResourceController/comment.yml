@@ -1,0 +1,7 @@
+comment:
+  - id: 102
+    user_id: 102
+    text: "Some text of comment"
+    persist_date: 2021-12-06 00:00:00
+    last_redaction_date: 2021-12-06 00:00:00
+    comment_type: 2

@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -83,7 +84,9 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/comment.yml",
+            "dataset/QuestionResourceController/comment_question.yml"})
     void getQuestionById() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("someHardPassword");
@@ -116,8 +119,11 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.countAnswer").value(1))
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
-                .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"));
-
+                .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.listCommentDto[0].id").value(102))
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102));
+        
     }
 
     @Test

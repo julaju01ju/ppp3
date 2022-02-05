@@ -36,6 +36,7 @@ public class QuestionDtoResultTransformer implements ResultTransformer {
                     questionDtoTemp.setCountAnswer(((BigInteger) tuple[10]).intValue());
                     questionDtoTemp.setViewCount(0);
                     questionDtoTemp.setListTagDto(new ArrayList<>());
+                    questionDtoTemp.setListCommentDto(new ArrayList<>());
                     return questionDtoTemp;
                 }
         );
