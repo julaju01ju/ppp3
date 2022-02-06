@@ -5,5 +5,7 @@ import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 
 public interface QuestionViewedDao extends ReadWriteDao<QuestionViewed, Long> {
 
-    Boolean checkHasUserViewedQuestionCache(String email, Long questionId);
+    Boolean isUserViewedQuestion(String email, Long questionId);
+
+    Boolean persistQuestionViewed(QuestionViewed questionViewed);
 }

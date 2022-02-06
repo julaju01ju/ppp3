@@ -76,8 +76,8 @@ public class QuestionResourceController {
             return new ResponseEntity<>("Вопрос с id = " + id + " не найден", HttpStatus.NOT_FOUND);
         }
 
-        if (questionViewedService.checkHasUserViewedQuestionCache(userPrincipal.getEmail(), question.get().getId()) == Boolean.FALSE) {
-            questionViewedService.persist(new QuestionViewed(userPrincipal, question.get(), LocalDateTime.now()));
+        if (!questionViewedService.isUserViewedQuestion(userPrincipal.getEmail(), question.get().getId())) {
+            questionViewedService.persistQuestionViewed(new QuestionViewed(userPrincipal, question.get(), LocalDateTime.now()));
             return new ResponseEntity<>("Вопрос просмотрен впервые", HttpStatus.OK);
         }
 
