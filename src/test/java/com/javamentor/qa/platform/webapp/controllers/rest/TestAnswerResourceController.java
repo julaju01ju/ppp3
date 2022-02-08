@@ -4,9 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
+import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
+import com.javamentor.qa.platform.models.dto.TagDto;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
+import com.jayway.jsonpath.JsonPath;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,9 +21,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.persistence.EntityManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,7 +55,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
             "dataset/QuestionResourceController/voteForAQuestion.yml"
-    },  disableConstraints = true)
+    }, disableConstraints = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
@@ -62,8 +71,8 @@ public class TestAnswerResourceController
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
         System.out.println(USER_TOKEN);
         mockMvc.perform(
-                get("/api/user/question/102/answer")
-                        .header(AUTHORIZATION, USER_TOKEN))
+                        get("/api/user/question/102/answer")
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(102))
@@ -197,7 +206,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml"})
     public void postUpVoteAnswerStatusOk() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/question/102/answer/103/upVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -215,7 +224,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml"})
     public void postDownVoteAnswerStatusOk() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/question/102/answer/102/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -227,16 +236,52 @@ public class TestAnswerResourceController
                 .setParameter("userId", 102L));
     }
 
-    @Test@DataSet(value = {"dataset/AnswerResourceController/users.yml",
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml"})
-    public void checkReVoteTheAnswer() throws Exception{
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+    public void checkReVoteTheAnswer() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(post("/api/user/question/102/answer/103/upVote")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml"}, disableConstraints = true, cleanBefore = true)
+    void answerCreate() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        Answer answer = new Answer();
+        answer.setHtmlBody("answerCreated");
+        answer.setIsHelpful(false);
+        answer.setIsDeletedByModerator(false);
+        answer.setIsDeleted(false);
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        String answerJsonString = mockMvc.perform(
+                        post("/api/user/question/102/answer/add")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(answer))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
     }
 }
