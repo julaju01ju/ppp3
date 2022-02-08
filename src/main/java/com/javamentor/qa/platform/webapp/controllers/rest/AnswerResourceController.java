@@ -1,6 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -14,9 +17,11 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,4 +128,20 @@ public class AnswerResourceController {
         return new ResponseEntity<>("Такого answer не существует", HttpStatus.NOT_FOUND);
     }
 
-}
+    @PostMapping("/{questionId}/answer/add")
+    @ApiOperation(value = "Добавление ответа к вопросу")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ответ добавлен"),
+            @ApiResponse(code = 400, message = "Ошибка добавления вопроса")})
+    public ResponseEntity<?> addAnswer(@ApiParam String body ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Answer answer = new Answer();
+        answer.setHtmlBody(body);
+        answer.setUser((User)authentication.getPrincipal());
+
+        answerService.persist(answer);
+
+        return new ResponseEntity<>((answer), HttpStatus.OK);
+    }
+    }
