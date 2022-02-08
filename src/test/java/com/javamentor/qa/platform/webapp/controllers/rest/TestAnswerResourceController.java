@@ -275,7 +275,7 @@ public class TestAnswerResourceController
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        String answerJsonString = mockMvc.perform(
+        mockMvc.perform(
                         post("/api/user/question/102/answer/add")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(answer))
