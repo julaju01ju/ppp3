@@ -51,6 +51,102 @@ public class TestQuestionResourceController {
     private EntityManager entityManager;
 
     @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
+    }
+    , disableConstraints = true
+    )
+    public void insertAuthUserToQuestionViewedByQuestionId() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/110/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
+    }
+            , disableConstraints = true
+    )
+    public void insertAuthUserToQuestionViewedByQuestionIdNotFound() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/155/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
+            "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
+    }
+            , disableConstraints = true
+    )
+    public void insertAuthUserToQuestionViewedByQuestionIdAfterUserBeenInserted() throws Exception {
+
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        post("/api/user/question/110/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        post("/api/user/question/110/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"}, disableConstraints = true)
     public void getQuestionCount() throws Exception {
 
