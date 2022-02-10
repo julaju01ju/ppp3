@@ -9,7 +9,6 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.dto.QuestionViewDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
@@ -39,7 +38,6 @@ public class QuestionResourceController {
 
     private TagService tagService;
     private QuestionDtoService questionDtoService;
-    private QuestionViewDtoService questionViewDtoService;
     private QuestionConverter questionConverter;
     private TagConverter tagConverter;
     private ReputationService reputationService;
@@ -47,7 +45,7 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewDtoService questionViewDtoService) {
+    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -55,7 +53,6 @@ public class QuestionResourceController {
         this.questionConverter = questionConverter;
         this.tagConverter = tagConverter;
         this.voteOnQuestionService = voteOnQuestionService;
-        this.questionViewDtoService = questionViewDtoService;
     }
 
     @GetMapping("/count")
@@ -153,7 +150,7 @@ public class QuestionResourceController {
         params.put("ignoredTag", ignoredTag);
 
 
-        return new ResponseEntity<>(questionViewDtoService.getPageQuestionsWithTags(
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags" ,params), HttpStatus.OK);
     }
 
@@ -178,7 +175,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
 
-        return new ResponseEntity<>(questionViewDtoService.getPageQuestionsWithTags(
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsNoAnswer" ,params), HttpStatus.OK);
     }
 
@@ -203,7 +200,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
 
-        return new ResponseEntity<>(questionViewDtoService.getPageQuestionsWithTags(
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsWithTagsSortedByPersistDate", params), HttpStatus.OK);
 
     }
