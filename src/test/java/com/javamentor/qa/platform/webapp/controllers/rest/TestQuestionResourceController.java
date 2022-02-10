@@ -52,6 +52,71 @@ public class TestQuestionResourceController {
 
     @Test
     @DataSet(value = {
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/role.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/users.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/reputations.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/answers.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/votes_on_questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/views.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/tags.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/question_has_tag.yml"
+    }
+    , disableConstraints = true
+    )
+    public void getQuestionsSortedByVotesAndAnswersAndQuestionViewed() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = mockMvc.perform(
+                        post("/api/auth/token/")
+                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(121))
+                .andExpect(jsonPath("$.items[0].countValuable").value(1))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].viewCount").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(122))
+                .andExpect(jsonPath("$.items[1].countValuable").value(1))
+                .andExpect(jsonPath("$.items[1].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[1].viewCount").value(0));
+
+        mockMvc.perform(
+                        post("/api/user/question/122/upVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        post("/api/user/question/122/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items[0].id").value(122))
+                .andExpect(jsonPath("$.items[0].countValuable").value(2))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].viewCount").value(1));
+    }
+
+    @Test
+    @DataSet(value = {
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"

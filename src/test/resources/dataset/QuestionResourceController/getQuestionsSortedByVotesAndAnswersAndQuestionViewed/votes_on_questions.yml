@@ -1,0 +1,11 @@
+votes_on_questions:
+  - id: 151
+    persist_date: 2021-12-06 00:00:00
+    vote: "UP_VOTE"
+    question_id: 121
+    user_id: 102
+  - id: 152
+    persist_date: 2021-12-06 00:00:00
+    vote: "UP_VOTE"
+    question_id: 122
+    user_id: 102
