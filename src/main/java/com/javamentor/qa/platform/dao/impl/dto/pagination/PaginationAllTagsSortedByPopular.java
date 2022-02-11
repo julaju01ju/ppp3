@@ -7,6 +7,14 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,16 +29,21 @@ public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagViewDto> 
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime one = LocalDateTime.now().minusDays(1);
+
         Query query = entityManager.createQuery(
                 "select new com.javamentor.qa.platform.models.dto.TagViewDto (" +
                         "t.id, " +
                         "t.name, " +
                         "t.description, " +
                         "cast (t.questions.size as long), " +
-                        "(select count (q.id) from Question q join q.tags qr where q.persistDateTime = current_date and t.id = qr.id) as one_day, " +
-                        "(select count (q.id) from Question q join q.tags qr where q.persistDateTime between current_date and current_date - 7 and t.id = qr.id) as one_week) " +
+                        "(select count (q.id) from Question q join q.tags qr where q.persistDateTime between :today and :one and t.id = qr.id) as one_day, " +
+                        "(select count (q.id) from Question q join q.tags qr where q.persistDateTime = current_date  and t.id = qr.id) as one_week) " +
                         "from Tag t " +
                         "order by cast(t.questions.size as long) desc, t.name ", TagViewDto.class);
+        query.setParameter("today", today);
+        query.setParameter("one", one);
         query.setFirstResult((page - 1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
         return query.getResultList();

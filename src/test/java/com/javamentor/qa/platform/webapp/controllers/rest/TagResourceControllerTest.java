@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -88,6 +89,7 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.totalPageCount").value(12))
                 .andExpect(jsonPath("$.totalResultCount").value(12))
                 .andExpect(jsonPath("$.itemsOnPage").value(1));
+
     }
 
 
@@ -353,6 +355,14 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
                 .andExpect(jsonPath("$.totalResultCount").value(12))
-                .andExpect(jsonPath("$.itemsOnPage").value(10));
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].name").value("tagname5"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(6))
+                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(0))
+                .andExpect(jsonPath("$.items[1].id").value(101))
+                .andExpect(jsonPath("$.items[1].name").value("tagname2"))
+                .andExpect(jsonPath("$.items[1].questionsCount").value(4))
+                .andExpect(jsonPath("$.items[1].questionCountOneDay").value(0));
     }
 }
