@@ -79,7 +79,7 @@ public class TestQuestionResourceController {
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
         mockMvc.perform(
-                        get("/api/user/question/sortedQuestions?page=1")
+                        get("/api/user/question/sortedQuestions?page=1&items=3")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -90,7 +90,12 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[1].id").value(122))
                 .andExpect(jsonPath("$.items[1].countValuable").value(1))
                 .andExpect(jsonPath("$.items[1].countAnswer").value(1))
-                .andExpect(jsonPath("$.items[1].viewCount").value(0));
+                .andExpect(jsonPath("$.items[1].viewCount").value(0))
+                .andExpect(jsonPath("$.items[2].id").value(123))
+                .andExpect(jsonPath("$.items[2].countValuable").value(1))
+                .andExpect(jsonPath("$.items[2].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[2].viewCount").value(0))
+                .andExpect(jsonPath("$.items[3].id").doesNotHaveJsonPath());
 
         mockMvc.perform(
                         post("/api/user/question/122/upVote")
@@ -105,14 +110,38 @@ public class TestQuestionResourceController {
                 .andExpect(status().isOk());
 
         mockMvc.perform(
-                        get("/api/user/question/sortedQuestions?page=1")
+                        post("/api/user/question/124/upVote")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        post("/api/user/question/124/view")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=4")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items[0].id").value(122))
                 .andExpect(jsonPath("$.items[0].countValuable").value(2))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(1))
-                .andExpect(jsonPath("$.items[0].viewCount").value(1));
+                .andExpect(jsonPath("$.items[0].viewCount").value(1))
+                .andExpect(jsonPath("$.items[1].id").value(121))
+                .andExpect(jsonPath("$.items[1].countValuable").value(1))
+                .andExpect(jsonPath("$.items[1].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[1].viewCount").value(1))
+                .andExpect(jsonPath("$.items[2].id").value(124))
+                .andExpect(jsonPath("$.items[2].countValuable").value(1))
+                .andExpect(jsonPath("$.items[2].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[2].viewCount").value(1))
+                .andExpect(jsonPath("$.items[3].id").value(123))
+                .andExpect(jsonPath("$.items[3].countValuable").value(1))
+                .andExpect(jsonPath("$.items[3].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[3].viewCount").value(0));
     }
 
     @Test

@@ -47,3 +47,19 @@ user_entity:
     password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
     persist_date: 2021-12-06 00:00:00
     role_id: 112
+  - id: 103
+    about: "Something103"
+    city: "Moscow103"
+    email: "103@mail.mail"
+    full_name: "Constantin103"
+    image_link: "link103"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link103"
+    link_site: "site@link103"
+    link_vk: "vk@link103"
+    nickname: "NickName103"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 112

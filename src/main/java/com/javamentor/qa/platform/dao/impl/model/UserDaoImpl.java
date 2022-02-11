@@ -26,6 +26,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
+    @CacheEvict(value = "getUserByEmail", key = "#email")
     public void updatePasswordByEmail (String email, String password) {
         String hql = "update User u set u.password = :password where u.email = :email";
         entityManager.createQuery(hql)
