@@ -90,21 +90,31 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                     @Override
                     public List transformList(List list) {
 
-//                        List<TagDto> tagDtoList = new ArrayList<>();
-//
-//                        for (Object a : list) {
-//                            tagDtoList.add(((QuestionDto) a).getListTagDto().get(0));
-//                        }
-//
-//                        QuestionDto questionDto = (QuestionDto) list.get(0);
-//                        questionDto.setListTagDto(tagDtoList);
-//                        for (int i = list.size() - 1; i != 0; i--) {
-//                            list.remove(i);
-//                        }
+                        List<TagDto> tagDtoList = new ArrayList<>();
+
+                        for (Object a : list) {
+                            tagDtoList.add(((QuestionDto) a).getListTagDto().get(0));
+                        }
+
+                        QuestionDto questionDto = (QuestionDto) list.get(0);
+                        questionDto.setListTagDto(tagDtoList);
+
+                        for (int i = list.size() - 1; i != 0; i--) {
+                            list.remove(i);
+                        }
+
+                        List<CommentDto> commentDtoList = new ArrayList<>();
+                        for (Object b : list) {
+                            commentDtoList.add(((QuestionDto) b).getListCommentDto().get(0));
+                        }
+                        QuestionDto questionDto1 = (QuestionDto) list.get(1);
+                        questionDto1.setListTagDto(tagDtoList);
+
+                        for (int i = list.size() - 1; i != 0; i--) {
+                            list.remove(i);
+                        }
                         return list;
-
                     }
-
                 }));
         return questionDto;
     }

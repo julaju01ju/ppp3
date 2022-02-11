@@ -12,7 +12,7 @@ import java.util.Map;
 public class QuestionViewDtoResultTransformer implements ResultTransformer {
 
 
-    private static final long serialVersionUID = 4818466198422098789L;
+    private static final long serialVersionUID = 8909545788077515255L;
     private final transient Map<Long, QuestionViewDto> questionViewDtoMap = new LinkedHashMap<>();
 
     @Override
