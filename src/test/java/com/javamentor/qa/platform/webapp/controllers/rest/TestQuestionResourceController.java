@@ -120,6 +120,10 @@ public class TestQuestionResourceController {
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.listTagDto.[1].id").value(108))
+                .andExpect(jsonPath("$.listTagDto.[1].name").value("TAG108"))
+                .andExpect(jsonPath("$.listTagDto.[2].id").value(109))
+                .andExpect(jsonPath("$.listTagDto.[2].name").value("TAG109"))
                 .andExpect(jsonPath("$.listCommentDto[0].id").value(102))
                 .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment"))
                 .andExpect(jsonPath("$.listCommentDto[0].userId").value(102));

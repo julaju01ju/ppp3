@@ -47,7 +47,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "join comment c on cq.comment_id = c.id " +
                                 "where q.id =:id")
 
-
                 .setParameter("id", id)
                 .unwrap(Query.class)
                 .setResultTransformer(new ResultTransformer() {
@@ -55,12 +54,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
                         QuestionDto questionDto = new QuestionDto();
-                        TagDto tagDto = new TagDto();
-                        tagDto.setId(((BigInteger) tuple[13]).longValue());
-                        tagDto.setName((String) tuple[14]);
-                        tagDto.setDescription((String) tuple[15]);
-                        List<TagDto> tagDtoList = new ArrayList<>();
-                        tagDtoList.add(tagDto);
                         CommentDto commentDto = new CommentDto();
                         commentDto.setId(((BigInteger) tuple[16]).longValue());
                         commentDto.setComment((String) tuple[17]);
@@ -82,16 +75,25 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
                         questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
                         questionDto.setViewCount(0);
-                        questionDto.setListTagDto(tagDtoList);
                         questionDto.setListCommentDto(commentDtoList);
                         return questionDto;
                     }
 
                     @Override
                     public List transformList(List list) {
+                        List<TagDto> tagDtoList = new ArrayList<>();
+
+                        for (Object a : list) {
+                            tagDtoList.add(((QuestionDto) a).getListTagDto().get(0));
+                        }
+
+                        QuestionDto questionDto = (QuestionDto) list.get(0);
+                        questionDto.setListTagDto(tagDtoList);
+                        for (int i = list.size() - 1; i != 0; i--) {
+                            list.remove(i);
+                        }
                         return list;
                     }
-
                 }));
         return questionDto;
     }
