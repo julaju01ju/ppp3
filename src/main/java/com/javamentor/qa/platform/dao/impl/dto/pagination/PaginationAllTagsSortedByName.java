@@ -38,8 +38,8 @@ public class PaginationAllTagsSortedByName implements PageDtoDao<TagViewDto> {
                         "t.name, " +
                         "t.description, " +
                         "cast (t.questions.size as long), " +
-                        "(select count(q.id)  from Question q join  q.tags qht  where q.persistDateTime = current_date and qht.id = q.id ) as one_day, " +
-                        "(select count (q.id) from Question q where q.persistDateTime = current_date  ) as one_week) " +
+                        "(select count (q.id) from Question  q  join q.tags qh where q.id =qh.id and q.persistDateTime >= current_date) as one_day, " +
+                        "(select count (q.id) from Question q  where q.persistDateTime = current_date) as one_week) " +
 //                        "(select count(t.id) from t.questions qht join Question q where q.persistDateTime between :today and :one and q.id = qht.id" +
                         "from Tag t " +
                         "order by cast(t.questions.size as long) desc, t.name ", TagViewDto.class);

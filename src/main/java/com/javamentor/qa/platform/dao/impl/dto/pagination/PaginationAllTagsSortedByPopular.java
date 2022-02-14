@@ -38,11 +38,11 @@ public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagViewDto> 
                         "t.name, " +
                         "t.description, " +
                         "cast (t.questions.size as long), " +
-                        "(select count(q.id)  from Question q join  q.tags qht  where q.persistDateTime = current_date and qht.id = q.id ) as one_day, " +
+                        "(select count (q.id) from Question  q join q.tags qh where q.id =qh.id and q.persistDateTime >= current_date) as one_day, " +
                         "(select count (q.id) from Question q  where q.persistDateTime = current_date  ) as one_week) " +
                         "from Tag t " +
                         "order by cast(t.questions.size as long) desc, t.name ", TagViewDto.class);
-//        query.setParameter("today", today);
+//        query.setParameter("id", kk);
 //        query.setParameter("one", one);
         query.setFirstResult((page - 1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
