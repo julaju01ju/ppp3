@@ -61,6 +61,26 @@ public class QuestionResourceController {
         this.questionViewedService = questionViewedService;
     }
 
+    @GetMapping("/sortedQuestions")
+    @ApiOperation("Paginate all QuestionDto with tags." +
+            "Sorted by votes, answers and views")
+    @ApiResponse(code = 200, message = "status OK")
+    public ResponseEntity<PageDto<QuestionDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/view")
     @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос")
     @ApiResponses(value = {
