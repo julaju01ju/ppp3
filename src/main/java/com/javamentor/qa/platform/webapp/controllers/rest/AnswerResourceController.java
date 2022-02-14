@@ -1,8 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
-import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
@@ -21,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,15 +130,26 @@ public class AnswerResourceController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ответ добавлен"),
             @ApiResponse(code = 400, message = "Ошибка добавления вопроса")})
-    public ResponseEntity<?> addAnswer(@ApiParam String body ) {
+    public ResponseEntity<?> addAnswer(@RequestBody String body, @PathVariable("questionId") Long questionId) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Optional<Question> optionalQuestion = questionService.getById(questionId);
+
+        if (optionalQuestion.isEmpty()) {
+            return new ResponseEntity<>("Вопрос с id = " + questionId + " не существует", HttpStatus.NOT_FOUND);
+        }
+        Question question = optionalQuestion.get();
 
         Answer answer = new Answer();
+        answer.setQuestion(question);
         answer.setHtmlBody(body);
         answer.setUser((User)authentication.getPrincipal());
+        answer.setIsHelpful(false);
+        answer.setIsDeletedByModerator(false);
+        answer.setIsDeleted(false);
 
         answerService.persist(answer);
 
         return new ResponseEntity<>((answer), HttpStatus.OK);
     }
-    }
+}
