@@ -75,7 +75,7 @@ public class AnswerResourceController {
         if (answerId == null) {
             return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
         } if (answerService.existsById(answerId)) {
-            answerDtoService.deleteAnswerByAnswerId(answerId);
+            answerService.deleteById(answerId);
             return ResponseEntity.ok().build();
         }
         return new ResponseEntity("Answer Id " + answerId + " not found!", HttpStatus.NOT_FOUND);
