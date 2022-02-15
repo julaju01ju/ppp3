@@ -32,6 +32,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void getAllTrackedTags() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/tracked")
@@ -48,6 +49,7 @@ public class TagResourceControllerTest
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutPageParam() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name")
@@ -60,6 +62,7 @@ public class TagResourceControllerTest
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutItemParam() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=1")
@@ -78,6 +81,7 @@ public class TagResourceControllerTest
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithPage2Items1() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=2&items=1")
@@ -99,6 +103,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true, transactional = false)
     public void getAllIgnoredTags() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/ignored")
@@ -118,6 +123,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addTrackedTag() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/tag/100/tracked")
@@ -145,6 +151,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addTrackedTagNotFound() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/tag/200/tracked")
@@ -169,6 +176,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addIgnoredTag() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/tag/102/ignored")
@@ -196,6 +204,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addIgnoredTagNotFound() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/tag/200/ignored")
@@ -218,6 +227,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByTheBeginningOrEndingLettersOfTheTagOrderByTop() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=s")
@@ -238,6 +248,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByLetterFromTheMiddleOfTheTagOrderByTop() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=a")
@@ -261,6 +272,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByFullTagName1() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=spring")
@@ -278,6 +290,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByFullTagName2() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=flyway")
@@ -295,6 +308,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName1() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=hib")
@@ -312,6 +326,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName2() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=post")
@@ -329,6 +344,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName3() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=ma")
@@ -346,6 +362,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/getAllFoundTags/questions.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByPopularPagination() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=1&items=10")

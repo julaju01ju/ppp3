@@ -37,7 +37,7 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionDto> impl
 
         PageDto<QuestionDto> pageDto = super.getPageDto(pageDtoDaoName, params);
         List ids = pageDto.getItems().stream().map(
-                questionViewDto -> questionViewDto.getId()).collect(Collectors.toList());
+                questionDto -> questionDto.getId()).collect(Collectors.toList());
         Map<Long, List<TagDto>> tags = tagDtoDao.getTagsByQuestionIds(ids);
         for (QuestionDto q : pageDto.getItems()) {
             q.setListTagDto(tags.get(q.getId()));

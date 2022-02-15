@@ -12,5 +12,6 @@ import java.util.Optional;
 
 public interface QuestionDtoService extends PageDtoService<QuestionDto> {
     Optional<QuestionDto> getQuestionById(Long id);
+
     PageDto<QuestionDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params);
 }
