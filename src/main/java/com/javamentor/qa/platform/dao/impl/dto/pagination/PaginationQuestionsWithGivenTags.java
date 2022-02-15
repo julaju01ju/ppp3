@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.QuestionViewDto;
-import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionDtoResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -11,13 +11,13 @@ import java.math.BigInteger;
 import java.util.*;
 
 @Repository
-public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionViewDto> {
+public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionDto> {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<QuestionViewDto> getItems(Map<String, Object> params) {
+    public List<QuestionDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
@@ -65,11 +65,12 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionView
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new QuestionViewDtoResultTransformer()).getResultList();
+                .setResultTransformer(new QuestionDtoResultTransformer()).getResultList();
     }
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+
 
         return ((BigInteger) em.createNativeQuery(
                         "SELECT " +

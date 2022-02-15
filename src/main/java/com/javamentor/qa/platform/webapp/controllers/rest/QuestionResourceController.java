@@ -239,7 +239,7 @@ public class QuestionResourceController {
             "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
     public ResponseEntity<PageDto<QuestionDto>> getAllQuestionDtoSortedByPersistDate(
             @RequestParam("page") Integer page,
-            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "items",defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
