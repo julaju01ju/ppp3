@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
@@ -14,8 +15,15 @@ import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -54,42 +62,43 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
-                        QuestionDto questionDto = new QuestionDto();
-                        TagDto tagDto = new TagDto();
-                        tagDto.setId(((BigInteger) tuple[13]).longValue());
-                        tagDto.setName((String) tuple[14]);
-                        tagDto.setDescription((String) tuple[15]);
-                        List<TagDto> tagDtoList = new ArrayList<>();
-                        tagDtoList.add(tagDto);
-                        CommentDto commentDto = new CommentDto();
-                        commentDto.setId(((BigInteger) tuple[16]).longValue());
-                        commentDto.setComment((String) tuple[17]);
-                        commentDto.setUserId(((BigInteger) tuple[18]).longValue());
-                        commentDto.setFullName((String) tuple[11]);
-                        commentDto.setReputation(((BigInteger) tuple[12]).longValue());
-                        commentDto.setDateAdded(((Timestamp) tuple[19]).toLocalDateTime());
-                        List<CommentDto> commentDtoList = new ArrayList<>();
-                        commentDtoList.add(commentDto);
-                        questionDto.setId(((BigInteger) tuple[0]).longValue());
-                        questionDto.setTitle((String) tuple[1]);
-                        questionDto.setDescription((String) tuple[2]);
-                        questionDto.setLastUpdateDateTime(((Timestamp) tuple[3]).toLocalDateTime());
-                        questionDto.setPersistDateTime(((Timestamp) tuple[4]).toLocalDateTime());
-                        questionDto.setAuthorId(((BigInteger) tuple[5]).longValue());
-                        questionDto.setAuthorName((String) tuple[6]);
-                        questionDto.setAuthorImage((String) tuple[7]);
-                        questionDto.setAuthorReputation(((BigInteger) tuple[8]).longValue());
-                        questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
-                        questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
-                        questionDto.setViewCount(0);
-                        questionDto.setListTagDto(tagDtoList);
-                        questionDto.setListCommentDto(commentDtoList);
-                        return questionDto;
-                    }
+
+
+                                    QuestionDto questionDto = new QuestionDto();
+                                    TagDto tagDto = new TagDto();
+                                    tagDto.setId(((BigInteger) tuple[13]).longValue());
+                                    tagDto.setName((String) tuple[14]);
+                                    tagDto.setDescription((String) tuple[15]);
+                                    List<TagDto> tagDtoList = new ArrayList<>();
+                                    tagDtoList.add(tagDto);
+                                    CommentDto commentDto = new CommentDto();
+                                    commentDto.setId(((BigInteger) tuple[16]).longValue());
+                                    commentDto.setComment((String) tuple[17]);
+                                    commentDto.setUserId(((BigInteger) tuple[18]).longValue());
+                                    commentDto.setFullName((String) tuple[11]);
+                                    commentDto.setReputation(((BigInteger) tuple[12]).longValue());
+                                    commentDto.setDateAdded(((Timestamp) tuple[19]).toLocalDateTime());
+                                    List<CommentDto> commentDtoList = new ArrayList<>();
+                                    commentDtoList.add(commentDto);
+                                    questionDto.setId(((BigInteger) tuple[0]).longValue());
+                                    questionDto.setTitle((String) tuple[1]);
+                                    questionDto.setDescription((String) tuple[2]);
+                                    questionDto.setLastUpdateDateTime(((Timestamp) tuple[3]).toLocalDateTime());
+                                    questionDto.setPersistDateTime(((Timestamp) tuple[4]).toLocalDateTime());
+                                    questionDto.setAuthorId(((BigInteger) tuple[5]).longValue());
+                                    questionDto.setAuthorName((String) tuple[6]);
+                                    questionDto.setAuthorImage((String) tuple[7]);
+                                    questionDto.setAuthorReputation(((BigInteger) tuple[8]).longValue());
+                                    questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
+                                    questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
+                                    questionDto.setViewCount(0);
+                                    questionDto.setListCommentDto(commentDtoList);
+                                    questionDto.setListTagDto(tagDtoList);
+                                    return questionDto;
+                                }
 
                     @Override
                     public List transformList(List list) {
-
                         List<TagDto> tagDtoList = new ArrayList<>();
 
                         for (Object a : list) {
@@ -98,24 +107,15 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
                         QuestionDto questionDto = (QuestionDto) list.get(0);
                         questionDto.setListTagDto(tagDtoList);
-
-                        for (int i = list.size() - 1; i != 0; i--) {
-                            list.remove(i);
-                        }
-
-                        List<CommentDto> commentDtoList = new ArrayList<>();
-                        for (Object b : list) {
-                            commentDtoList.add(((QuestionDto) b).getListCommentDto().get(0));
-                        }
-                        QuestionDto questionDto1 = (QuestionDto) list.get(1);
-                        questionDto1.setListTagDto(tagDtoList);
-
                         for (int i = list.size() - 1; i != 0; i--) {
                             list.remove(i);
                         }
                         return list;
+
                     }
-                }));
+
+}
+                ));
         return questionDto;
     }
 }

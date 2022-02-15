@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -30,5 +32,4 @@ public class QuestionDto {
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
     private List<CommentDto> listCommentDto;
-
 }
