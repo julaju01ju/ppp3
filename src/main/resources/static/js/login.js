@@ -17,7 +17,9 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
         }
         let token =Object.values(getToken);
 
+
         document.cookie = token;
+        window.location.href = '/main';
     }
     if(!response.ok) {
         document.getElementById("errorCode").hidden=false;
