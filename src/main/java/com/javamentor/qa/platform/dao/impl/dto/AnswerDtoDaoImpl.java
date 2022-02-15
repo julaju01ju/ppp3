@@ -74,13 +74,5 @@ public class AnswerDtoDaoImpl
 
     }
 
-    @Override
-    @Transactional
-    public void deleteAnswerByAnswerId(Long id) {
-        String query = "UPDATE Answer SET isDeleted = true where id = :id";
-        entityManager.createQuery(query)
-                .setParameter("id", id)
-                .executeUpdate();
-    }
 
 }

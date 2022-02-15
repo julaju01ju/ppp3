@@ -10,6 +10,5 @@ import java.util.List;
 public interface AnswerDtoService {
     public List<AnswerDto> getAllAnswersByQuestionId(Long id);
 
-    void deleteAnswerByAnswerId(Long id);
 
 }
