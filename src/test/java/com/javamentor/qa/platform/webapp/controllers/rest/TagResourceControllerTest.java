@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -344,6 +343,7 @@ public class TagResourceControllerTest
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByPopularPagination() throws Exception {
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -358,7 +358,8 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.itemsOnPage").value(10))
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].name").value("tagname5"))
-                .andExpect(jsonPath("$.items[0].questionsCount").value(6))
-                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(2));
+                .andExpect(jsonPath("$.items[0].questionsCount").value(10))
+                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(2))
+                .andExpect(jsonPath("$.items[0].questionCountWeekDay").value(3));
     }
 }
