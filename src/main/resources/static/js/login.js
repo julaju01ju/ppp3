@@ -11,13 +11,13 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
         })
     });
     if (response.ok) {
-        const token = await response.json();
+        let getToken = await response.json();
         if (document.cookie.split(';').filter((item) => item.trim().startsWith('token=')).length) {
             document.cookie = "token=;max-age=-1";
         }
-        document.cookie = `token = ${token}`;
+        let token =Object.values(getToken);
 
-        window.location.href = '/main';
+        document.cookie = token;
     }
     if(!response.ok) {
         document.getElementById("errorCode").hidden=false;
