@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -63,14 +65,14 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
 
-
                                     QuestionDto questionDto = new QuestionDto();
                                     TagDto tagDto = new TagDto();
                                     tagDto.setId(((BigInteger) tuple[13]).longValue());
                                     tagDto.setName((String) tuple[14]);
                                     tagDto.setDescription((String) tuple[15]);
-                                    List<TagDto> tagDtoList = new ArrayList<>();
-                                    tagDtoList.add(tagDto);
+                                    Map<Long, TagDto> tagDtoList = new HashMap<>();
+                                    tagDtoList.put(tagDto.getId(), tagDto);
+                                     List<TagDto> newList2 = tagDtoList.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
                                     CommentDto commentDto = new CommentDto();
                                     commentDto.setId(((BigInteger) tuple[16]).longValue());
                                     commentDto.setComment((String) tuple[17]);
@@ -78,8 +80,9 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                     commentDto.setFullName((String) tuple[11]);
                                     commentDto.setReputation(((BigInteger) tuple[12]).longValue());
                                     commentDto.setDateAdded(((Timestamp) tuple[19]).toLocalDateTime());
-                                    List<CommentDto> commentDtoList = new ArrayList<>();
-                                    commentDtoList.add(commentDto);
+                                    Map<Long, CommentDto> commentDtoList = new HashMap<>();
+                                    commentDtoList.put(commentDto.getId(), commentDto);
+                                    List<CommentDto> newList = commentDtoList.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
                                     questionDto.setId(((BigInteger) tuple[0]).longValue());
                                     questionDto.setTitle((String) tuple[1]);
                                     questionDto.setDescription((String) tuple[2]);
@@ -92,25 +95,21 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                     questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
                                     questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
                                     questionDto.setViewCount(0);
-                                    questionDto.setListCommentDto(commentDtoList);
-                                    questionDto.setListTagDto(tagDtoList);
-                                    return questionDto;
+                                    questionDto.setListCommentDto(newList);
+                                    questionDto.setListTagDto(newList2);
+                                    Map<QuestionDto, List> aaa = new HashMap<>();
+                                    aaa.put(questionDto, newList);
+                                    aaa.put(questionDto,newList2);
+                                    return aaa;
                                 }
 
                     @Override
                     public List transformList(List list) {
-                        List<TagDto> tagDtoList = new ArrayList<>();
 
-                        for (Object a : list) {
-                            tagDtoList.add(((QuestionDto) a).getListTagDto().get(0));
-                        }
 
-                        QuestionDto questionDto = (QuestionDto) list.get(0);
-                        questionDto.setListTagDto(tagDtoList);
-                        for (int i = list.size() - 1; i != 0; i--) {
-                            list.remove(i);
-                        }
-                        return list;
+
+
+                        return new ArrayList<>(aaa.values());
 
                     }
 

@@ -32,7 +32,9 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void getAllTrackedTags() throws Exception {
+
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
         mockMvc.perform(
                         get("/api/user/tag/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))

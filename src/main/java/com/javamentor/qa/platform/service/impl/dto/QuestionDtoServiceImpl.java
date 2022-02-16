@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto>  implements QuestionDtoService {
+public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> implements QuestionDtoService {
 
     @Autowired
     private QuestionDtoDao questionDtoDao;
