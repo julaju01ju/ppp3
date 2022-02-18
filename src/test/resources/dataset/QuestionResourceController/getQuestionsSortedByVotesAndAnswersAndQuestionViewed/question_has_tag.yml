@@ -1,0 +1,9 @@
+question_has_tag:
+  - question_id: 121
+    tag_id: 171
+  - question_id: 122
+    tag_id: 172
+  - question_id: 123
+    tag_id: 171
+  - question_id: 124
+    tag_id: 172

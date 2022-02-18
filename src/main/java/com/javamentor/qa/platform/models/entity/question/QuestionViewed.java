@@ -38,6 +38,11 @@ public class QuestionViewed implements Serializable {
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     private LocalDateTime localDateTime = LocalDateTime.now();
 
+    public QuestionViewed(User user, Question question, LocalDateTime localDateTime) {
+        this.user = user;
+        this.question = question;
+        this.localDateTime = localDateTime;
+    }
 
     @Override
     public boolean equals(Object o) {

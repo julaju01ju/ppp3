@@ -28,9 +28,5 @@ public class AnswerDtoServiceImpl implements AnswerDtoService {
         return answerDto.getAllByQuestionId(id);
     }
 
-    @Override
-    public void deleteAnswerByAnswerId(Long id) {
-        answerDto.deleteAnswerByAnswerId(id);
-    }
 
 }
