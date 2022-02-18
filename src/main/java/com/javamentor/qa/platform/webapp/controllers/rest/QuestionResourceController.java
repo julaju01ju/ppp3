@@ -66,7 +66,7 @@ public class QuestionResourceController {
     @ApiOperation("Paginate all QuestionDto with tags." +
             "Sorted by votes, answers and views")
     @ApiResponse(code = 200, message = "status OK")
-    public ResponseEntity<PageDto<QuestionDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
