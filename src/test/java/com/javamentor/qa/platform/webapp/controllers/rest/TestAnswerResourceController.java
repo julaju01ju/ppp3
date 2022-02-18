@@ -4,14 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
-import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
-import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
-import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
-import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.entity.question.Question;
-import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.dto.*;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
-import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.Ignore;
@@ -21,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -30,10 +22,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.persistence.EntityManager;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -264,19 +254,25 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
     void postAnswerCreateSetBody() throws Exception {
 
-        Answer answer = new Answer();
-        answer.setHtmlBody("answerCreated");
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
-        mockMvc.perform(
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto();
+        answerCreateDto.setBody("test");
+
+        String answerDtoJsonString = mockMvc.perform(
                         post("/api/user/question/102/answer/add")
                                 .header(AUTHORIZATION, USER_TOKEN)
-                                .content(new ObjectMapper().writeValueAsString(answer))
+                                .content(new ObjectMapper().writeValueAsString(answerCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
+
+        Integer id = JsonPath.read(answerDtoJsonString, "$.id");
+
+        String sql = "select CAST(count(a.id) as int) from Answer a where a.id =: answerDtoId";
+        int rowCount = (int) entityManager.createQuery(sql).setParameter("answerDtoId", id.longValue()).getSingleResult();
+        Assertions.assertEquals(1, rowCount);
     }
 
     @Test
@@ -286,9 +282,6 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/votes_on_answers.yml",
             "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
     void postAnswerCreateWrongQuestionId() throws Exception {
-
-        Answer answer = new Answer();
-        answer.setHtmlBody("answerCreated");
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 

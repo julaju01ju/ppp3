@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
@@ -11,6 +12,7 @@ import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
+import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,19 +40,24 @@ public class AnswerResourceController {
     private final QuestionService questionService;
     private final VoteOnAnswerService voteOnAnswerService;
     private final ReputationService reputationService;
+    private final AnswerConverter answerConverter;
 
     @Autowired
     public AnswerResourceController(
             AnswerDtoService answerDtoService,
             AnswerService answerService,
             UserDtoService userDtoService,
-            QuestionService questionService, VoteOnAnswerService voteOnAnswerService, ReputationService reputationService) {
+            QuestionService questionService,
+            VoteOnAnswerService voteOnAnswerService,
+            ReputationService reputationService,
+            AnswerConverter answerConverter) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
         this.questionService = questionService;
         this.voteOnAnswerService = voteOnAnswerService;
         this.reputationService = reputationService;
+        this.answerConverter = answerConverter;
     }
 
     @GetMapping("/{questionId}/answer")
@@ -130,26 +138,22 @@ public class AnswerResourceController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ответ добавлен"),
             @ApiResponse(code = 400, message = "Ошибка добавления вопроса")})
-    public ResponseEntity<?> addAnswer(@RequestBody String body, @PathVariable("questionId") Long questionId) {
+    public ResponseEntity<?> addAnswerByQuestionId(@Valid @RequestBody AnswerCreateDto answerCreateDto, @PathVariable("questionId") Long questionId) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Optional<Question> optionalQuestion = questionService.getById(questionId);
 
         if (optionalQuestion.isEmpty()) {
-            return new ResponseEntity<>("Вопрос с id = " + questionId + " не существует", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Вопрос с id = " + questionId + " не существует", HttpStatus.BAD_REQUEST);
         }
         Question question = optionalQuestion.get();
 
         Answer answer = new Answer();
-        answer.setQuestion(question);
-        answer.setHtmlBody(body);
+        answer.setHtmlBody(answerCreateDto.getBody());
         answer.setUser((User)authentication.getPrincipal());
-        answer.setIsHelpful(false);
-        answer.setIsDeletedByModerator(false);
-        answer.setIsDeleted(false);
-
+        answer.setQuestion(question);
         answerService.persist(answer);
 
-        return new ResponseEntity<>((answer), HttpStatus.OK);
+        return new ResponseEntity<>(answerConverter.answerToAnswerDto(answer), HttpStatus.OK);
     }
 }
