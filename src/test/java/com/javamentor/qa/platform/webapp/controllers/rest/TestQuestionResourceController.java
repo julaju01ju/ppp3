@@ -105,10 +105,13 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
                 .andExpect(jsonPath("$.listCommentDto[0].id").value(102))
                 .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 102"))
-                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102));
-//                .andExpect(jsonPath("$.listCommentDto[1].id").value(104))
-//                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 104"))
-//                .andExpect(jsonPath("$.listCommentDto[1].userId").value(104));
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102))
+                .andExpect(jsonPath("$.listCommentDto[1].id").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 103"))
+                .andExpect(jsonPath("$.listCommentDto[1].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[2].id").value(104))
+                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 104"))
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(102));
         
     }
 
