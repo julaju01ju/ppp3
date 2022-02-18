@@ -33,6 +33,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     }
 
     @Override
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
@@ -52,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http.csrf().disable();
         http.cors().disable();
 
-        http.authorizeRequests().antMatchers("/api/user/**").hasRole("USER");
+        http.authorizeRequests().antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN");
+        http.authorizeRequests().antMatchers("/api/admin/**").hasRole("ADMIN");
         http.authorizeRequests().antMatchers("/api/auth/token/").permitAll();
         http.authorizeRequests().antMatchers("/images/**").permitAll();
         http.authorizeRequests().antMatchers("/js/**").permitAll();

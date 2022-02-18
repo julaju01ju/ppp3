@@ -17,4 +17,11 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
         super(answerDao);
         this.answerDao = answerDao;
     }
+
+
+    @Override
+    public void deleteById(Long id) {
+        answerDao.deleteById(id);
+    }
+
 }
