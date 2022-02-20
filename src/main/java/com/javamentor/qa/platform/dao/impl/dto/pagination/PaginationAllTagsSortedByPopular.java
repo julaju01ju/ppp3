@@ -26,6 +26,7 @@ public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagViewDto> 
                         "t.id, " +
                         "t.name, " +
                         "t.description, " +
+                        "t.persistDateTime, " +
                         "cast (t.questions.size as long), " +
                         "(select count (q.id) from Question  q join q.tags qh where t.id = qh.id and q.persistDateTime >= current_date) as one_day, " +
                         "(select count (q.id) from Question  q join q.tags qh where t.id = qh.id and q.persistDateTime between (current_date-7) and current_date ) as one_week) " +

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -357,6 +358,7 @@ public class TagResourceControllerTest
     }
 
     @Test
+
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
             "dataset/TagResourceController/getAllFoundTags/questions.yml",
@@ -376,7 +378,7 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].name").value("tagname5"))
                 .andExpect(jsonPath("$.items[0].questionsCount").value(10))
-                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(2))
-                .andExpect(jsonPath("$.items[0].questionCountWeekDay").value(3));
+                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(1))
+                .andExpect(jsonPath("$.items[0].questionCountWeekDay").value(2));
     }
 }

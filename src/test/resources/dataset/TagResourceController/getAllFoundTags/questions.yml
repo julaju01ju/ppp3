@@ -31,7 +31,7 @@ question:
     description: "description to 105"
     is_deleted: false
     last_redaction_date: 2022-02-15 05:00:00
-    persist_date: 2022-02-15 05:00:00
+    persist_date:
     title: "title"
     user_id: 101
   - id: 106
