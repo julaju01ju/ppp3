@@ -23,7 +23,7 @@ public class PaginationAllUsersSortingByPersistDate implements PageDtoDao<UserDt
                 " user.imageLink,user.city," +
                 " (select CAST(COALESCE(sum(reputation.count), 0) as int) from Reputation reputation where reputation.author = user)) " +
                 " from User user" +
-                " order by user.persistDateTime", UserDto.class);
+                " order by user.persistDateTime desc", UserDto.class);
         query.setFirstResult(((int) params.get("currentPageNumber") - 1) * (int) params.get("itemsOnPage"));
         query.setMaxResults((int) params.get("itemsOnPage"));
         return query.getResultList();

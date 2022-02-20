@@ -30,7 +30,7 @@ public class PaginationAllUsersSortedByReputation implements PageDtoDao<UserDto>
                         "coalesce(CAST(sum(rep.count) as integer), 0)) " +
                         "from User u left join Reputation rep on u.id = rep.author.id " +
                         "group by u.id,rep.author.id " +
-                        "order by sum(rep.count) desc", UserDto.class);
+                        "order by sum(rep.count) desc, u.id", UserDto.class);
         query.setFirstResult((page -1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
         return query.getResultList();
