@@ -14,10 +14,10 @@ import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -28,6 +28,10 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private Map<Long,QuestionDto> questionDtoMap = new TreeMap<>();
+    private Map<Long,TagDto> tagDtoMap = new TreeMap<>();
+    private Map<Long,CommentDto> commentDtoMap = new TreeMap<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -55,13 +59,13 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                           @Override
                                           public Object transformTuple(Object[] tuple, String[] aliases) {
 
-                                              QuestionDto questionDto = new QuestionDto();
                                               TagDto tagDto = new TagDto();
                                               tagDto.setId(((BigInteger) tuple[17]).longValue());
                                               tagDto.setName((String) tuple[18]);
                                               tagDto.setDescription((String) tuple[19]);
-                                              List<TagDto> tagDtoList = new ArrayList<>();
-                                              tagDtoList.add(tagDto);
+                                              if (!tagDtoMap.containsKey(tagDto.getId())){
+                                                  tagDtoMap.put(tagDto.getId(), tagDto);
+                                              }
 
                                               CommentDto commentDto = new CommentDto();
                                               commentDto.setFullName((String) tuple[11]);
@@ -70,9 +74,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               commentDto.setComment((String) tuple[14]);
                                               commentDto.setUserId(((BigInteger) tuple[15]).longValue());
                                               commentDto.setDateAdded(((Timestamp) tuple[16]).toLocalDateTime());
-                                              List<CommentDto> commentDtoList = new ArrayList<>();
-                                              commentDtoList.add(commentDto);
+                                              if (!commentDtoMap.containsKey(commentDto.getId())){
+                                                  commentDtoMap.put(commentDto.getId(), commentDto);
+                                              }
 
+                                              QuestionDto questionDto = new QuestionDto();
                                               questionDto.setId(((BigInteger) tuple[0]).longValue());
                                               questionDto.setTitle((String) tuple[1]);
                                               questionDto.setDescription((String) tuple[2]);
@@ -85,32 +91,20 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
                                               questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
                                               questionDto.setViewCount(0);
-                                              questionDto.setListTagDto(tagDtoList);
-                                              questionDto.setListCommentDto(commentDtoList);
-
-                                              return questionDto;
+                                              if (!questionDtoMap.containsKey(id)){
+                                                  questionDtoMap.put(questionDto.getId(), questionDto);
+                                              }
+//
+                                              return questionDtoMap.get(id);
                                           }
 
                                           @Override
                                           public List transformList(List list) {
 
-                                              Set<TagDto> tagSet = new LinkedHashSet<>();
-                                              for (Object a : list) {
-                                                  tagSet.add(((QuestionDto) a).getListTagDto().get(0));
-                                              }
-                                              List<TagDto> tagDtoList = new ArrayList<>();
-                                              tagDtoList.addAll(tagSet);
+                                              QuestionDto questionDto = questionDtoMap.get(id);
 
-
-                                              Set<CommentDto> commentSet = new LinkedHashSet<>();
-                                              for (Object a : list) {
-                                                  commentSet.add(((QuestionDto) a).getListCommentDto().get(0));
-                                              }
-                                              List<CommentDto> commentDtoList = new ArrayList<>();
-                                              commentDtoList.addAll(commentSet);
-
-
-                                              QuestionDto questionDto = (QuestionDto) list.get(0);
+                                              List<TagDto> tagDtoList = new ArrayList<>(tagDtoMap.values());
+                                              List<CommentDto> commentDtoList = new ArrayList<>(commentDtoMap.values());
 
                                               questionDto.setListTagDto(tagDtoList);
                                               questionDto.setListCommentDto(commentDtoList);
@@ -118,6 +112,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               for (int i = list.size() - 1; i != 0; i--) {
                                                   list.remove(i);
                                               }
+
                                               return list;
                                           }
                                       }
