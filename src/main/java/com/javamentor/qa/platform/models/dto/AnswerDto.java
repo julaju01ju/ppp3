@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.models.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 
 @Data
@@ -18,6 +17,7 @@ public class AnswerDto {
     private String body;
     private LocalDateTime persistDate;
     private Boolean isHelpful;
+    private Boolean isDeleted;
     private LocalDateTime dateAccept;
     private Long countValuable;
     private String image;
