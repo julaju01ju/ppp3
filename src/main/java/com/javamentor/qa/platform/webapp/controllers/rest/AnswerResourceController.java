@@ -17,7 +17,6 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,7 +83,8 @@ public class AnswerResourceController {
     public ResponseEntity<?> deleteAnswerById(@ApiParam(name = "answerId") @PathVariable Long answerId) {
         if (answerId == null) {
             return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
-        } if (answerService.existsById(answerId)) {
+        }
+        if (answerService.existsById(answerId)) {
             answerDtoService.deleteAnswerByAnswerId(answerId);
             return ResponseEntity.ok().build();
         }
@@ -140,20 +140,22 @@ public class AnswerResourceController {
             @ApiResponse(code = 400, message = "Ошибка добавления вопроса")})
     public ResponseEntity<?> addAnswerByQuestionId(@Valid @RequestBody AnswerCreateDto answerCreateDto, @PathVariable("questionId") Long questionId) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
         Optional<Question> optionalQuestion = questionService.getById(questionId);
-
-        if (optionalQuestion.isEmpty()) {
-            return new ResponseEntity<>("Вопрос с id = " + questionId + " не существует", HttpStatus.BAD_REQUEST);
+        if (optionalQuestion.isPresent()) {
+            Question question = optionalQuestion.get();
+            if (answerService.getIfNotExists(question.getId(), sender.getId())) {
+                Answer answer = new Answer();
+                answer.setHtmlBody(answerCreateDto.getBody());
+                answer.setUser(sender);
+                answer.setQuestion(question);
+                answerService.persist(answer);
+                return new ResponseEntity<>(answerConverter.answerToAnswerDto(answer), HttpStatus.OK);
+            }
+            return new ResponseEntity<>("Вы уже отвечали на данный вопрос", HttpStatus.BAD_REQUEST);
         }
-        Question question = optionalQuestion.get();
-
-        Answer answer = new Answer();
-        answer.setHtmlBody(answerCreateDto.getBody());
-        answer.setUser((User)authentication.getPrincipal());
-        answer.setQuestion(question);
-        answerService.persist(answer);
-
-        return new ResponseEntity<>(answerConverter.answerToAnswerDto(answer), HttpStatus.OK);
+        return new ResponseEntity<>("Вопроса с указанным id, не существует", HttpStatus.NOT_FOUND);
     }
+
 }

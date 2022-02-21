@@ -5,6 +5,8 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.*;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
@@ -251,28 +253,25 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml",
-            "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
-    void postAnswerCreateSetBody() throws Exception {
-
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+            "dataset/AnswerResourceController/questions.yml", }, disableConstraints = true, cleanBefore = true)
+    void answerCheckReAdd() throws Exception {
 
         AnswerCreateDto answerCreateDto = new AnswerCreateDto();
         answerCreateDto.setBody("test");
 
-        String answerDtoJsonString = mockMvc.perform(
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
                         post("/api/user/question/102/answer/add")
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 .content(new ObjectMapper().writeValueAsString(answerCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
-
-        Integer id = JsonPath.read(answerDtoJsonString, "$.id");
-
-        String sql = "select CAST(count(a.id) as int) from Answer a where a.id =: answerDtoId";
-        int rowCount = (int) entityManager.createQuery(sql).setParameter("answerDtoId", id.longValue()).getSingleResult();
-        Assertions.assertEquals(1, rowCount);
+        Assertions.assertNotNull(entityManager.createQuery("SELECT a FROM Answer a WHERE a.question.id =:questionId AND a.user.id =: userId", Answer.class)
+                .setParameter("questionId", 102L)
+                .setParameter("userId", 102L));
     }
 
     @Test
@@ -281,14 +280,20 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml",
             "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
-    void postAnswerCreateWrongQuestionId() throws Exception {
+    void answerQuestionIdNotFound() throws Exception {
+
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto();
+        answerCreateDto.setBody("test");
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/9991999/answer/add")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isBadRequest());
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(answerCreateDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
     }
 }
