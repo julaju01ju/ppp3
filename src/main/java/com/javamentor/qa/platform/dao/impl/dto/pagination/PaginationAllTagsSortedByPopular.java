@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PaginationAllTagsSortedByPopular implements PageDtoDao<TagViewDto> {
+public class   PaginationAllTagsSortedByPopular implements PageDtoDao<TagViewDto> {
     
     @PersistenceContext
     private EntityManager entityManager;
