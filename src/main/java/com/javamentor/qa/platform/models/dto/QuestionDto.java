@@ -28,6 +28,7 @@ public class QuestionDto {
     private int countValuable;
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
+    private String isUserVote;
     private List<TagDto> listTagDto;
     private List<CommentDto> listCommentDto;
 

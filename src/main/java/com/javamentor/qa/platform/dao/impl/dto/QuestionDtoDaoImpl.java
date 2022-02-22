@@ -44,6 +44,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "(select count(a.id) from answer a where a.question_id = q.id) as answers, " +
                                 "(select u.full_name from user_entity u where u.id = c.user_id) as uc_full_name, " +
                                 "(select sum(r.count) from reputation r where r.sender_id = c.user_id) as reputation_u_c, " +
+                                "(select qv.vote from votes_on_questions qv where qv.question_id = q.id and qv.user_id = (select id from SESSION_USER )), " +
                                 "c.id as com_id, c.text as com_text, c.user_id as com_user_id, c.persist_date as com_persist_date,  " +
                                 "t.id as t_id, t.name as t_name, t.description as t_desc " +
                                 "from question q join user_entity u on u.id = q.user_id " +
@@ -60,9 +61,9 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                           public Object transformTuple(Object[] tuple, String[] aliases) {
 
                                               TagDto tagDto = new TagDto();
-                                              tagDto.setId(((BigInteger) tuple[17]).longValue());
-                                              tagDto.setName((String) tuple[18]);
-                                              tagDto.setDescription((String) tuple[19]);
+                                              tagDto.setId(((BigInteger) tuple[18]).longValue());
+                                              tagDto.setName((String) tuple[19]);
+                                              tagDto.setDescription((String) tuple[20]);
                                               if (!tagDtoMap.containsKey(tagDto.getId())){
                                                   tagDtoMap.put(tagDto.getId(), tagDto);
                                               }
@@ -70,10 +71,10 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               CommentDto commentDto = new CommentDto();
                                               commentDto.setFullName((String) tuple[11]);
                                               commentDto.setReputation(((BigInteger) tuple[12]).longValue());
-                                              commentDto.setId(((BigInteger) tuple[13]).longValue());
-                                              commentDto.setComment((String) tuple[14]);
-                                              commentDto.setUserId(((BigInteger) tuple[15]).longValue());
-                                              commentDto.setDateAdded(((Timestamp) tuple[16]).toLocalDateTime());
+                                              commentDto.setId(((BigInteger) tuple[14]).longValue());
+                                              commentDto.setComment((String) tuple[15]);
+                                              commentDto.setUserId(((BigInteger) tuple[16]).longValue());
+                                              commentDto.setDateAdded(((Timestamp) tuple[17]).toLocalDateTime());
                                               if (!commentDtoMap.containsKey(commentDto.getId())){
                                                   commentDtoMap.put(commentDto.getId(), commentDto);
                                               }
@@ -90,6 +91,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setAuthorReputation(((BigInteger) tuple[8]).longValue());
                                               questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
                                               questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
+                                              questionDto.setIsUserVote((String) tuple[13]);
                                               questionDto.setViewCount(0);
                                               if (!questionDtoMap.containsKey(id)){
                                                   questionDtoMap.put(questionDto.getId(), questionDto);

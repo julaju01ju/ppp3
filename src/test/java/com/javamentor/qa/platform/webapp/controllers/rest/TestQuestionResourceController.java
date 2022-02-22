@@ -286,6 +286,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.viewCount").value(0))
                 .andExpect(jsonPath("$.countValuable").value(2))
                 .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.isUserVote").value("UP_VOTE"))
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"))
