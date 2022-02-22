@@ -20,3 +20,14 @@ async function pagination(page, itemsOnPage, funcForURL) {
 function getAmountPerPage() {
     return document.getElementById('amountPerPage').value;
 }
+
+function imposeMinMax(el){
+    if(el.value != ""){
+        if(parseInt(el.value) < parseInt(el.min)){
+            el.value = el.min;
+        }
+        if(parseInt(el.value) > parseInt(el.max)){
+            el.value = el.max;
+        }
+    }
+}
