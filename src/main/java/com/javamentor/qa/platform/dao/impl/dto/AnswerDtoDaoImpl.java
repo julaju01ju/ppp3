@@ -2,20 +2,15 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
-import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import org.hibernate.transform.ResultTransformer;
-import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AnswerDtoDaoImpl
@@ -28,21 +23,22 @@ public class AnswerDtoDaoImpl
     @Override
     @Transactional
     public List<AnswerDto> getAllByQuestionId(Long id) {
-        List<AnswerDto> answerDtos;
-        String query = "select a.id , a.user.id," +
-                        "(select rep.count from Reputation rep where rep.author.id = a.user.id),"+
-                        "a.question.id, " +
-                        "a.htmlBody,"+
-                        "a.persistDateTime,"+
-                        "a.isHelpful,"+
-                        "a.dateAcceptTime,"+
-                        "(select sum(case va.vote  when 'UP_VOTE' then 1 else -1 end) from VoteAnswer va group by a" +
-                ".id),"+
-                        "(select u.imageLink from User u),"+
-                        "(select u.nickname from User u)"+
-                        "from Answer as a where a.question.id = :id";
+        final String query =
+                "select a.id, a.user.id," +
+                        "(select sum(rep.count) from Reputation as rep wher rep.author.id = a.user.id)," +
+                            "a.question.id,"+
+                            "a.htmlBody,"+
+                            "a.persistDateTime, "+
+                            "a.isHelpful,"+
+                            "a.isDeleted,"+
+                            "a.dateAcceptTime,"+
+                        "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id),"+
+                        "(select u.imageLink from User as u where u.id = a.user.id),"+
+                            "(select u.nickname from User as u where u.id = a.user.id)"+
+                        "from Answer as a where a.question.id = :id and a.isDeleted = false";
 
-        answerDtos = (List<AnswerDto>) entityManager.createQuery(query)
+
+        return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(
@@ -52,15 +48,16 @@ public class AnswerDtoDaoImpl
                                 return new AnswerDto(
                                         ((Long) tuple[0]).longValue(),
                                         ((Long) tuple[1]).longValue(),
-                                        ((Integer) tuple[2]).longValue(),
+                                        Optional.ofNullable(tuple[2]).map(t2 -> ((Long) t2).longValue()).orElse(null),
                                         ((Long) tuple[3]).longValue(),
                                         ((String) tuple[4]),
                                         ((LocalDateTime) tuple[5]),
                                         ((Boolean) tuple[6]).booleanValue(),
-                                        ((LocalDateTime) tuple[7]),
-                                        ((Long) tuple[8]).longValue(),
-                                        ((String) tuple[9]),
-                                        ((String) tuple[10]));
+                                        ((Boolean) tuple[7]).booleanValue(),
+                                        ((LocalDateTime) tuple[8]),
+                                        Optional.ofNullable(tuple[9]).map(t9 -> ((Long) t9).longValue()).orElse(null),
+                                        ((String) tuple[10]),
+                                        ((String) tuple[11]));
                             }
 
                             @Override
@@ -69,9 +66,6 @@ public class AnswerDtoDaoImpl
                             }
                         }
                 ).getResultList();
-
-        return answerDtos;
-
     }
 
 

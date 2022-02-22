@@ -44,8 +44,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml",
-            "dataset/QuestionResourceController/voteForAQuestion.yml"
+            "dataset/AnswerResourceController/answervote.yml"
     },  disableConstraints = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -71,10 +70,10 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].userReputation").value(102))
                 .andExpect(jsonPath("$[0].questionId").value(102))
                 .andExpect(jsonPath("$[0].body").value("Some Body"))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T04:00:00"))
                 .andExpect(jsonPath("$[0].isHelpful").value("true"))
-                .andExpect(jsonPath("$[0].dateAccept").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$[0].countValuable").value(1))
+                .andExpect(jsonPath("$[0].isDeleted").value("false"))
+                .andExpect(jsonPath("$[0].dateAccept").value("2021-12-06T04:00:00"))
                 .andExpect(jsonPath("$[0].image").value("image"))
                 .andExpect(jsonPath("$[0].nickName").value("USR"));
     }
@@ -235,24 +234,28 @@ public class TestAnswerResourceController
     @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml",
             "dataset/AnswerResourceController/questions.yml"})
     public void postUpVoteAnswerStatusOk() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
-                        post("/api/user/question/102/answer/103/upVote")
+                        post("/api/user/question/102/answer/104/upVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.content().string("1"))
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
-                .setParameter("answerId", 103L)
+                .setParameter("answerId", 104L)
                 .setParameter("userId", 102L));
     }
 
     @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml",
             "dataset/AnswerResourceController/questions.yml"})
     public void postDownVoteAnswerStatusOk() throws Exception {
 
