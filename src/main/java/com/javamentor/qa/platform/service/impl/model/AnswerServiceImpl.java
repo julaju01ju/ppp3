@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.AnswerDao;
+import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,10 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
         this.answerDao = answerDao;
     }
 
+
     @Override
-    public Boolean getIfNotExists(Long questionId, Long userId) {
-        return answerDao.getIfNotExists(questionId, userId);
+    public void deleteById(Long id) {
+        answerDao.deleteById(id);
     }
+
 }

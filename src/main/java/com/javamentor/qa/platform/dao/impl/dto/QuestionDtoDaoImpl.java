@@ -4,17 +4,15 @@ import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigInteger;
-import java.sql.Timestamp;
+import org.hibernate.query.Query;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -31,40 +29,50 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
 
-        Optional<QuestionDto> questionDto = SingleResultUtil.getSingleResultOrNull(entityManager.createNativeQuery(
-                        "select q.id as q_id, q.title, q.description,  q.last_redaction_date,  q.persist_date,  u.id as u_id,  u.full_name,  u.image_link, " +
-                                "(select sum(r.count) from reputation r where r.author_id = u.id) as reputation, " +
-                                "(select count(up.vote) from votes_on_questions up where up.vote = 'UP_VOTE' and up.question_id = q.id) - (select count(down.vote) from votes_on_questions down where down.vote = 'DOWN_VOTE' and down.question_id = q.id) as votes, " +
-                                "(select count(a.id) from answer a where a.question_id = q.id)    as answers, " +
-                                "t.id as t_id, t.name as t_name, t.description as t_desc " +
-                                "from question q join user_entity u on u.id = q.user_id " +
-                                "join question_has_tag qht on q.id = qht.question_id " +
-                                "join tag t on qht.tag_id = t.id where q.id =:id")
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
+                        "select q.id, " +
+                                "q.title, " +
+                                "u.id, " +
+                                "u.fullName, " +
+                                "u.imageLink," +
+                                "q.description, " +
+                                "q.persistDateTime, " +
+                                "q.lastUpdateDateTime, " +
+                                "coalesce((select sum(r.count) from Reputation r where r.author.id = u.id), 0), " +
+                                "coalesce((select sum(case v.vote  when 'UP_VOTE' then 1 else -1 end) from VoteQuestion v where v.question.id=q.id), 0), " +
+                                "(select count(qv.id) from QuestionViewed qv where qv.question.id = q.id), " +
+                                "(select count(a.id) from Answer a where a.question.id = q.id), " +
+                                "t.id, " +
+                                "t.name, " +
+                                "t.description " +
+                                "from Question q " +
+                                "join q.user u " +
+                                "join q.tags t " +
+                                "where q.id =:id ")
                 .setParameter("id", id)
                 .unwrap(Query.class)
                 .setResultTransformer(new ResultTransformer() {
-
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {
                         QuestionDto questionDto = new QuestionDto();
                         TagDto tagDto = new TagDto();
-                        tagDto.setId(((BigInteger) tuple[11]).longValue());
-                        tagDto.setName((String) tuple[12]);
-                        tagDto.setDescription((String) tuple[13]);
+                        tagDto.setId((Long) tuple[12]);
+                        tagDto.setName((String) tuple[13]);
+                        tagDto.setDescription((String) tuple[14]);
                         List<TagDto> tagDtoList = new ArrayList<>();
                         tagDtoList.add(tagDto);
-                        questionDto.setId(((BigInteger) tuple[0]).longValue());
+                        questionDto.setId((Long) tuple[0]);
                         questionDto.setTitle((String) tuple[1]);
-                        questionDto.setDescription((String) tuple[2]);
-                        questionDto.setLastUpdateDateTime(((Timestamp) tuple[3]).toLocalDateTime());
-                        questionDto.setPersistDateTime(((Timestamp) tuple[4]).toLocalDateTime());
-                        questionDto.setAuthorId(((BigInteger) tuple[5]).longValue());
-                        questionDto.setAuthorName((String) tuple[6]);
-                        questionDto.setAuthorImage((String) tuple[7]);
-                        questionDto.setAuthorReputation(((BigInteger) tuple[8]).longValue());
-                        questionDto.setCountValuable(((BigInteger) tuple[9]).intValue());
-                        questionDto.setCountAnswer(((BigInteger) tuple[10]).intValue());
-                        questionDto.setViewCount(0);
+                        questionDto.setAuthorId((Long) tuple[2]);
+                        questionDto.setAuthorName((String) tuple[3]);
+                        questionDto.setAuthorImage((String) tuple[4]);
+                        questionDto.setDescription((String) tuple[5]);
+                        questionDto.setPersistDateTime((LocalDateTime) tuple[6]);
+                        questionDto.setLastUpdateDateTime((LocalDateTime) tuple[7]);
+                        questionDto.setAuthorReputation((Long) tuple[8]);
+                        questionDto.setCountValuable(((Long) tuple[9]).intValue());
+                        questionDto.setViewCount(((Long) tuple[10]).intValue());
+                        questionDto.setCountAnswer(((Long) tuple[11]).intValue());
                         questionDto.setListTagDto(tagDtoList);
                         return questionDto;
                     }
@@ -86,6 +94,5 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                         return list;
                     }
                 }));
-        return questionDto;
     }
 }
