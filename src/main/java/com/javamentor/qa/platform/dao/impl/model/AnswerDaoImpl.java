@@ -16,6 +16,15 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer,Long> implements Answ
     private EntityManager entityManager;
 
     @Override
+    public void deleteById(Long id) {
+        String query = "UPDATE Answer SET isDeleted = true where id = :id";
+        entityManager.createQuery(query)
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
+
+    @Override
     public Boolean getIfNotExists(Long questionId, Long userId) {
         TypedQuery<Answer> typedQuery = entityManager.createQuery(
                         "select a from Answer a where a.question.id = :questionId and a.user.id = :userId",

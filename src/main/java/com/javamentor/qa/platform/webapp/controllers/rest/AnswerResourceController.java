@@ -46,7 +46,10 @@ public class AnswerResourceController {
             AnswerDtoService answerDtoService,
             AnswerService answerService,
             UserDtoService userDtoService,
-            QuestionService questionService, VoteOnAnswerService voteOnAnswerService, ReputationService reputationService, AnswerConverter answerConverter ) {
+            QuestionService questionService,
+            VoteOnAnswerService voteOnAnswerService,
+            ReputationService reputationService,
+            AnswerConverter answerConverter ) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
