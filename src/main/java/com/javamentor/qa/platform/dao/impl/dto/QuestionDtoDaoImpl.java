@@ -38,15 +38,27 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     public Optional<QuestionDto> getQuestionById(Long id) {
 
         Optional<QuestionDto> questionDto = SingleResultUtil.getSingleResultOrNull(entityManager.createNativeQuery(
-                        "select q.id , q.title, q.description,  q.last_redaction_date,  q.persist_date,  u.id as u_id,  u.full_name,  u.image_link, " +
+                        "select q.id, " +
+                                "q.title, " +
+                                "q.description,  " +
+                                "q.last_redaction_date,  " +
+                                "q.persist_date,  " +
+                                "u.id as u_id,  " +
+                                "u.full_name,  " +
+                                "u.image_link, " +
                                 "(select sum(r.count) from reputation r where r.author_id = u.id) as reputation, " +
                                 "(select count(up.vote) from votes_on_questions up where up.vote = 'UP_VOTE' and up.question_id = q.id) - (select count(down.vote) from votes_on_questions down where down.vote = 'DOWN_VOTE' and down.question_id = q.id) as votes, " +
                                 "(select count(a.id) from answer a where a.question_id = q.id) as answers, " +
                                 "(select u.full_name from user_entity u where u.id = c.user_id) as uc_full_name, " +
                                 "(select sum(r.count) from reputation r where r.sender_id = c.user_id) as reputation_u_c, " +
                                 "(select qv.vote from votes_on_questions qv where qv.question_id = q.id and qv.user_id = (select id from SESSION_USER )), " +
-                                "c.id as com_id, c.text as com_text, c.user_id as com_user_id, c.persist_date as com_persist_date,  " +
-                                "t.id as t_id, t.name as t_name, t.description as t_desc " +
+                                "c.id as com_id, " +
+                                "c.text as com_text, " +
+                                "c.user_id as com_user_id, " +
+                                "c.persist_date as com_persist_date,  " +
+                                "t.id as t_id, " +
+                                "t.name as t_name, " +
+                                "t.description as t_desc " +
                                 "from question q join user_entity u on u.id = q.user_id " +
                                 "join comment_question cq on q.id = cq.question_id " +
                                 "join comment c on cq.comment_id = c.id " +
