@@ -7,3 +7,7 @@ question_has_tag:
     tag_id: 101
   - question_id: 104
     tag_id: 101
+  - question_id: 105
+    tag_id: 102
+  - question_id: 106
+    tag_id: 102
