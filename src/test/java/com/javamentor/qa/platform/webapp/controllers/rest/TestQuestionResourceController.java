@@ -301,6 +301,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[1].id").value(103))
                 .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 103"))
                 .andExpect(jsonPath("$.listCommentDto[1].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
                 .andExpect(jsonPath("$.listCommentDto[2].id").value(104))
                 .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 104"))
                 .andExpect(jsonPath("$.listCommentDto[2].userId").value(102));
