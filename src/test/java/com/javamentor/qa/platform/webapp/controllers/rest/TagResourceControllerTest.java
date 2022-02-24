@@ -377,8 +377,7 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.itemsOnPage").value(10))
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].name").value("tagname5"))
-                .andExpect(jsonPath("$.items[0].questionsCount").value(10))
-                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(1))
-                .andExpect(jsonPath("$.items[0].questionCountWeekDay").value(2));
+                .andExpect(jsonPath("$.items[0].questionsCount").value(10));
+
     }
 }
