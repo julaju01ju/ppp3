@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
@@ -65,7 +66,7 @@ public class QuestionResourceController {
     @ApiOperation("Paginate all QuestionDto with tags." +
             "Sorted by votes, answers and views")
     @ApiResponse(code = 200, message = "status OK")
-    public ResponseEntity<PageDto<QuestionDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
@@ -186,7 +187,7 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
-    public ResponseEntity<PageDto<QuestionDto>> getQuestions(
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestions(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
@@ -231,7 +232,7 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
-    public ResponseEntity<PageDto<QuestionDto>> getQuestionsNoAnswer(
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsNoAnswer(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
@@ -256,7 +257,7 @@ public class QuestionResourceController {
             "если что-то передали то мы должны отдавать те вопросы в которых есть хотя бы один из переданных тэгов " +
             "ignoredTag - не обязательный параметр, " +
             "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
-    public ResponseEntity<PageDto<QuestionDto>> getAllQuestionDtoSortedByPersistDate(
+    public ResponseEntity<PageDto<QuestionViewDto>> getAllQuestionDtoSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,

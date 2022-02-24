@@ -30,6 +30,7 @@ public class Question implements Serializable {
 
     private static final long serialVersionUID = -4612026867697897418L;
     @Id
+
     @GeneratedValue(generator = "Question_seq")
     private Long id;
 
@@ -71,7 +72,7 @@ public class Question implements Serializable {
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question", orphanRemoval = true)
-    private List<CommentQuestion> commentQuestions;
+    private List<CommentQuestion> commentQuestions = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question", orphanRemoval = true)
     private List<UserFavoriteQuestion> userFavoriteQuestions;

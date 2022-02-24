@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.models.dto;
 
-import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +14,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuestionDto {
-
+public class QuestionViewDto {
     private Long id;
     private String title;
     private Long authorId;
@@ -29,10 +27,5 @@ public class QuestionDto {
     private int countValuable;
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
-    private Enum<VoteType> isUserVote;
     private List<TagDto> listTagDto;
-    private List<CommentDto> listCommentDto;
-
 }
-
-
