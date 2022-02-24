@@ -31,10 +31,14 @@ public class TagDtoDaoImpl implements TagDtoDao {
     @Override
     public Map<Long, List<TagDto>> getTagsByQuestionIds(List<?> ids) {
 
-        List<Map<Long, List<TagDto>>> list = entityManager.createNativeQuery(
-                        "select qht.question_id, t.id, t.name, t.description " +
-                                "from tag t join question_has_tag qht on t.id = qht.tag_id " +
-                                "and qht.question_id in :ids")
+        List<Map<Long, List<TagDto>>> list = entityManager.createQuery(
+                        "select q.id, " +
+                                "t.id, " +
+                                "t.name, " +
+                                "t.description " +
+                                "from Question q " +
+                                "join q.tags t " +
+                                "where q.id in :ids ")
                 .setParameter("ids", ids)
                 .unwrap(org.hibernate.query.Query.class)
                 .setResultTransformer(new ResultTransformer() {
@@ -44,10 +48,10 @@ public class TagDtoDaoImpl implements TagDtoDao {
                     public Object transformTuple(Object[] objects, String[] strings) {
 
                         List<TagDto> tagDtoList = map.computeIfAbsent(
-                                ((BigInteger) objects[0]).longValue(),
+                                (Long) objects[0],
                                 id -> new ArrayList<>());
                         tagDtoList.add(new TagDto(
-                                ((BigInteger) objects[1]).longValue(),
+                                (Long) objects[1],
                                 (String) objects[2],
                                 (String) objects[3]
                         ));

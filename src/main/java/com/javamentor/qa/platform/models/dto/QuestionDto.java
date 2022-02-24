@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,9 @@ public class QuestionDto {
     private int countValuable;
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
+    private Enum<VoteType> isUserVote;
     private List<TagDto> listTagDto;
 
 }
+
+

@@ -575,5 +575,32 @@ java -jar app.jar --spring.profiles.active=dev (program param)
 9. Все классы для тестов находиться в папке **.../api**.
 
 
+## Работа с pagination.js
+
+1. Основная функция ```pagination()```(1), принемает в качестве параметров (№ страницы, кол-во элементов на странице и функцию по получению Fetch API)
+   
+![](src/main/resources/static/images/pagination_tutor/pagination_js.png) 
+2. В качестве вложенной функции используется ```fillCard(element.items)```, реализация данной функции, как и функции по получению Fetch API, происходит в кастомном js (2)
+
+![](src/main/resources/static/images/pagination_tutor/custom_js.png) 
+
+3. Для создания/добавления № страниц, использует след div
+
+```<div class="btn-group" id="paginationButtons"></div>```
 
 
+4. Для методов ```getAmountPerPage()``` и ```imposeMinMax()```(js файл № 1)
+
+```
+<label for="amountPerPage">Amount per page</label>
+<input type="number" min="1" max="100" onkeyup=imposeMinMax(this) id="amountPerPage" style="width: 4pc">
+```
+
+5. Для первноначального вызова ```pagination()```(1)
+```
+<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+    <input type="radio" onclick="pagination(1, getAmountPerPage(), getUsersSortedByReputation)"
+           class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+    <label class="btn btn-outline-primary" for="btnradio1">Репутация</label>
+</div>
+```

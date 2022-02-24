@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
  */
 
 @Service
-public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionDto> implements QuestionDtoService {
+public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> implements QuestionDtoService {
 
     @Autowired
     private QuestionDtoDao questionDtoDao;
@@ -33,13 +34,13 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionDto> impl
     }
 
     @Override
-    public PageDto<QuestionDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params) {
+    public PageDto<QuestionViewDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params) {
 
-        PageDto<QuestionDto> pageDto = super.getPageDto(pageDtoDaoName, params);
+        PageDto<QuestionViewDto> pageDto = super.getPageDto(pageDtoDaoName, params);
         List ids = pageDto.getItems().stream().map(
-                questionDto -> questionDto.getId()).collect(Collectors.toList());
+                questionViewDto -> questionViewDto.getId()).collect(Collectors.toList());
         Map<Long, List<TagDto>> tags = tagDtoDao.getTagsByQuestionIds(ids);
-        for (QuestionDto q : pageDto.getItems()) {
+        for (QuestionViewDto q : pageDto.getItems()) {
             q.setListTagDto(tags.get(q.getId()));
         }
         return pageDto;

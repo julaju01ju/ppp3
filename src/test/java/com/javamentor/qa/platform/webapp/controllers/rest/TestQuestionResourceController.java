@@ -11,6 +11,7 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,7 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = "spring.config.location = src/test/resources/application-test.properties")
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-public class TestQuestionResourceController {
+@Ignore
+public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -245,18 +245,7 @@ public class TestQuestionResourceController {
     @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"}, disableConstraints = true)
     public void getQuestionCount() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/count")
@@ -278,18 +267,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/comment.yml",
             "dataset/QuestionResourceController/comment_question.yml"})
     void getQuestionById() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/101")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -307,6 +286,7 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.viewCount").value(0))
                 .andExpect(jsonPath("$.countValuable").value(2))
                 .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.isUserVote").value("UP_VOTE"))
 
                 .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
                 .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"))
@@ -314,9 +294,17 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.listTagDto.[1].name").value("TAG108"))
                 .andExpect(jsonPath("$.listTagDto.[2].id").value(109))
                 .andExpect(jsonPath("$.listTagDto.[2].name").value("TAG109"))
+
                 .andExpect(jsonPath("$.listCommentDto[0].id").value(102))
-                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment"))
-                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102));
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 102"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102))
+                .andExpect(jsonPath("$.listCommentDto[1].id").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 103"))
+                .andExpect(jsonPath("$.listCommentDto[1].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.listCommentDto[2].id").value(104))
+                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 104"))
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(102));
         
     }
 
@@ -330,19 +318,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void shouldNotGetQuestionById() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/105")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -357,10 +334,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTitle() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setDescription("Description");
 
@@ -370,14 +343,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -394,10 +360,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutDescription() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
 
@@ -407,14 +369,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -431,22 +386,11 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTags() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
         questionCreateDto.setDescription("Description");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -463,10 +407,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTitle() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setDescription("Description");
         questionCreateDto.setTitle("");
@@ -477,14 +417,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -501,10 +434,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyDescription() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
         questionCreateDto.setDescription("");
@@ -515,14 +444,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -539,24 +461,13 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithEmptyTags() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
         questionCreateDto.setDescription("Description");
 
         questionCreateDto.setTags(new ArrayList<>());
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -573,10 +484,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenExist() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
         questionCreateDto.setDescription("Description");
@@ -587,14 +494,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -620,10 +520,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
         questionCreateDto.setDescription("Description");
@@ -634,14 +530,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/")
@@ -663,10 +552,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("questionHasBeenCreated");
         questionCreateDto.setDescription("questionHasBeenCreated");
@@ -683,14 +568,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto3);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         String questionDtoJsonString = mockMvc.perform(
                         post("/api/user/question/")
@@ -715,10 +593,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void questionHasBeenCreated_CheckTagList() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("questionHasBeenCreated_CheckTagList");
         questionCreateDto.setDescription("questionHasBeenCreated_CheckTagList");
@@ -735,14 +609,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto3);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         String questionDtoJsonString = mockMvc.perform(
                         post("/api/user/question/")
@@ -770,10 +637,6 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
     void checkFieldsQuestionInReturnedQuestionDto() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("checkFieldsReturnedQuestionDto");
         questionCreateDto.setDescription("checkFieldsReturnedQuestionDto");
@@ -790,14 +653,7 @@ public class TestQuestionResourceController {
         listTagDto.add(tagDto3);
         questionCreateDto.setTags(listTagDto);
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         String questionDtoJsonString = mockMvc.perform(
                         post("/api/user/question/")
@@ -843,18 +699,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithoutTagsInParams() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -891,25 +737,15 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
@@ -925,18 +761,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedTagsInParams() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=102&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -958,18 +784,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithIgnoredTagsInParams() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&ignoredTag=102&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -978,8 +794,7 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
-                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
-                ;
+                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath());
     }
 
     @Test
@@ -990,17 +805,7 @@ public class TestQuestionResourceController {
 
     public void postUpVoteQuestion() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/101/upVote")
@@ -1020,18 +825,7 @@ public class TestQuestionResourceController {
 
     public void postDownVoteQuestion() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/101/downVote")
@@ -1051,18 +845,7 @@ public class TestQuestionResourceController {
 
     public void postWrongIdQuestion() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/333/downVote")
@@ -1080,18 +863,7 @@ public class TestQuestionResourceController {
 
     public void repeatVotingForQuestion() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/101/downVote")
@@ -1110,18 +882,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithoutTagsInParamsNoAnswer() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/noAnswer?page=1&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1136,8 +898,8 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].title").value("title"))
                 .andExpect(jsonPath("$.items[0].description").value("description to 104"))
-                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T07:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T07:00:00"))
+                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.items[0].authorId").value(101))
                 .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].authorImage").value("link"))
@@ -1158,18 +920,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedAndIgnoredTagsInParamsNoAnswer() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/noAnswer?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1182,8 +934,8 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].title").value("title"))
                 .andExpect(jsonPath("$.items[0].description").value("description to 104"))
-                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T07:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T07:00:00"))
+                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.items[0].authorId").value(101))
                 .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].authorImage").value("link"))
@@ -1202,18 +954,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedTagsInParamsNoAnswer() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/noAnswer?page=1&trackedTag=102&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1233,18 +975,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithIgnoredTagsInParamsNoAnswer() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/noAnswer?page=1&ignoredTag=102&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1266,18 +998,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"},disableConstraints = true, cleanBefore = true)
     void getQuestionsWithoutTagsInParamsSortedByPersistDateDESC() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/new?page=1&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1322,18 +1044,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/new?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1357,18 +1069,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithTrackedTagsInParamsSortedByPersistDateDESC() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/new?page=1&trackedTag=102&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -1380,6 +1082,44 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[1].id").value(102));
     }
 
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/questions.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedTagsInParamsSortedByWeightLastWeek() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                post("/api/auth/token/")
+                        .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/mostPopularWeek?page=1&ignoredTag=102&items=5&trackedTag=101")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[1].id").value(103))
+                .andExpect(jsonPath("$.items[2].id").value(102))
+                .andExpect(jsonPath("$.itemsOnPage").value(5));
+    }
+
+
+
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
@@ -1390,18 +1130,8 @@ public class TestQuestionResourceController {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml"})
     void getQuestionsWithIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/new?page=1&ignoredTag=102&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))

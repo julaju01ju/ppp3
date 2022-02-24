@@ -3,9 +3,12 @@
 <head>
     <script src="../../js/authorization_check.js"></script>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ask a question</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="../css/error.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
 </head>
 <body>
 
@@ -20,24 +23,34 @@
         <div class="col-9">
             <div class="card">
                 <div class="card-body">
-                    <form>
+                    <form id="form" method="post">
                         <div class="form-group">
-                            <label for="titleInput">Заголовок вопроса</label>
-                            <input type="email" class="form-control" id="titleInput">
-                        </div>
+                            <p>
+                                <label for="titleInput">
+                                    <span>Заголовок вопроса</span>
+
+                            <input type="text" id="titleInput" name="titleInput" class="form-control js-title" required>
+                                    <span class="error" aria-live="polite"></span>
+                                </label>
+                            </p>
+
                         <div class="form-group">
                             <label for="questionBodyInput">Вопрос</label>
-                            <textarea class="form-control" id="questionBodyInput" rows="7"></textarea>
+                            <textarea class="editor" id="questionBodyInput" rows="10" required></textarea>
                         </div>
-                        <div class="form-group">
+                            <div class="ui-widget">
                             <label for="tagInput">Теги</label>
-                            <textarea class="form-control" id="tagInput" rows="1"></textarea>
+                                <input type="text" id="tagInput" name="tagInput" class="tagInput" style="font-size: 20px" >
+                                <div class="error" style="font-size: .9rem; color: red; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none" id="errorCode" hidden>Используйте только буквы, цифры и допустимые
+                                    знаки для разделения тегов: <h5>"," / ";" / пробел</h5>.
+                                </div>
+                                <div id="log" class="ui-widget-content" hidden></div>
+                            </div>
+                            <p>
+                        <button type="submit" class="btn btn-primary my-3" id="handleQuestion">Опубликовать вопрос</button>
+                        </p>
                         </div>
-
-                        <button type="submit" class="btn btn-primary my-3">Опубликовать вопрос</button>
-
                     </form>
-
                 </div>
             </div>
         </div>
@@ -116,8 +129,6 @@
 <div id="footer">
     <!--    FOOTER-->
 </div>
-
-
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
         integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>
@@ -127,5 +138,44 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script src="https://cdn.tiny.cloud/1/jv3ztbs3yx37cs004t590bkcajkm7onuh97ixtoosum7w8fi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+<script src="../js/tags.js"></script>
+<script src="../js/question.js"></script>
+<script src="../js/scripts.js"></script>
+
+<script>
+    tinymce.init({
+        selector: '#questionBodyInput',
+        language: "ru",
+        menubar: 'false',
+        toolbar: 'undo redo | styleselect | bold italic | codesample code link | alignleft aligncenter alignright alignjustify | outdent indent',
+        plugins: 'codesample code link',
+        codesample_languages: [
+            { text: 'Java', value: 'java' },
+            { text: 'HTML/XML', value: 'markup' },
+            { text: 'JavaScript', value: 'javascript' },
+            { text: 'CSS', value: 'css' },
+        ],
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("#form").validate({
+            rules: {
+                titleInput: {
+                    required: true,
+                },
+            },
+            messages: {
+                titleInput: {
+                    required: "Введите заголовок!"
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>

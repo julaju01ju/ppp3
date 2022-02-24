@@ -3,10 +3,14 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import org.junit.Ignore;
+import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
+import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
@@ -35,6 +39,7 @@ public class TagResourceControllerTest
     public void getAllTrackedTags() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
         mockMvc.perform(
                         get("/api/user/tag/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -104,7 +109,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true, transactional = false)
     public void getAllIgnoredTags() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/ignored")
@@ -177,7 +181,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addIgnoredTag() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         mockMvc.perform(
                         post("/api/user/tag/102/ignored")
@@ -228,7 +231,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByTheBeginningOrEndingLettersOfTheTagOrderByTop() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=s")
@@ -249,7 +251,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByLetterFromTheMiddleOfTheTagOrderByTop() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=a")
@@ -273,7 +274,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByFullTagName1() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=spring")
@@ -291,7 +291,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByFullTagName2() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=flyway")
@@ -309,7 +308,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName1() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=hib")
@@ -327,7 +325,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName2() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=post")
@@ -345,7 +342,6 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/users.yml"},
             disableConstraints = true, cleanBefore = true)
     public void searchByPartOfTheTagName3() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         get("/api/user/tag/latter?searchString=ma")
@@ -358,7 +354,6 @@ public class TagResourceControllerTest
     }
 
     @Test
-
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
             "dataset/TagResourceController/getAllFoundTags/questions.yml",
@@ -379,5 +374,54 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.items[0].name").value("tagname5"))
                 .andExpect(jsonPath("$.items[0].questionsCount").value(10));
 
+    }
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml",
+            "dataset/AnswerResourceController/questions.yml", }, disableConstraints = true, cleanBefore = true)
+    void answerCheckReAdd() throws Exception {
+
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto();
+        answerCreateDto.setBody("test");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/question/102/answer/add")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(answerCreateDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andReturn().getResponse().getContentAsString();
+        Assertions.assertNotNull(entityManager.createQuery("SELECT a FROM Answer a WHERE a.question.id =:questionId AND a.user.id =: userId", Answer.class)
+                .setParameter("questionId", 102L)
+                .setParameter("userId", 102L));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+            "dataset/AnswerResourceController/votes_on_answers.yml",
+            "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
+    void answerQuestionIdNotFound() throws Exception {
+
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto();
+        answerCreateDto.setBody("test");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/question/9991999/answer/add")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(answerCreateDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound())
+                .andReturn().getResponse().getContentAsString();
     }
 }
