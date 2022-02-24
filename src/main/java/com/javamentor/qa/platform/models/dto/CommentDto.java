@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CommentDto {
 
-    private Long id;
-    private String  comment;
-    private Long userId;
-    private String fullName;
-    private Long reputation;
-    private LocalDateTime dateAdded;
+     private Long id;
+     private String  comment;
+     private Long userId;
+     private String fullName;
+     private Long reputation;
+     private LocalDateTime dateAdded;
 
 }
