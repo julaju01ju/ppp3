@@ -894,12 +894,12 @@ public class TestQuestionResourceController {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
@@ -1369,6 +1369,44 @@ public class TestQuestionResourceController {
                 .andExpect(jsonPath("$.items[0].id").value(103))
                 .andExpect(jsonPath("$.items[1].id").value(102));
     }
+
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/questions.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"})
+    void getQuestionsWithTrackedTagsInParamsSortedByWeightLastWeek() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("someHardPassword");
+        authenticationRequest.setUsername("SomeEmail@mail.mail");
+
+        String USER_TOKEN = mockMvc.perform(
+                post("/api/auth/token/")
+                        .content(new ObjectMapper().writeValueAsString(authenticationRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+
+        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/mostPopularWeek?page=1&ignoredTag=102&items=5&trackedTag=101")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[1].id").value(103))
+                .andExpect(jsonPath("$.items[2].id").value(102))
+                .andExpect(jsonPath("$.itemsOnPage").value(5));
+    }
+
+
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/users.yml",

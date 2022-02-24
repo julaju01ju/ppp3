@@ -203,6 +203,25 @@ public class QuestionResourceController {
                 "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
     }
 
+
+    @GetMapping("/mostPopularWeek")
+    @ApiOperation("Получение пагинации QuestionDto за неделю с сортировкой по наибольшей популярности")
+    public ResponseEntity<PageDto<QuestionDto>> mostPopularQuestionsWeek(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationQuestionsMostPopularWeek", params), HttpStatus.OK);
+    }
+
     @GetMapping("/noAnswer")
     @ApiOperation("Получение пагинации QuestionDto, где не на один вопрос не был дан ответ с тэгами. " +
             "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
