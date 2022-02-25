@@ -19,7 +19,7 @@ user_entity:
     about: "Something"
     city: "Moscow"
     email: "SomeEmaiaal@mail.mail"
-    full_name: "Nikolay"
+    full_name: "Constantin"
     image_link: "link"
     is_deleted: false
     is_enabled: true

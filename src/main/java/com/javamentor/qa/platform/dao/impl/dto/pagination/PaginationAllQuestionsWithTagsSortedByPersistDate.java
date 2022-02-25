@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -16,6 +17,7 @@ public class PaginationAllQuestionsWithTagsSortedByPersistDate implements PageDt
 
     @PersistenceContext
     private EntityManager entityManager;
+
 
     @Override
     public List<QuestionViewDto> getItems(Map<String, Object> params) {
@@ -72,6 +74,7 @@ public class PaginationAllQuestionsWithTagsSortedByPersistDate implements PageDt
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+
 
         return ((BigInteger) entityManager.createNativeQuery(
                         "SELECT " +

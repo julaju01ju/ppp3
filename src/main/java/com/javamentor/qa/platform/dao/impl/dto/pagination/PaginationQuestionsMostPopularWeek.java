@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.QuestionDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionDto> {
+public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionViewDto> {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    public List<QuestionDto> getItems(Map<String, Object> params) {
+    public List<QuestionViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
@@ -75,7 +75,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionDt
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new QuestionDtoResultTransformer()).getResultList();
+                .setResultTransformer(new QuestionViewDtoResultTransformer()).getResultList();
     }
 
     @Override

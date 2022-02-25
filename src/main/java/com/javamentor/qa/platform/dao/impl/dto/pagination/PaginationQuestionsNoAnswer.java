@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -72,6 +73,7 @@ public class PaginationQuestionsNoAnswer implements PageDtoDao<QuestionViewDto> 
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+
 
         return ((BigInteger) em.createNativeQuery(
                         "SELECT " +

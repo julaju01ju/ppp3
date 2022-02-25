@@ -2,7 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
-import com.javamentor.qa.platform.models.dto.TagDtoPagination;
+import com.javamentor.qa.platform.models.dto.TagViewDto;
 import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 import com.javamentor.qa.platform.models.entity.question.Tag;
 import com.javamentor.qa.platform.models.entity.question.TrackedTag;
@@ -56,7 +56,6 @@ public class TagResourceController {
         this.ignoredTagService = ignoredTagService;
     }
 
-
     @ApiOperation(value = "Get all authorized user's tracked tags")
     @ApiResponses(value =
     @ApiResponse(code = 200, message = "Get all tracked tags"))
@@ -82,7 +81,7 @@ public class TagResourceController {
     @ApiOperation("API получение всех тегов, отсортированных по имени, с пагинацией. " +
             "Принимает параметры: page(обязательный) - текущая страница и " +
             "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
-    public ResponseEntity<PageDto<TagDtoPagination>> getAllTagsOrderByNamePagination(
+    public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByNamePagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
                     defaultValue = "10") Integer items) {
@@ -90,7 +89,7 @@ public class TagResourceController {
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
 
-        PageDto<TagDtoPagination> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
+        PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 
@@ -149,12 +148,11 @@ public class TagResourceController {
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
 
-
     @GetMapping("/popular")
     @ApiOperation("API получение всех тегов, с пагинацией по популярности (популярность - количество вопросов за тегом)" +
             "Принимает параметры: page(обязательный) - текущая страница и " +
             "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
-    public ResponseEntity<PageDto<TagDtoPagination>> getAllTagsOrderByPopularPagination(
+    public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByPopularPagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
                     defaultValue = "10") Integer items) {
@@ -162,7 +160,7 @@ public class TagResourceController {
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
 
-        PageDto<TagDtoPagination> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
+        PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 }

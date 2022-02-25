@@ -72,7 +72,7 @@ public class Question implements Serializable {
     private List<Answer> answers = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question", orphanRemoval = true)
-    private List<CommentQuestion> commentQuestions = new ArrayList<>();
+    private List<CommentQuestion> commentQuestions;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "question", orphanRemoval = true)
     private List<UserFavoriteQuestion> userFavoriteQuestions;

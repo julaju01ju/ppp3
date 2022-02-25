@@ -207,7 +207,7 @@ public class QuestionResourceController {
 
     @GetMapping("/mostPopularWeek")
     @ApiOperation("Получение пагинации QuestionDto за неделю с сортировкой по наибольшей популярности")
-    public ResponseEntity<PageDto<QuestionDto>> mostPopularQuestionsWeek(
+    public ResponseEntity<PageDto<QuestionViewDto>> mostPopularQuestionsWeek(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
