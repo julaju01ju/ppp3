@@ -84,10 +84,12 @@ public class TagResourceController {
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByNamePagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
-                    defaultValue = "10") Integer items) {
+                    defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false) String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("tagsFilter", filter);
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
@@ -139,11 +141,11 @@ public class TagResourceController {
         return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
     }
 
-        @GetMapping("/latter")
+    @GetMapping("/latter")
     @ApiOperation("API поиск тегов по букве или слову. " +
             "Выдается 10 самых популярных тегов для текущего поиска. " +
             "В качестве параметров передается searchString - строка или буква.")
-    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString")String searchString) {
+    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString") String searchString) {
         List<TagDto> tagDtos = tagDtoService.getTop10FoundTags(searchString);
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
@@ -155,10 +157,12 @@ public class TagResourceController {
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByPopularPagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
-                    defaultValue = "10") Integer items) {
+                    defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false) String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("tagsFilter", filter);
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);

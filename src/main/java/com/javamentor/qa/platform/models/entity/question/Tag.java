@@ -5,10 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,6 +22,10 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "tag")
+@FilterDef(name = "PaginationAllTags", parameters = {
+        @ParamDef(name = "name", type = "string")
+})
+@Filter(name = "PaginationAllTags", condition = "name like '%' || :name || '%'")
 public class Tag implements Serializable {
 
     private static final long serialVersionUID = 6264105282197120461L;

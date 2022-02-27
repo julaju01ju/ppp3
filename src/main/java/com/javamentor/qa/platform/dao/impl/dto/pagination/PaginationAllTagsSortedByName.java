@@ -2,6 +2,8 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.TagViewDto;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -20,6 +22,10 @@ public class PaginationAllTagsSortedByName implements PageDtoDao<TagViewDto> {
     public List<TagViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
+
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("PaginationAllTags");
+        filter.setParameter("name", params.get("tagsFilter"));
 
         Query query = entityManager.createQuery(
                 "select new com.javamentor.qa.platform.models.dto.TagViewDto (" +
