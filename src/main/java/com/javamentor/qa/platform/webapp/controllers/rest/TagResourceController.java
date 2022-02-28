@@ -85,7 +85,8 @@ public class TagResourceController {
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
                     defaultValue = "10") Integer items,
-            @RequestParam(value = "filter", required = false) String filter) {
+            @RequestParam(value = "filter", required = false,
+                    defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -158,7 +159,8 @@ public class TagResourceController {
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
                     defaultValue = "10") Integer items,
-            @RequestParam(value = "filter", required = false) String filter) {
+            @RequestParam(value = "filter", required = false,
+                    defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);

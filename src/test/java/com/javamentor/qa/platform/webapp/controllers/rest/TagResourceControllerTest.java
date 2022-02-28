@@ -103,6 +103,45 @@ public class TagResourceControllerTest
 
     }
 
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithItems1AndFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname1&page=1&items=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.itemsOnPage").value(1));
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithItems10AndFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname12&page=1&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(111))
+                .andExpect(jsonPath("$.items[0].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[0].description").value("description12"));
+
+    }
+
 
     @Test
     @DataSet(value = {
@@ -131,7 +170,7 @@ public class TagResourceControllerTest
     }, disableConstraints = true, cleanBefore = true)
     public void addTrackedTag() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/tag/100/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -159,7 +198,7 @@ public class TagResourceControllerTest
     }, disableConstraints = true, cleanBefore = true)
     public void addTrackedTagNotFound() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/tag/200/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -183,7 +222,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/tag.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addIgnoredTag() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/tag/102/ignored")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -211,7 +250,7 @@ public class TagResourceControllerTest
     }, disableConstraints = true, cleanBefore = true)
     public void addIgnoredTagNotFound() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
                         post("/api/user/tag/200/ignored")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -360,11 +399,11 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
             "dataset/TagResourceController/getAllFoundTags/questions.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllTagsOrderByPopularPagination() throws Exception {
+    void getAllTagsOrderByPopularPaginationWithEmptyFilter() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=1&items=10")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=%&items=10&page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -379,11 +418,34 @@ public class TagResourceControllerTest
     }
 
     @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByPopularPaginationWithFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname2&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].name").value("tagname2"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(6));
+
+    }
+
+    @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml",
-            "dataset/AnswerResourceController/questions.yml", }, disableConstraints = true, cleanBefore = true)
+            "dataset/AnswerResourceController/questions.yml",}, disableConstraints = true, cleanBefore = true)
     void answerCheckReAdd() throws Exception {
 
         AnswerCreateDto answerCreateDto = new AnswerCreateDto();
