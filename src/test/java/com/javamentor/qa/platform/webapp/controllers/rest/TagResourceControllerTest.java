@@ -19,8 +19,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -426,4 +425,117 @@ public class TagResourceControllerTest
                 .andExpect(status().isNotFound())
                 .andReturn().getResponse().getContentAsString();
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteTrackedTagByTagId() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/100/tracked")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 100";
+        List<Long> ttId = entityManager.createQuery(sql).getResultList();
+        Assertions.assertTrue(ttId.size() == 0);
+
+        String sql1 = "select t.id from Tag t where t.id = 100";
+        List<Long> tId = entityManager.createQuery(sql1).getResultList();
+        Assertions.assertTrue(tId.size() == 1);
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteTrackedTagByTagIdNotFound() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/200/tracked")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteTrackedTagByTagIdNotTracked() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/103/tracked")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/ignoredTag.yml",
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteIgnoredTagByTagId() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/102/ignored")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String sql = "select it.ignoredTag.id from IgnoredTag it where it.id = 102";
+        List<Long> itId = entityManager.createQuery(sql).getResultList();
+        Assertions.assertTrue(itId.size() == 0);
+
+        sql = "select t.id from Tag t where t.id = 102";
+        List<Long> tId = entityManager.createQuery(sql).getResultList();
+        Assertions.assertTrue(tId.size() == 1);
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/ignoredTag.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteIgnoredTagByTagIdNotFound() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/200/ignored")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/ignoredTag.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void deleteIgnoredTagByTagIdNotIgnored() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        mockMvc.perform(
+                        delete("/api/user/tag/100/ignored")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
 }

@@ -20,4 +20,11 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
     public Boolean getTagIfNotExist(Long tagId, Long userId) {
         return trackedTagDao.getTagIfNotExist(tagId, userId);
     }
+
+    @Override
+    public TrackedTag getTrackedTagByTagIdAndUserId(Long tagId, Long userId) {
+        return trackedTagDao.getTrackedTagByTagIdAndUserId(tagId, userId);
+    }
+
+
 }

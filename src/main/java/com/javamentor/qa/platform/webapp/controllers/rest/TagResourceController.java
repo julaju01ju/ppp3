@@ -23,10 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user/tag")
@@ -139,11 +137,11 @@ public class TagResourceController {
         return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
     }
 
-        @GetMapping("/latter")
+    @GetMapping("/latter")
     @ApiOperation("API поиск тегов по букве или слову. " +
             "Выдается 10 самых популярных тегов для текущего поиска. " +
             "В качестве параметров передается searchString - строка или буква.")
-    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString")String searchString) {
+    public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString") String searchString) {
         List<TagDto> tagDtos = tagDtoService.getTop10FoundTags(searchString);
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
@@ -162,5 +160,43 @@ public class TagResourceController {
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
+    }
+
+    @ApiOperation(
+            value = "Delete Tag from TrackedTag table by tag id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "TrackedTag deleted successfully"),
+            @ApiResponse(code = 404, message = "Tag not found")})
+    @DeleteMapping("/{id}/tracked")
+    public ResponseEntity<?> deleteTrackedTagByTagId(@PathVariable("id") Long tagId) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!trackedTagService.getTagIfNotExist(tagId, user.getId())) {
+            return new ResponseEntity<>("TrackedTag not found", HttpStatus.NOT_FOUND);
+        } else {
+            TrackedTag trackedTag = trackedTagService.getTrackedTagByTagIdAndUserId(tagId, user.getId());
+            trackedTagService.deleteById(trackedTag.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+    }
+
+    @ApiOperation(
+            value = "Delete Tag from IgnoredTag table by tag id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "IgnoredTag deleted successfully"),
+            @ApiResponse(code = 404, message = "Tag not found")})
+    @DeleteMapping("/{id}/ignored")
+    public ResponseEntity<?> deleteIgnoredTagByTagId(@PathVariable("id") Long tagId) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!ignoredTagService.getTagIfNotExist(tagId, user.getId())) {
+            return new ResponseEntity<>("TrackedTag not found", HttpStatus.NOT_FOUND);
+        } else {
+            IgnoredTag ignoredTag = ignoredTagService.getIgnoredTagByTagIdAndUserId(tagId, user.getId());
+            ignoredTagService.deleteById(ignoredTag.getId());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 }

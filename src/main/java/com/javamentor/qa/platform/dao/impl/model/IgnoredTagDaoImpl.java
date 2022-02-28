@@ -25,4 +25,14 @@ public class IgnoredTagDaoImpl extends ReadWriteDaoImpl<IgnoredTag, Long> implem
                 .setParameter("userId",userId);
         return SingleResultUtil.getSingleResultOrNull(typedQuery).isPresent();
     }
+
+    @Override
+    public IgnoredTag getIgnoredTagByTagIdAndUserId(Long tagId, Long userId) {
+        TypedQuery<IgnoredTag> typedQuery = entityManager.createQuery(
+                        "select it from IgnoredTag it where it.ignoredTag.id = :tagId and it.user.id = :userId",
+                        IgnoredTag.class
+                ).setParameter("tagId",tagId)
+                .setParameter("userId",userId);
+        return SingleResultUtil.getSingleResultOrNull(typedQuery).get();
+    }
 }
