@@ -5,5 +5,5 @@ import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
 public interface IgnoredTagService extends ReadWriteService<IgnoredTag, Long> {
 
     public Boolean getTagIfNotExist(Long tagId, Long userId);
-    IgnoredTag getIgnoredTagByTagIdAndUserId(Long tagId, Long userId);
+    void deleteIgnoredTagByTagIdAndUserId(Long tagId, Long userId);
 }

@@ -6,6 +6,8 @@ import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long> implements TrackedTagService {
     private final TrackedTagDao trackedTagDao;
@@ -21,9 +23,10 @@ public class TrackedTagServiceImpl extends ReadWriteServiceImpl<TrackedTag, Long
         return trackedTagDao.getTagIfNotExist(tagId, userId);
     }
 
+    @Transactional
     @Override
-    public TrackedTag getTrackedTagByTagIdAndUserId(Long tagId, Long userId) {
-        return trackedTagDao.getTrackedTagByTagIdAndUserId(tagId, userId);
+    public void deleteTrackedTagByTagIdAndUserId(Long tagId, Long userId) {
+        trackedTagDao.deleteTrackedTagByTagIdAndUserId(tagId, userId);
     }
 
 

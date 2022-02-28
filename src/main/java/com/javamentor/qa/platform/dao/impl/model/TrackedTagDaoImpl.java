@@ -26,12 +26,11 @@ public class TrackedTagDaoImpl extends ReadWriteDaoImpl<TrackedTag, Long> implem
     }
 
     @Override
-    public TrackedTag getTrackedTagByTagIdAndUserId(Long tagId, Long userId) {
-        TypedQuery<TrackedTag> typedQuery = entityManager.createQuery(
-                        "select tt from TrackedTag tt where tt.trackedTag.id = :tagId and tt.user.id = :userId",
-                        TrackedTag.class
-                ).setParameter("tagId",tagId)
-                .setParameter("userId",userId);
-        return SingleResultUtil.getSingleResultOrNull(typedQuery).get();
+    public void deleteTrackedTagByTagIdAndUserId(Long tagId, Long userId) {
+        entityManager.createQuery(
+                        "delete from TrackedTag tt where tt.trackedTag.id = :tagId and tt.user.id = :userId")
+                .setParameter("tagId",tagId)
+                .setParameter("userId",userId)
+                .executeUpdate();
     }
 }

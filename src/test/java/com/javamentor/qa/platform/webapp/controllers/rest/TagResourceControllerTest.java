@@ -19,7 +19,9 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -463,7 +465,7 @@ public class TagResourceControllerTest
                         delete("/api/user/tag/200/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -479,7 +481,7 @@ public class TagResourceControllerTest
                         delete("/api/user/tag/103/tracked")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -519,7 +521,7 @@ public class TagResourceControllerTest
                         delete("/api/user/tag/200/ignored")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -535,7 +537,7 @@ public class TagResourceControllerTest
                         delete("/api/user/tag/100/ignored")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
     }
 
 }

@@ -23,8 +23,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/tag")
@@ -166,37 +168,35 @@ public class TagResourceController {
             value = "Delete Tag from TrackedTag table by tag id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "TrackedTag deleted successfully"),
-            @ApiResponse(code = 404, message = "Tag not found")})
+            @ApiResponse(code = 400, message = "TrackedTag not found")})
     @DeleteMapping("/{id}/tracked")
     public ResponseEntity<?> deleteTrackedTagByTagId(@PathVariable("id") Long tagId) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if(!trackedTagService.getTagIfNotExist(tagId, user.getId())) {
-            return new ResponseEntity<>("TrackedTag not found", HttpStatus.NOT_FOUND);
-        } else {
-            TrackedTag trackedTag = trackedTagService.getTrackedTagByTagIdAndUserId(tagId, user.getId());
-            trackedTagService.deleteById(trackedTag.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.badRequest().body("Error deleting TrackeTag by tag id" + tagId);
         }
+
+        trackedTagService.deleteTrackedTagByTagIdAndUserId(tagId, user.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(
             value = "Delete Tag from IgnoredTag table by tag id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "IgnoredTag deleted successfully"),
-            @ApiResponse(code = 404, message = "Tag not found")})
+            @ApiResponse(code = 400, message = "IgnoredTag not found")})
     @DeleteMapping("/{id}/ignored")
     public ResponseEntity<?> deleteIgnoredTagByTagId(@PathVariable("id") Long tagId) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if(!ignoredTagService.getTagIfNotExist(tagId, user.getId())) {
-            return new ResponseEntity<>("TrackedTag not found", HttpStatus.NOT_FOUND);
-        } else {
-            IgnoredTag ignoredTag = ignoredTagService.getIgnoredTagByTagIdAndUserId(tagId, user.getId());
-            ignoredTagService.deleteById(ignoredTag.getId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.badRequest().body("Error deleting IgnoredTag by tag id" + tagId);
         }
+
+        ignoredTagService.deleteIgnoredTagByTagIdAndUserId(tagId, user.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
