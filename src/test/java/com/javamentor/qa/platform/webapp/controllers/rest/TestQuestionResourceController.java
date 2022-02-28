@@ -1145,14 +1145,14 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {
+            "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/votes_on_questions.yml",
-            "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/answers.yml",
-            "dataset/QuestionResourceController/votes_on_questions.yml",
-            "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml"})
 
     void getQuestionsSortedByVotesAndAnswersAndViewsByMonth() throws Exception {
