@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
 
+
 @Repository
 public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao {
 
@@ -23,11 +24,22 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         String hql = "select u from User u " +
                 "join fetch u.role where u.email = :email";
         TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
+
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
+    @CacheEvict(value = "checkIsExists", key = "#email")
+    public boolean checkIsExists(String email) {
+        String hql = "select u from User u " +
+                "join fetch u.role where u.email = :email";
+        TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
+        boolean check = ((SingleResultUtil.getSingleResultOrNull(query)).equals(Optional.empty())) ? false : true;
+        return check;
+    }
+
+
     @CacheEvict(value = "getUserByEmail", key = "#email")
-    public void updatePasswordByEmail (String email, String password) {
+    public void updatePasswordByEmail(String email, String password) {
         String hql = "update User u set u.password = :password where u.email = :email";
         entityManager.createQuery(hql)
                 .setParameter("password", password)
@@ -40,4 +52,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         String hql = "update User u set u.isEnabled = false where u.email = :email";
         entityManager.createQuery(hql).setParameter("email", email).executeUpdate();
     }
+
+
 }
+
