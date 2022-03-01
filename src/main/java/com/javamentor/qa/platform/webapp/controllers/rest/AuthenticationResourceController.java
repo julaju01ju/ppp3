@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.text.ParseException;
 import java.util.Collection;
 
 @RestController
@@ -47,14 +46,13 @@ public class AuthenticationResourceController {
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             if (request.isRemember()) {
-                jwtTokenDTO.setToken(jwtUtil.generateLongToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+                jwtTokenDTO.setToken(jwtUtil.generateLongToken((User) userDetails));
             } else {
-                jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+                jwtTokenDTO.setToken(jwtUtil.generateLongToken((User) userDetails));
             }
-        } catch (BadCredentialsException exception) {
+        }
+        catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
         return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
     }

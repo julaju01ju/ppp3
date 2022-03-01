@@ -9,11 +9,8 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -46,13 +43,12 @@ public class JwtUtil {
         return token;
     }
 
-    public String generateLongToken(User user) throws ParseException {
+    public String generateLongToken(User user) {
 
         Algorithm algorithm = getAlgorithm();
-
         String token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(new SimpleDateFormat( "dd.MM.yyyy" ).parse( "31.12.2122" ))
+                .withExpiresAt((Date) DateTimeFormatter.ofPattern("dd.MM.yyyy").parse("31.12.2122"))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("role", user.getRole().getId())
                 .sign(algorithm);
