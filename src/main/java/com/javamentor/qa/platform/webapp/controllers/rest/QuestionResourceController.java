@@ -273,4 +273,24 @@ public class QuestionResourceController {
                 "paginationAllQuestionsWithTagsSortedByPersistDate", params), HttpStatus.OK);
 
     }
+
+    @GetMapping("/sortedQuestionsByMonth")
+    @ApiOperation("Получение пагинации QuestionDto с тэгами, " +
+            "за месяц по наибольшим голосам, ответам и просмотрам.")
+    @ApiResponse(code = 200, message = "status OK")
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndViewsByMonth(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);
+    }
 }
