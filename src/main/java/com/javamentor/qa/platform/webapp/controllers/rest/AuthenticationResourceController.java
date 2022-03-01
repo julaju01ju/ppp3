@@ -3,7 +3,10 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
+import com.javamentor.qa.platform.models.entity.user.Role;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +29,12 @@ public class AuthenticationResourceController {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserDao userDAO;
+    private final UserService userService;
 
-    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
+    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
-        this.userDAO = userDAO;
+        this.userService = userService;
     }
 
     @PostMapping("/auth/token/")
@@ -41,11 +44,16 @@ public class AuthenticationResourceController {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
 
         try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+//            Authentication authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//            Почему не можем брать напрямую request.getUsername()?
+            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userService.getUserByEmail(request.getUsername())));
+
+//            Не понял, почему запрос не имел смысла, если так можно было получить юзера? Только что в слой сервиса перекинуть
+//            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+
             return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
@@ -61,7 +69,8 @@ public class AuthenticationResourceController {
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("USER")) {
+//            Здесь просто неверно роль была указана?
+            if (authority.getAuthority().equals("ROLE_USER")) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         }

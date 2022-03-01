@@ -50,4 +50,11 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
     public void disableUserByEmail(String email) {
         userDao.disableUserByEmail(email);
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+         Optional<User> user = userDao.getUserByEmail(email);
+         return user.get();
+
+    }
 }
