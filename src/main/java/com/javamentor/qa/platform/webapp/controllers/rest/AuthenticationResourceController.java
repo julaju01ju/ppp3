@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.text.ParseException;
 import java.util.Collection;
 
 @RestController
@@ -45,11 +46,17 @@ public class AuthenticationResourceController {
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
-            return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
+            if (request.isRemember()) {
+                jwtTokenDTO.setToken(jwtUtil.generateLongToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+            } else {
+                jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+            }
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+        return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
     }
 
     @GetMapping("/user/check_auth")
