@@ -1,9 +1,7 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
-import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -29,12 +27,12 @@ public class AuthenticationResourceController {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
+//    private final UserService userService;
 
     public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserService userService) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
+//        this.userService = userService;
     }
 
     @PostMapping("/auth/token/")
@@ -44,16 +42,14 @@ public class AuthenticationResourceController {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
 
         try {
-//            Authentication authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            Почему не можем брать напрямую request.getUsername()?
-            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userService.getUserByEmail(request.getUsername())));
-
-//            Не понял, почему запрос не имел смысла, если так можно было получить юзера? Только что в слой сервиса перекинуть
-//            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
-
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//            тогда у меня тут 2 вариант решения
+//            и, как понимаю, лучше использовать через userDetails, а userService вообще удалить.
+//            И метод getUserByEmail тогда можно не писать, раз мы берем пользователя из контекста
+            jwtTokenDTO.setToken(jwtUtil.generateAccessToken((User) userDetails));
+//            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userService.getUserByEmail(userDetails.getUsername()).get()));
             return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
@@ -69,7 +65,6 @@ public class AuthenticationResourceController {
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-//            Здесь просто неверно роль была указана?
             if (authority.getAuthority().equals("ROLE_USER")) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }

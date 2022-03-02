@@ -52,9 +52,7 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
     }
 
     @Override
-    public User getUserByEmail(String email) {
-         Optional<User> user = userDao.getUserByEmail(email);
-         return user.get();
-
+    public Optional<User> getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
     }
 }
