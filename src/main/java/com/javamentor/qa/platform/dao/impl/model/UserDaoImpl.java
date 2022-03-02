@@ -3,7 +3,9 @@ package com.javamentor.qa.platform.dao.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.user.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -24,19 +26,15 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         String hql = "select u from User u " +
                 "join fetch u.role where u.email = :email";
         TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
-
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @CacheEvict(value = "checkIsExists", key = "#email")
+    @Cacheable(value = "user")
     public boolean checkIsExists(String email) {
-        String hql = "select u from User u " +
-                "join fetch u.role where u.email = :email";
-        TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
-        boolean check = ((SingleResultUtil.getSingleResultOrNull(query)).equals(Optional.empty())) ? false : true;
-        return check;
+        long count = (long) entityManager.createQuery("SELECT COUNT(e)  FROM User e"
+                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult();
+        return count > 0;
     }
-
 
     @CacheEvict(value = "getUserByEmail", key = "#email")
     public void updatePasswordByEmail(String email, String password) {
