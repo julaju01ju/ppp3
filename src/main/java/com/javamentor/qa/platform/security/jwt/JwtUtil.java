@@ -48,7 +48,7 @@ public class JwtUtil {
         Algorithm algorithm = getAlgorithm();
         String token = JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt((Date) DateTimeFormatter.ofPattern("dd.MM.yyyy").parse("31.12.2122"))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("role", user.getRole().getId())
                 .sign(algorithm);

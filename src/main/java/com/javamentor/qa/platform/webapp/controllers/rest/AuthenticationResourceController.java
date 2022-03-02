@@ -35,7 +35,7 @@ public class AuthenticationResourceController {
     }
 
     @PostMapping("/auth/token/")
-    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username и password")
+    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username, password и значение поля isRemember")
     public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
@@ -44,11 +44,11 @@ public class AuthenticationResourceController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            User user = (User) authentication.getPrincipal();
             if (request.isRemember()) {
-                jwtTokenDTO.setToken(jwtUtil.generateLongToken((User) userDetails));
+                jwtTokenDTO.setToken(jwtUtil.generateLongToken(user));
             } else {
-                jwtTokenDTO.setToken(jwtUtil.generateLongToken((User) userDetails));
+                jwtTokenDTO.setToken(jwtUtil.generateAccessToken(user));
             }
         }
         catch (BadCredentialsException exception) {
