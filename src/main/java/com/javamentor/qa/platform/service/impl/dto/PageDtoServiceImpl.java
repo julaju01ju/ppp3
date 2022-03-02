@@ -47,7 +47,6 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
         pageDto.setItemsOnPage((int) params.get("itemsOnPage"));
         pageDto.setCurrentPageNumber((int) params.get("currentPageNumber"));
         pageDto.setItems(pageDtoDao.getItems(params));
-        pageDto.setFilter((String) params.get("tagsFilter"));
         pageDto.setTotalResultCount(pageDtoDao.getTotalResultCount(params));
         pageDto.setTotalPageCount((int) (Math.ceil(((double) pageDto.getTotalResultCount() / (int) params.get("itemsOnPage")))));
         if (pageDto.getTotalPageCount() == 0) {

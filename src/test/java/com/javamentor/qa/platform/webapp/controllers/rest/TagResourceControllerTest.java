@@ -106,18 +106,30 @@ public class TagResourceControllerTest
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllTagsOrderByNamePaginationWithItems1AndFilter() throws Exception {
+    void getAllTagsOrderByNamePaginationWithItems4AndFilter() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname1&page=1&items=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname1&page=1&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(4))
-                .andExpect(jsonPath("$.itemsOnPage").value(1));
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].name").value("tagname1"))
+                .andExpect(jsonPath("$.items[0].description").value("description1"))
+                .andExpect(jsonPath("$.items[1].id").value(109))
+                .andExpect(jsonPath("$.items[1].name").value("tagname10"))
+                .andExpect(jsonPath("$.items[1].description").value("description10"))
+                .andExpect(jsonPath("$.items[2].id").value(110))
+                .andExpect(jsonPath("$.items[2].name").value("tagname11"))
+                .andExpect(jsonPath("$.items[2].description").value("description11"))
+                .andExpect(jsonPath("$.items[3].id").value(111))
+                .andExpect(jsonPath("$.items[3].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[3].description").value("description12"));
 
     }
 
@@ -403,7 +415,7 @@ public class TagResourceControllerTest
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=%&items=10&page=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/popular?items=10&page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -426,7 +438,7 @@ public class TagResourceControllerTest
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=tagname2&items=10&page=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/popular?filter=tagname2&items=10&page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())

@@ -18,7 +18,6 @@ public class PageDto<T> {
     private int totalPageCount;
     private int totalResultCount;
     private List<T> items;
-    private String filter;
     private int itemsOnPage;
 
     @Override
@@ -28,7 +27,6 @@ public class PageDto<T> {
                 ", totalPageCount=" + totalPageCount +
                 ", totalResultCount=" + totalResultCount +
                 ", items=" + items +
-                ", filters=" + filter +
                 ", itemsOnPage=" + itemsOnPage +
                 '}';
     }
