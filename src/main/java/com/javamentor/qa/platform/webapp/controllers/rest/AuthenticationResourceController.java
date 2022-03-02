@@ -39,7 +39,6 @@ public class AuthenticationResourceController {
     public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
-
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
