@@ -1,15 +1,6 @@
 document.getElementById("handleFormSubmit").addEventListener("click", async e => {
     e.preventDefault();
 
-    // let ob = {
-    //     username: document.getElementById("inputEmail").value,
-    //     password: document.getElementById("inputPassword").value,
-    //     isRemember: document.getElementById("rememberMe").checked
-    // }
-    // console.log(ob)
-    // console.log(pas)
-    // console.log(isR)
-
     const response = await fetch("/api/auth/token/", {
         method: "POST",
         headers: {"Accept": "application/json", "Content-Type": "application/json"},
