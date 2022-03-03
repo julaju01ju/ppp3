@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TagService extends ReadWriteService<Tag, Long> {
     List<Tag> getListTagsByListOfTagName(List<String> listTagName);
+    boolean isTagsMappingToTrackedAndIgnoredCorrect(List<Long> trackedTag, List<Long> ignoredTag);
 }

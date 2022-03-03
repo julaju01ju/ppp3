@@ -72,6 +72,13 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -193,6 +200,13 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -212,6 +226,13 @@ public class QuestionResourceController {
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
@@ -238,6 +259,13 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -263,6 +291,13 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -283,6 +318,13 @@ public class QuestionResourceController {
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
+
+            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);

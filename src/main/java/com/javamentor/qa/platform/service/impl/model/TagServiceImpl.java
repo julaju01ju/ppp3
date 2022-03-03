@@ -22,4 +22,9 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
     public List<Tag> getListTagsByListOfTagName(List<String> listTagName){
         return tagDao.getListTagsByListOfTagName(listTagName);
     }
+
+    @Override
+    public boolean isTagsMappingToTrackedAndIgnoredCorrect(List<Long> trackedTag, List<Long> ignoredTag) {
+        return tagDao.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag);
+    }
 }
