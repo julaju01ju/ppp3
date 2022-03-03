@@ -1,8 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.Collection;
 
 @RestController
@@ -26,12 +25,10 @@ public class AuthenticationResourceController {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserDao userDAO;
 
-    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
+    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
-        this.userDAO = userDAO;
     }
 
     @PostMapping("/auth/token/")
@@ -39,13 +36,11 @@ public class AuthenticationResourceController {
     public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
-
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            jwtTokenDTO.setToken(jwtUtil.generateAccessToken(userDAO.getUserByEmail(userDetails.getUsername()).get()));
+            jwtTokenDTO.setToken(jwtUtil.generateAccessToken((User) userDetails));
             return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
         } catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
@@ -61,7 +56,7 @@ public class AuthenticationResourceController {
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("USER")) {
+            if (authority.getAuthority().equals("ROLE_USER")) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         }
