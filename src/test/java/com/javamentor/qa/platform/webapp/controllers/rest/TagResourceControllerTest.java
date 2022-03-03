@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import org.junit.Ignore;
 import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
@@ -152,6 +153,63 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.items[0].name").value("tagname12"))
                 .andExpect(jsonPath("$.items[0].description").value("description12"));
 
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithoutFilterParam() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?page=1&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].name").value("tagname1"))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithEmptyFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=&page=1&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].name").value("tagname1"))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
+
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByNamePaginationWithFilterNotExists() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/name?filter=notexists&page=1&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(0))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items").isEmpty());
     }
 
 
@@ -415,6 +473,29 @@ public class TagResourceControllerTest
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/popular?filter=&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].name").value("tagname5"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(10));
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByPopularPaginationWithoutFilterParam() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/popular?items=10&page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -428,6 +509,29 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.items[0].questionsCount").value(10));
 
     }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    void getAllTagsOrderByPopularPaginationWithFilterNotExists() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/popular?filter=notexists&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(0))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items").isEmpty());
+
+    }
+
+
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
