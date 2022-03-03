@@ -1142,4 +1142,32 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[1].id").value(101));
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/votes_on_questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/answers.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml"})
+
+    void getQuestionsSortedByVotesAndAnswersAndViewsByMonth() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/sortedQuestionsByMonth?page=1&ignoredTag=103&trackedTag=102&items=4")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].id").value(103))
+                .andExpect(jsonPath("$.items[1].id").value(102))
+                .andExpect(jsonPath("$.items[2].id").value(104));
+    }
 }
