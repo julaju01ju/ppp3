@@ -3,9 +3,7 @@ package com.javamentor.qa.platform.dao.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.user.User;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
@@ -24,15 +22,19 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
 
     @Cacheable(value = "getUserByEmail", key = "#email")
     public Optional<User> getUserByEmail(String email) {
+        checkIfExists(email);
+        checkIfExists(email);
         String hql = "select u from User u " +
                 "join fetch u.role where u.email = :email";
         TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
+
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @CachePut(value = "getUserByEmail", key = "#email")
-    public boolean checkIsExists(String email) {
-        long count = (long) entityManager.createQuery("SELECT COUNT(e)  FROM User e"
+    //@Cacheable(value = "checkIfExists", key = "#email", unless = "#email != null ")
+    @Cacheable(value = "checkIfExists", key = "#email")
+    public boolean checkIfExists(String email) {
+        long count = (long) entityManager.createQuery("SELECT COUNT(e) FROM User e"
                 + "  WHERE e.email =: email").setParameter("email", email).getSingleResult();
         return count > 0;
     }
