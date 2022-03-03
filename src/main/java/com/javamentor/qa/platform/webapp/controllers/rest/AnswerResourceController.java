@@ -61,17 +61,11 @@ public class AnswerResourceController {
 
     @GetMapping("/{questionId}/answer")
     @ApiOperation(
-            value = "Returns List of AnswerDtos corresponding questionId",
-            notes = "Returns HTTP 404 if the questionId is not found")
+            value = "Returns List of AnswerDtos corresponding questionId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Valid List of AnswerDtos found"),
-            @ApiResponse(code = 404, message = "Answers with id not found")})
+            @ApiResponse(code = 200, message = "Valid List of AnswerDtos found")})
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        List<AnswerDto> answerDtos = answerDtoService.getAllAnswersByQuestionId(id);
-
-        return answerDtos.isEmpty() ?
-                new ResponseEntity<>("Answers with id " + id + " not found!", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(answerDtos, HttpStatus.OK);
+        return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")
