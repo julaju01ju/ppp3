@@ -84,10 +84,13 @@ public class TagResourceController {
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByNamePagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
-                    defaultValue = "10") Integer items) {
+                    defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false,
+                    defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("tagsFilter", filter);
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByName", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
@@ -155,10 +158,13 @@ public class TagResourceController {
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByPopularPagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
-                    defaultValue = "10") Integer items) {
+                    defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false,
+                    defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("tagsFilter", filter);
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByPopular", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
