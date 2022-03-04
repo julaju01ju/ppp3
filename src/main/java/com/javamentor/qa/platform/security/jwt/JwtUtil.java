@@ -9,8 +9,8 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
-
 import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -37,6 +37,18 @@ public class JwtUtil {
         String token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
+                .withIssuedAt(new Date(System.currentTimeMillis()))
+                .withClaim("role", user.getRole().getId())
+                .sign(algorithm);
+        return token;
+    }
+
+    public String generateLongToken(User user) {
+
+        Algorithm algorithm = getAlgorithm();
+        String token = JWT.create()
+                .withSubject(user.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 365 * 24 * 60 * 60 * 1000))
                 .withIssuedAt(new Date(System.currentTimeMillis()))
                 .withClaim("role", user.getRole().getId())
                 .sign(algorithm);
