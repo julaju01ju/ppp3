@@ -19,27 +19,20 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
 
     @PersistenceContext
     private EntityManager entityManager;
-    CacheManager cacheManager;
 
     @Cacheable(value = "getUserByEmail", key = "#email")
     public Optional<User> getUserByEmail(String email) {
-        checkIfExists(email);
-        checkIfExists(email);
         String hql = "select u from User u " +
                 "join fetch u.role where u.email = :email";
         TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("email", email);
-checkIfExists(email);
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    //@Cacheable(value = "checkIfExists", key = "#email", unless = "#email != null ")
+
     @Cacheable(value = "checkIfExists", key = "#email")
     public boolean checkIfExists(String email) {
-//        if (count>0 == true){
-//            cacheManager.getCache(email).clear();
-//  }
         return (long) entityManager.createQuery(" SELECT COUNT(e) FROM User e"
-                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult()>0;
+                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult() > 0;
     }
 
     @CacheEvict(value = "getUserByEmail", key = "#email")
