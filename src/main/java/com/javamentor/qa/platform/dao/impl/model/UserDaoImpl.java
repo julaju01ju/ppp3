@@ -35,7 +35,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
                 + "  WHERE e.email =: email").setParameter("email", email).getSingleResult();
     }
 
-    @CacheEvict(value = "getUserByEmail", key = "#email")
+    @CacheEvict(value = {"getUserByEmail", "checkIfExists"}, key = "#email")
     public void updatePasswordByEmail(String email, String password) {
         String hql = "update User u set u.password = :password where u.email = :email";
         entityManager.createQuery(hql)
