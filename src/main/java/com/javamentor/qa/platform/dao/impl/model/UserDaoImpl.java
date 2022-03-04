@@ -31,8 +31,8 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
 
     @Cacheable(value = "checkIfExists", key = "#email")
     public boolean checkIfExists(String email) {
-        return (long) entityManager.createQuery(" SELECT COUNT(e) FROM User e"
-                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult() > 0;
+        return (boolean) entityManager.createQuery(" SELECT COUNT(e) > 0 FROM User e"
+                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult();
     }
 
     @CacheEvict(value = "getUserByEmail", key = "#email")
@@ -44,7 +44,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
-    @CacheEvict(value = "getUserByEmail", key = "#email")
+    @CacheEvict(value = {"getUserByEmail", "checkIfExists"}, key = "#email")
     public void disableUserByEmail(String email) {
         String hql = "update User u set u.isEnabled = false where u.email = :email";
         entityManager.createQuery(hql).setParameter("email", email).executeUpdate();
