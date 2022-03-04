@@ -100,8 +100,8 @@ public class TagResourceController {
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (!(trackedTagService.getTagIfNotExist(tagId, user.getId())) &&
-                    !(ignoredTagService.getTagIfNotExist(tagId, user.getId()))) {
+            if (!(trackedTagService.getTagIfNotExist(Objects.requireNonNull(getAllIgnoredTags().getBody()).stream().filter(t -> t.getId()
+                    .equals(tagId)).findAny().get().getId(), user.getId()))) {
                 TrackedTag trackedTag = new TrackedTag();
                 trackedTag.setTrackedTag(tag);
                 trackedTag.setUser(user);
@@ -123,8 +123,8 @@ public class TagResourceController {
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (!(trackedTagService.getTagIfNotExist(Objects.requireNonNull(getAllIgnoredTags().getBody()).stream().filter(t -> t.getId()
-                    .equals(tagId)).findAny().get().getId(), user.getId()))) {
+            if (!(trackedTagService.getTagIfNotExist(tagId, user.getId())) &&
+                    !(ignoredTagService.getTagIfNotExist(tagId, user.getId()))) {
                 IgnoredTag ignoredTag = new IgnoredTag();
                 ignoredTag.setIgnoredTag(tag);
                 ignoredTag.setUser(user);
