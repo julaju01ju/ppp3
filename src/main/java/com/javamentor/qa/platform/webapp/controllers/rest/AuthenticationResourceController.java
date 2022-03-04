@@ -32,19 +32,25 @@ public class AuthenticationResourceController {
     }
 
     @PostMapping("/auth/token/")
-    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username и password")
+    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username, password и значение поля isRemember")
     public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            jwtTokenDTO.setToken(jwtUtil.generateAccessToken((User) userDetails));
-            return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
-        } catch (BadCredentialsException exception) {
+
+            User user = (User) authentication.getPrincipal();
+            if (request.isRemember()) {
+                jwtTokenDTO.setToken(jwtUtil.generateLongToken(user));
+            } else {
+                jwtTokenDTO.setToken(jwtUtil.generateAccessToken(user));
+            }
+        }
+        catch (BadCredentialsException exception) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
         }
+        return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
     }
 
     @GetMapping("/user/check_auth")
