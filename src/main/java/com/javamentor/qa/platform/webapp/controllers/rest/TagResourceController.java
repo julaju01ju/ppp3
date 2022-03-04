@@ -23,10 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/user/tag")
@@ -126,8 +123,8 @@ public class TagResourceController {
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (!(ignoredTagService.getTagIfNotExist(tagId, user.getId())) &&
-                    !(trackedTagService.getTagIfNotExist(tagId, user.getId()))) {
+            if (!(trackedTagService.getTagIfNotExist(Objects.requireNonNull(getAllIgnoredTags().getBody()).stream().filter(t -> t.getId()
+                    .equals(tagId)).findAny().get().getId(), user.getId()))) {
                 IgnoredTag ignoredTag = new IgnoredTag();
                 ignoredTag.setIgnoredTag(tag);
                 ignoredTag.setUser(user);
@@ -174,7 +171,7 @@ public class TagResourceController {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(!trackedTagService.getTagIfNotExist(tagId, user.getId())) {
+        if (!trackedTagService.getTagIfNotExist(tagId, user.getId())) {
             return ResponseEntity.badRequest().body("Error deleting TrackeTag by tag id" + tagId);
         }
 
@@ -192,7 +189,7 @@ public class TagResourceController {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(!ignoredTagService.getTagIfNotExist(tagId, user.getId())) {
+        if (!ignoredTagService.getTagIfNotExist(tagId, user.getId())) {
             return ResponseEntity.badRequest().body("Error deleting IgnoredTag by tag id" + tagId);
         }
 
