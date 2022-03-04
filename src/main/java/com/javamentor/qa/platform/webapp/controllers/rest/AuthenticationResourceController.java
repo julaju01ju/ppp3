@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -26,12 +25,10 @@ public class AuthenticationResourceController {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final UserDao userDAO;
 
-    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager, UserDao userDAO) {
+    public AuthenticationResourceController(JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.jwtUtil = jwtUtil;
         this.authenticationManager = authenticationManager;
-        this.userDAO = userDAO;
     }
 
     @PostMapping("/auth/token/")
@@ -65,7 +62,7 @@ public class AuthenticationResourceController {
         }
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (GrantedAuthority authority : authorities) {
-            if (authority.getAuthority().equals("USER")) {
+            if (authority.getAuthority().equals("ROLE_USER")) {
                 return ResponseEntity.status(HttpStatus.OK).build();
             }
         }
