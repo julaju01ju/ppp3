@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.entity.user.User;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Optional;
+
 
 @Repository
 public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao {
@@ -26,8 +28,15 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    @CacheEvict(value = "getUserByEmail", key = "#email")
-    public void updatePasswordByEmail (String email, String password) {
+
+    @Cacheable(value = "checkIfExists", key = "#email")
+    public boolean checkIfExists(String email) {
+        return (boolean) entityManager.createQuery(" SELECT COUNT(e) > 0 FROM User e"
+                + "  WHERE e.email =: email").setParameter("email", email).getSingleResult();
+    }
+
+    @CacheEvict(value = {"getUserByEmail", "checkIfExists"}, key = "#email")
+    public void updatePasswordByEmail(String email, String password) {
         String hql = "update User u set u.password = :password where u.email = :email";
         entityManager.createQuery(hql)
                 .setParameter("password", password)
@@ -35,9 +44,13 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     @Override
-    @CacheEvict(value = "getUserByEmail", key = "#email")
+    @CacheEvict(value = {"getUserByEmail", "checkIfExists"}, key = "#email")
     public void disableUserByEmail(String email) {
         String hql = "update User u set u.isEnabled = false where u.email = :email";
         entityManager.createQuery(hql).setParameter("email", email).executeUpdate();
+
     }
+
+
 }
+
