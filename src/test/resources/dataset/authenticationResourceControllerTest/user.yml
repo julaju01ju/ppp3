@@ -4,12 +4,12 @@ role:
   - id: 101
     name: "ROLE_USER"
 user_entity:
-  - id: 100
+  - id: 103
     full_name: "ADMIN"
     password: "$2a$10$Xb1oUBYItmnOu5RsXOwzZ.5ECR9gXlUFQ7qwIs7exAidDvXxs970G"
     persist_date: "2021-12-09"
     last_redaction_date: "2021-12-09"
-    email: "admin@mail.ru"
+    email: "adminAUTH@mail.ru"
     about: "about1"
     city: "city"
     link_site: "site"

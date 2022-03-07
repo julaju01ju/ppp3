@@ -1,24 +1,16 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
-import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -37,12 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@TestPropertySource(properties = "spring.config.location = src/test/resources/application-test.properties")
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-@Ignore
 public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Autowired
@@ -62,22 +48,12 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/views.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/tags.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/question_has_tag.yml"
-    }
-    , disableConstraints = true
+    },
+            disableConstraints = true, cleanBefore = true
     )
     public void getQuestionsSortedByVotesAndAnswersAndQuestionViewed() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
 
         mockMvc.perform(
                         get("/api/user/question/sortedQuestions?page=1&items=3")
@@ -150,53 +126,32 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
-    }
-    , disableConstraints = true
+    },
+            disableConstraints = true, cleanBefore = true
     )
     public void insertAuthUserToQuestionViewedByQuestionId() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user120@mail.ru","USER");
 
         mockMvc.perform(
                         post("/api/user/question/110/view")
-                                .header(AUTHORIZATION, USER_TOKEN))
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
+
 
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
-    }
-            , disableConstraints = true
+    },
+            disableConstraints = true, cleanBefore = true
     )
     public void insertAuthUserToQuestionViewedByQuestionIdNotFound() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user100@mail.ru","USER");
 
         mockMvc.perform(
                         post("/api/user/question/155/view")
@@ -210,27 +165,16 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/role.yml",
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/user.yml"
-    }
-            , disableConstraints = true
+    },
+            disableConstraints = true, cleanBefore = true
     )
     public void insertAuthUserToQuestionViewedByQuestionIdAfterUserBeenInserted() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = super.getToken("user100@mail.ru","USER");
 
         mockMvc.perform(
                         post("/api/user/question/110/view")
-                                .header(AUTHORIZATION, USER_TOKEN))
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -242,21 +186,24 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"}, disableConstraints = true)
+    @DataSet(value = {"dataset/question/questionQuestionApi.yml", "dataset/question/user.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     public void getQuestionCount() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/count")
-                                .header(AUTHORIZATION, USER_TOKEN))
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.content().string("8"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
@@ -265,13 +212,16 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml"})
-    void getQuestionById() throws Exception {
+            "dataset/QuestionResourceController/comment_question.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionById() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/101")
-                        .header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        get("/api/user/question/101")
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(101))
@@ -316,8 +266,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void shouldNotGetQuestionById() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void shouldNotGetQuestionById() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -331,7 +283,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTitle() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
@@ -357,7 +311,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutDescription() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
@@ -383,7 +339,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     void questionCreateDtoWithoutTags() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
@@ -404,8 +362,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionCreateDtoWithEmptyTitle() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionCreateDtoWithEmptyTitle() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setDescription("Description");
@@ -431,8 +391,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionCreateDtoWithEmptyDescription() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionCreateDtoWithEmptyDescription() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
@@ -458,8 +420,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionCreateDtoWithEmptyTags() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionCreateDtoWithEmptyTags() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
@@ -481,8 +445,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionCreateDtoWithNameTagWhenExist() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionCreateDtoWithNameTagWhenExist() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
@@ -517,8 +483,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionCreateDtoWithNameTagWhenNotExist() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("Title");
@@ -549,8 +517,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionHasBeenCreated() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionHasBeenCreated() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("questionHasBeenCreated");
@@ -590,8 +560,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void questionHasBeenCreated_CheckTagList() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void questionHasBeenCreated_CheckTagList() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("questionHasBeenCreated_CheckTagList");
@@ -634,8 +606,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/role.yml",
             "dataset/QuestionResourceController/user_entity.yml",
-            "dataset/QuestionResourceController/tag.yml"}, disableConstraints = true, cleanBefore = true)
-    void checkFieldsQuestionInReturnedQuestionDto() throws Exception {
+            "dataset/QuestionResourceController/tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void checkFieldsQuestionInReturnedQuestionDto() throws Exception {
 
         QuestionCreateDto questionCreateDto = new QuestionCreateDto();
         questionCreateDto.setTitle("checkFieldsReturnedQuestionDto");
@@ -697,8 +671,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithoutTagsInParams() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsInParams() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -727,20 +703,24 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].countAnswer").value(1));
 
     }
+
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
 
-        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -751,18 +731,22 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
                 .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(104));
     }
+
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedTagsInParams() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedTagsInParams() throws Exception {
 
-        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question?page=1&trackedTag=102&items=3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -775,15 +759,18 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithIgnoredTagsInParams() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParams() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -800,7 +787,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            "dataset/QuestionResourceController/voteQuestionApi.yml"
+    },
             disableConstraints = true, transactional = true)
 
     public void postUpVoteQuestion() throws Exception {
@@ -820,7 +808,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
+            "dataset/QuestionResourceController/voteQuestionApi.yml"
+    },
             disableConstraints = true, transactional = true)
 
     public void postDownVoteQuestion() throws Exception {
@@ -840,8 +829,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
             "dataset/QuestionResourceController/user.yml",
-            "dataset/QuestionResourceController/voteQuestionApi.yml"},
-            disableConstraints = true, transactional = true, cleanBefore = true)
+            "dataset/QuestionResourceController/voteQuestionApi.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
 
     public void postWrongIdQuestion() throws Exception {
 
@@ -855,18 +845,19 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
+    @DataSet(value = {
             "dataset/QuestionResourceController/user.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml",
-            "dataset/QuestionResourceController/votes_on_questions.yml"},
-            disableConstraints = true, transactional = true)
+            "dataset/QuestionResourceController/votes_on_questions.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
 
     public void repeatVotingForQuestion() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
-                        post("/api/user/question/101/downVote")
+                        post("/api/user/question/100/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -880,8 +871,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithoutTagsInParamsNoAnswer() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsInParamsNoAnswer() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -918,8 +911,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedAndIgnoredTagsInParamsNoAnswer() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParamsNoAnswer() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -952,8 +947,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedTagsInParamsNoAnswer() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedTagsInParamsNoAnswer() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -973,8 +970,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithIgnoredTagsInParamsNoAnswer() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsNoAnswer() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -996,8 +995,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"},disableConstraints = true, cleanBefore = true)
-    void getQuestionsWithoutTagsInParamsSortedByPersistDateDESC() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsInParamsSortedByPersistDateDESC() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -1042,8 +1043,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -1060,15 +1063,18 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedTagsInParamsSortedByPersistDateDESC() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedTagsInParamsSortedByPersistDateDESC() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
@@ -1083,30 +1089,24 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
 
+    //Если не работает этот тест, поменять в dataset questions (id 104, 103, 102) persist_date на текущую дату
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
             "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/questions.yml",
             "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithTrackedTagsInParamsSortedByWeightLastWeek() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("someHardPassword");
-        authenticationRequest.setUsername("SomeEmail@mail.mail");
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedTagsInParamsSortedByWeightLastWeek() throws Exception {
 
-        String USER_TOKEN = mockMvc.perform(
-                post("/api/auth/token/")
-                        .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/mostPopularWeek?page=1&ignoredTag=102&items=5&trackedTag=101")
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&ignoredTag=102&items=5&trackedTag=101")
                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -1128,13 +1128,16 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"})
-    void getQuestionsWithIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
+            "dataset/QuestionResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/new?page=1&ignoredTag=102&items=4")
-                        .header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&ignoredTag=102&items=4")
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
@@ -1153,14 +1156,17 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/votes_on_questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/answers.yml",
-            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml"})
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
 
-    void getQuestionsSortedByVotesAndAnswersAndViewsByMonth() throws Exception {
+    public void getQuestionsSortedByVotesAndAnswersAndViewsByMonth() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/sortedQuestionsByMonth?page=1&ignoredTag=103&trackedTag=102&items=4")
-                                .header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&ignoredTag=103&trackedTag=102&items=4")
+                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
