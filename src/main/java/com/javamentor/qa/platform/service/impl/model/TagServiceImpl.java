@@ -19,7 +19,14 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
         super(tagDao);
         this.tagDao = tagDao;
     }
+
     public List<Tag> getListTagsByListOfTagName(List<String> listTagName){
         return tagDao.getListTagsByListOfTagName(listTagName);
+    }
+
+    @Transactional
+    @Override
+    public boolean checkedAndIgnoredContainTag(Long tagId) {
+        return tagDao.checkedAndIgnoredContainTag(tagId);
     }
 }
