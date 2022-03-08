@@ -9,7 +9,7 @@
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link href="../css/style.css" rel="stylesheet" media="screen">
 </head>
-<body onload="pagination(1, getAmountPerPage(), getUsersSortedByReputation)">
+<body onload="pagination(1, 10, getUsersSortedByReputation)">
 
 <div class="container-fluid">
     <div id="app-header"></div>
@@ -27,7 +27,7 @@
 
 
                 <div class="col-5 btn-group justify-content-end" id="differentUsersBar">
-                    <button type="button" class="btn btn-sm active" onclick="pagination(1, getAmountPerPage(), getUsersSortedByReputation)">Репутация</button>
+                    <button type="button" class="btn btn-sm active" onclick="pagination(1, 10, getUsersSortedByReputation)">Репутация</button>
                     <button type="button" href="#" class="btn btn-sm">Новые участники</button>
                     <button type="button" href="#" class="btn btn-sm">Голосующие</button>
                     <button type="button" href="#" class="btn btn-sm">Редакторы</button>
@@ -73,18 +73,10 @@
 
             <!-- PAGINATION -->
 
-            <div class="row">
-                <div class="col-12 text-right">
-                    <label for="amountPerPage">Показывать на странице</label>
-                    <input type="number" min="1" max="100" value="10" onkeyup="imposeMinMax(this)" id="amountPerPage"
-                           style="width: 3pc">
-                </div>
-            </div>
             <nav>
                 <ul class="pagination justify-content-end" id="paginationButtons">
                 </ul>
             </nav>
-
 
         </div>
     </div>
