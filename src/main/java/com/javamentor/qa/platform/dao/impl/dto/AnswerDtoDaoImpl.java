@@ -25,7 +25,7 @@ public class AnswerDtoDaoImpl
     public List<AnswerDto> getAllByQuestionId(Long id) {
         final String query =
                 "select a.id, a.user.id," +
-                        "(select sum(rep.count) from Reputation as rep wher rep.author.id = a.user.id)," +
+                        "(select sum(rep.count) from Reputation as rep where rep.author.id = a.user.id)," +
                             "a.question.id,"+
                             "a.htmlBody,"+
                             "a.persistDateTime, "+

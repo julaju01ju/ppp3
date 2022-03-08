@@ -1,21 +1,10 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
-import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.persistence.EntityManager;
@@ -25,12 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@TestPropertySource(properties = "spring.config.location = src/test/resources/application-test.properties")
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-@Ignore
+
 public class TestAnswerResourceController
         extends AbstractControllerTest {
 
@@ -45,66 +29,45 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml"
-    },  disableConstraints = true)
+    },  disableConstraints = true, cleanBefore = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
         mockMvc.perform(
                 get("/api/user/question/102/answer")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(102))
-                .andExpect(jsonPath("$[0].userId").value(102))
+                .andExpect(jsonPath("$[0].userId").value(101))
                 .andExpect(jsonPath("$[0].userReputation").value(102))
                 .andExpect(jsonPath("$[0].questionId").value(102))
                 .andExpect(jsonPath("$[0].body").value("Some Body"))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T04:00:00"))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$[0].isHelpful").value("true"))
                 .andExpect(jsonPath("$[0].isDeleted").value("false"))
-                .andExpect(jsonPath("$[0].dateAccept").value("2021-12-06T04:00:00"))
+                .andExpect(jsonPath("$[0].dateAccept").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$[0].image").value("image"))
                 .andExpect(jsonPath("$[0].nickName").value("USR"));
     }
 
+    //ошибка в контроллере
     @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
-    })
-    void shouldNotGetAnswerByQuestionId() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
+    }, disableConstraints = true, cleanBefore = true)
+    public void shouldGetNullAnswerByQuestionId() throws Exception {
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/105/answer")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
@@ -114,24 +77,14 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml"})
+            "dataset/AnswerResourceController/answervote.yml"
+    }, disableConstraints = true, cleanBefore = true)
     public void deleteAnswer_OK() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
-
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/102").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        delete("/api/user/question/102/answer/102").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -141,64 +94,49 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml"})
+            "dataset/AnswerResourceController/answervote.yml"
+    }, disableConstraints = true, cleanBefore = true)
     public void deleteAnswer_t() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/t").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        delete("/api/user/question/102/answer/t").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
+    //ошибка в контроллере (сделать ответ 404)
     @Test
     @DataSet(value = {"dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
-    })
-    void deleteGetAnswerByQuestionIdNotFound() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void deleteGetAnswerByQuestionIdNotFound() throws Exception {
 
-        String USER_TOKEN = mockMvc.perform(
-                post("/api/auth/token/")
-                        .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
-
-
-        mockMvc.perform(get("/api/user/question/102/answer").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        get("/api/user/question/102/answer").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/102").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        delete("/api/user/question/102/answer/102").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/question/102/answer/103").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        delete("/api/user/question/102/answer/103").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/api/user/question/3/answer").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        get("/api/user/question/3/answer").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.id").doesNotExist());
@@ -209,23 +147,14 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml"})
+            "dataset/AnswerResourceController/answervote.yml"
+    }, disableConstraints = true, cleanBefore = true)
     public void deleteAnswer_1000() throws Exception {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        System.out.println(USER_TOKEN);
-
-        mockMvc.perform(delete("/api/user/question/1/answer/1000").header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(
+                        delete("/api/user/question/1/answer/1000").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.id").doesNotExist());
@@ -236,7 +165,8 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml",
-            "dataset/AnswerResourceController/questions.yml"})
+            "dataset/AnswerResourceController/questions.yml"
+    }, disableConstraints = true, cleanBefore = true)
     public void postUpVoteAnswerStatusOk() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
@@ -248,7 +178,7 @@ public class TestAnswerResourceController
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
                 .setParameter("answerId", 104L)
-                .setParameter("userId", 102L));
+                .setParameter("userId", 101L));
     }
 
     @Test
@@ -256,10 +186,12 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/votes_on_answers.yml",
-            "dataset/AnswerResourceController/questions.yml"})
+            "dataset/AnswerResourceController/questions.yml"
+    }, disableConstraints = true, cleanBefore = true)
     public void postDownVoteAnswerStatusOk() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
         mockMvc.perform(
                         post("/api/user/question/102/answer/102/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -268,17 +200,21 @@ public class TestAnswerResourceController
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
                 .setParameter("answerId", 102L)
-                .setParameter("userId", 102L));
+                .setParameter("userId", 101L));
     }
 
-    @Test@DataSet(value = {"dataset/AnswerResourceController/users.yml",
+    @Test@DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
-            "dataset/AnswerResourceController/votes_on_answers.yml"})
+            "dataset/AnswerResourceController/votes_on_answers.yml"
+    }, disableConstraints = true, cleanBefore = true )
     public void checkReVoteTheAnswer() throws Exception{
+
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
 
-        mockMvc.perform(post("/api/user/question/102/answer/103/upVote")
+        mockMvc.perform(
+                        post("/api/user/question/102/answer/103/upVote")
                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

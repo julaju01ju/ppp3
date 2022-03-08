@@ -1,29 +1,19 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
-import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,44 +22,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Ali Veliev 02.12.2021
  */
 
-
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@TestPropertySource(properties = "spring.config.location = src/test/resources/application-test.properties")
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-public class TestUserResourceController {
+public class TestUserResourceController extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
             "dataset/UserResourceController/answers.yml",
             "dataset/UserResourceController/questions.yml",
             "dataset/UserResourceController/reputations.yml",
-            "dataset/UserResourceController/roles.yml"})
-    void getUserById() throws Exception {
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getUserById() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/101")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(101))
-                .andExpect(jsonPath("$.email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.email").value("SomeEmail@mail.com"))
                 .andExpect(jsonPath("$.fullName").value("Constantin"))
                 .andExpect(jsonPath("$.linkImage").value("link"))
                 .andExpect(jsonPath("$.city").value("Moscow"))
@@ -81,21 +57,10 @@ public class TestUserResourceController {
             "dataset/UserResourceController/answers.yml",
             "dataset/UserResourceController/questions.yml",
             "dataset/UserResourceController/reputations.yml",
-            "dataset/UserResourceController/roles.yml"})
-    void shouldNotGetUserById() throws Exception {
+            "dataset/UserResourceController/roles.yml"}, disableConstraints = true, cleanBefore = true)
+    public void shouldNotGetUserById() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/120")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -108,20 +73,9 @@ public class TestUserResourceController {
     @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
             "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllUsersOrderByPersistDatePaginationWithOutPageParam() throws Exception {
+    public void getAllUsersOrderByPersistDatePaginationWithOutPageParam() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -133,20 +87,9 @@ public class TestUserResourceController {
     @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
             "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllUsersOrderByPersistDatePaginationWithOutItemsParam() throws Exception {
+    public void getAllUsersOrderByPersistDatePaginationWithOutItemsParam() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -158,24 +101,15 @@ public class TestUserResourceController {
                 .andExpect(jsonPath("$.itemsOnPage").value(10));
     }
 
+
     @Test
-    @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
             "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllUsersOrderByPersistDatePaginationWithPage2Items1() throws Exception {
+    public void getAllUsersOrderByPersistDatePaginationWithPage2Items1() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=2&items=1")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -189,27 +123,16 @@ public class TestUserResourceController {
 
         List<HashMap> list = JsonPath.read(pageUsers, "$.items");
         Assertions.assertTrue(list.size() == 1);
-        Assertions.assertTrue((int) list.get(0).get("id") == 101);
+        Assertions.assertTrue((int) list.get(0).get("id") == 121);
     }
 
     @Test
     @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
             "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllUsersOrderByPersistDatePaginationWithPage1Items50() throws Exception {
+    public void getAllUsersOrderByPersistDatePaginationWithPage1Items50() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=1&items=50")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -226,23 +149,13 @@ public class TestUserResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
             "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
-    void getAllUsersOrderByPersistDatePaginationWithPage1Items5CheckSorting() throws Exception {
+    public void getAllUsersOrderByPersistDatePaginationWithPage1Items5CheckSorting() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=1&items=5")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -255,33 +168,25 @@ public class TestUserResourceController {
                 .andReturn().getResponse().getContentAsString();
 
         List<HashMap> list = JsonPath.read(pageUsers, "$.items");
-        Assertions.assertTrue((int) list.get(0).get("id") == 100);
-        Assertions.assertTrue((int) list.get(1).get("id") == 101);
-        Assertions.assertTrue((int) list.get(2).get("id") == 102);
-        Assertions.assertTrue((int) list.get(3).get("id") == 103);
-        Assertions.assertTrue((int) list.get(4).get("id") == 104);
+        Assertions.assertTrue((int) list.get(0).get("id") == 122);
+        Assertions.assertTrue((int) list.get(1).get("id") == 121);
+        Assertions.assertTrue((int) list.get(2).get("id") == 120);
+        Assertions.assertTrue((int) list.get(3).get("id") == 119);
+        Assertions.assertTrue((int) list.get(4).get("id") == 118);
     }
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/users.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
             "dataset/UserResourceController/answers.yml",
             "dataset/UserResourceController/questions.yml",
             "dataset/UserResourceController/reputations.yml",
-            "dataset/UserResourceController/roles.yml"})
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     public void getPageAllUserSortedByReputation() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/reputation?page=1&items=5")
                         .header(AUTHORIZATION, USER_TOKEN).header(AUTHORIZATION, USER_TOKEN))
@@ -289,10 +194,10 @@ public class TestUserResourceController {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(7))
+                .andExpect(jsonPath("$.totalResultCount").value(9))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
                 .andExpect(jsonPath("$.items[0].id").value(101))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
                 .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].linkImage").value("link"))
                 .andExpect(jsonPath("$.items[0].city").value("Moscow"))
@@ -301,7 +206,8 @@ public class TestUserResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/users.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/reputations.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/questions.yml",
@@ -309,20 +215,9 @@ public class TestUserResourceController {
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_questions.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_answers.yml"
             }, disableConstraints = true, cleanBefore = true)
-    void GetPageAllUsersSortedByVoteCheckSortingDESCWithPage1Items5() throws Exception {
+    public void getPageAllUsersSortedByVoteCheckSortingDESCWithPage1Items5() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/vote?page=1&items=5")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -344,7 +239,8 @@ public class TestUserResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersSortedByVote/roles.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/users.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/reputations.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/questions.yml",
@@ -352,20 +248,9 @@ public class TestUserResourceController {
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_questions.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_answers.yml"
     }, disableConstraints = true, cleanBefore = true)
-    void GetPageAllUsersSortedByVoteCheckSortingASCWithPage4Items5() throws Exception {
+    public void GetPageAllUsersSortedByVoteCheckSortingASCWithPage4Items5() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/vote?page=4&items=5")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -387,28 +272,18 @@ public class TestUserResourceController {
     }
 
     @Test
-    @DataSet(value = {"dataset/UserResourceController/updatePassword/users.yml"}, disableConstraints = true, cleanBefore = true)
-    void updatePassword() throws Exception {
+    @DataSet(value = {"dataset/UserResourceController/updatePassword/users.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void updatePassword() throws Exception {
 
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
+        String USER_TOKEN = getToken("user130@mail.ru", "USER");
 
         UserDtoTest userDtoTest = new UserDtoTest();
-        userDtoTest.setId(101L);
+        userDtoTest.setId(130L);
         userDtoTest.setPassword("USER");
 
         // the same password
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -416,7 +291,7 @@ public class TestUserResourceController {
 
         // password is not correct(too short)
         userDtoTest.setPassword("Ty55");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -424,15 +299,15 @@ public class TestUserResourceController {
 
         // password is not correct(wrong symbols)
         userDtoTest.setPassword("111111111111111111");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
         // password is correct
-        userDtoTest.setPassword("3Tt###");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 101L)
+        userDtoTest.setPassword("TtF@R1");
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                   .andDo(print())
