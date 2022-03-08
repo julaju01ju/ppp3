@@ -1,12 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.mysql.cj.x.protobuf.MysqlxCrud;
-import org.junit.Ignore;
 import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
-import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -27,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Ignore
 public class TagResourceControllerTest
         extends AbstractControllerTest {
 
@@ -57,7 +51,8 @@ public class TagResourceControllerTest
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutPageParam() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -70,7 +65,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutItemParam() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -89,7 +85,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithPage2Items1() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -107,7 +104,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithItems4AndFilter() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -137,7 +135,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithItems10AndFilter() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -158,7 +157,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithoutFilterParam() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -177,7 +177,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithEmptyFilter() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -197,7 +198,8 @@ public class TagResourceControllerTest
 
     @Test
     @DataSet(value = {"dataset/TagResourceController/users.yml",
-            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"}, disableConstraints = true, cleanBefore = true)
+            "dataset/TagResourceController/GetAllTagsOrderByNamePagination/tag.yml"
+    }, disableConstraints = true, cleanBefore = true)
     void getAllTagsOrderByNamePaginationWithFilterNotExists() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -219,7 +221,7 @@ public class TagResourceControllerTest
             "dataset/TagResourceController/ignoredTag.yml",
             "dataset/TagResourceController/users.yml",
             "dataset/TagResourceController/tag.yml",
-    }, disableConstraints = true, cleanBefore = true, transactional = false)
+    }, disableConstraints = true, cleanBefore = true)
     public void getAllIgnoredTags() throws Exception {
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
         mockMvc.perform(
