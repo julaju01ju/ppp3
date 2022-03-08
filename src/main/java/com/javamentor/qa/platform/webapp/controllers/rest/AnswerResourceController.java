@@ -68,7 +68,7 @@ public class AnswerResourceController {
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
-        if (answerDtoList.isEmpty()){
+        if (answerDtoList == null){
             return new ResponseEntity<>("Answer of question id " + id + " not found!", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);

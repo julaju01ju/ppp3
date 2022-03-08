@@ -60,7 +60,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
     }, disableConstraints = true, cleanBefore = true)
-    public void shouldNotGetAnswerByQuestionId() throws Exception {
+    public void shouldGetNullAnswerByQuestionId() throws Exception {
 
         String USER_TOKEN = getToken("user@mail.ru", "USER");
 
@@ -68,7 +68,6 @@ public class TestAnswerResourceController
                         get("/api/user/question/105/answer")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
