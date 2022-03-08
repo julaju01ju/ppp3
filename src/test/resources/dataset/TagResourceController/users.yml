@@ -5,7 +5,7 @@ role:
     name: "ROLE_USER"
 
 user_entity:
-  - id: 102
+  - id: 101
     full_name: "USER"
     password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
     persist_date: 2021-12-06 00:00:00

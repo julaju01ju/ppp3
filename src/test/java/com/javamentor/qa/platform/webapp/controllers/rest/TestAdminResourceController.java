@@ -1,11 +1,8 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -20,17 +17,17 @@ public class TestAdminResourceController extends AbstractControllerTest {
             "dataset/adminResourceController/roles.yml",
             "dataset/adminResourceController/users.yml",
     }
-    , disableConstraints = true
+    , disableConstraints = true, cleanBefore = true
     )
     public void deleteUserById() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("admin@mail.ru");
+        authenticationRequest.setUsername("admin1@mail.ru");
 
         String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
         mockMvc.perform(
-                        delete("/api/admin/delete/100")
+                        delete("/api/admin/delete/101")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -41,7 +38,7 @@ public class TestAdminResourceController extends AbstractControllerTest {
             "dataset/adminResourceController/roles.yml",
             "dataset/adminResourceController/users.yml",
     }
-            , disableConstraints = true
+            , disableConstraints = true, cleanBefore = true
     )
     public void deleteUserByIdNotFound() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -64,7 +61,7 @@ public class TestAdminResourceController extends AbstractControllerTest {
             "dataset/adminResourceController/users.yml",
             "dataset/UserResourceController/reputations.yml",
     }
-            , disableConstraints = true
+            , disableConstraints = true, cleanBefore = true
     )
     public void getUserByIdForbidden() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -97,7 +94,7 @@ public class TestAdminResourceController extends AbstractControllerTest {
             "dataset/adminResourceController/testRoleUserAccess/roles.yml",
             "dataset/adminResourceController/testRoleUserAccess/users.yml",
     }
-            , disableConstraints = true
+            , disableConstraints = true, cleanBefore = true
     )
     public void testRoleUserAccess() throws Exception {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();

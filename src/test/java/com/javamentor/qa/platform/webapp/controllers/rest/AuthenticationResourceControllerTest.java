@@ -32,12 +32,13 @@ class AuthenticationResourceControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void returnTokenWithAuthentication() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true ,cleanBefore = true)
+    public void returnTokenWithAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("admin@mail.ru");
+        authenticationRequest.setUsername("adminAUTH@mail.ru");
 
         mockMvc.perform(
                         post("/api/auth/token/")
@@ -50,8 +51,9 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void returnTokenWithoutAuthentication() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true, cleanBefore = true)
+    public void returnTokenWithoutAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
 
@@ -66,8 +68,9 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void returnTokenWithoutBodyRequest() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true, cleanBefore = true)
+    public void returnTokenWithoutBodyRequest() throws Exception {
 
         mockMvc.perform(
                         post("/api/auth/token/"))
@@ -76,12 +79,13 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void requestToAdminApiWithAdminRole() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true, cleanBefore = true)
+    public void requestToAdminApiWithAdminRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("admin@mail.ru");
+        authenticationRequest.setUsername("adminAUTH@mail.ru");
 
         String ADMIN_TOKEN = mockMvc.perform(
                         post("/api/auth/token/")
@@ -101,8 +105,9 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void requestToUserApiWithUserRole() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true, cleanBefore = true)
+    public void requestToUserApiWithUserRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
@@ -126,8 +131,9 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void requestToAdminApiWithUserRole() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true, cleanBefore = true)
+    public void requestToAdminApiWithUserRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("USER");
@@ -150,12 +156,13 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void requestToUserApiWithAdminRole() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true,cleanBefore = true)
+    public void requestToUserApiWithAdminRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("admin@mail.ru");
+        authenticationRequest.setUsername("adminAUTH@mail.ru");
 
         String ADMIN_TOKEN = mockMvc.perform(
                         post("/api/auth/token/")
@@ -174,8 +181,9 @@ class AuthenticationResourceControllerTest {
     }
 
     @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml", disableConstraints = true)
-    void requestToUserApiWithoutToken() throws Exception {
+    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
+            disableConstraints = true,cleanBefore = true)
+    public void requestToUserApiWithoutToken() throws Exception {
 
         mockMvc.perform(
                         get("/api/testuser/")
