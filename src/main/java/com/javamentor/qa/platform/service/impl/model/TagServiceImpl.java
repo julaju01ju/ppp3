@@ -26,7 +26,7 @@ public class TagServiceImpl extends ReadWriteServiceImpl<Tag, Long> implements T
 
     @Transactional
     @Override
-    public boolean checkedAndIgnoredContainTag(Long tagId) {
-        return tagDao.checkedAndIgnoredContainTag(tagId);
+    public boolean checkedAndIgnoredContainTag(Long tagId, Long userId) {
+        return tagDao.checkedAndIgnoredContainTag(tagId, userId);
     }
 }

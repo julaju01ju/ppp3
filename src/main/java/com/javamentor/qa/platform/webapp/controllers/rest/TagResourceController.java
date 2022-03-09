@@ -101,7 +101,7 @@ public class TagResourceController {
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (tagService.checkedAndIgnoredContainTag(tagId)) {
+            if (tagService.checkedAndIgnoredContainTag(tagId, user.getId())) {
                 TrackedTag trackedTag = new TrackedTag();
                 trackedTag.setTrackedTag(tag);
                 trackedTag.setUser(user);
@@ -123,7 +123,7 @@ public class TagResourceController {
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
-            if (tagService.checkedAndIgnoredContainTag(tagId)) {
+            if (tagService.checkedAndIgnoredContainTag(tagId, user.getId())) {
                 IgnoredTag ignoredTag = new IgnoredTag();
                 ignoredTag.setIgnoredTag(tag);
                 ignoredTag.setUser(user);

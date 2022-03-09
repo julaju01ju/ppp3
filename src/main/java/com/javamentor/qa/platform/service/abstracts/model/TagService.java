@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface TagService extends ReadWriteService<Tag, Long> {
     List<Tag> getListTagsByListOfTagName(List<String> listTagName);
-    boolean checkedAndIgnoredContainTag(Long tagId);
+    boolean checkedAndIgnoredContainTag(Long tagId, Long userId);
 }

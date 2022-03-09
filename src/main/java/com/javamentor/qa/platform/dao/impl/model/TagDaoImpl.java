@@ -23,9 +23,9 @@ public class TagDaoImpl extends ReadWriteDaoImpl<Tag, Long> implements TagDao {
     }
 
     @Override
-    public boolean checkedAndIgnoredContainTag(Long tagId) {
+    public boolean checkedAndIgnoredContainTag(Long tagId, Long userId) {
         String hql = "SELECT count(it) FROM IgnoredTag it JOIN TrackedTag tt ON it.user.id=tt.user.id WHERE " +
-                "it.ignoredTag.id =:tagId AND tt.trackedTag.id=:tagId";
+                "it.ignoredTag.id =:tagId AND tt.trackedTag.id=:tagId AND it.user.id=:userId";
         return entityManager.createQuery(hql).setParameter("tagId", tagId).getFirstResult()==0;
     }
 }

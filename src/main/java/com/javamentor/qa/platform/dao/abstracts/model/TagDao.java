@@ -8,5 +8,5 @@ public interface TagDao extends ReadWriteDao<Tag, Long> {
 
     List<Tag> getListTagsByListOfTagName(List<String> listTagName);
 
-    boolean checkedAndIgnoredContainTag(Long tagId);
+    boolean checkedAndIgnoredContainTag(Long tagId, Long userId);
 }
