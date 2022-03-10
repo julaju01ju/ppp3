@@ -121,6 +121,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[3].viewCount").value(0));
     }
 
+
+
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/insertAuthUserToQuestionViewed/question.yml",
@@ -713,7 +715,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
@@ -783,6 +785,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath());
     }
+
+
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
@@ -1175,5 +1179,360 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(103))
                 .andExpect(jsonPath("$.items[1].id").value(102))
                 .andExpect(jsonPath("$.items[2].id").value(104));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsSortedByVotesAndAnswersAndQuestionViewedWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsdWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void mostPopularQuestionsWeekWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsNoAnswerWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/noAnswer?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getAllQuestionDtoSortedByPersistDateWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/new?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsSortedByVotesAndAnswersAndViewsByMonthWithTagsInParams() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }

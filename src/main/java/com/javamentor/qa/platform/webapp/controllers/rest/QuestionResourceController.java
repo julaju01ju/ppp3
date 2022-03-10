@@ -65,12 +65,17 @@ public class QuestionResourceController {
     @GetMapping("/sortedQuestions")
     @ApiOperation("Paginate all QuestionDto with tags." +
             "Sorted by votes, answers and views")
-    @ApiResponse(code = 200, message = "status OK")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        System.out.println(trackedTag + " " + ignoredTag);
 
         if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
 
@@ -194,6 +199,10 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestions(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -221,6 +230,10 @@ public class QuestionResourceController {
 
     @GetMapping("/mostPopularWeek")
     @ApiOperation("Получение пагинации QuestionDto за неделю с сортировкой по наибольшей популярности")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> mostPopularQuestionsWeek(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -253,6 +266,10 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsNoAnswer(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -285,6 +302,10 @@ public class QuestionResourceController {
             "если что-то передали то мы должны отдавать те вопросы в которых есть хотя бы один из переданных тэгов " +
             "ignoredTag - не обязательный параметр, " +
             "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getAllQuestionDtoSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -312,7 +333,10 @@ public class QuestionResourceController {
     @GetMapping("/sortedQuestionsByMonth")
     @ApiOperation("Получение пагинации QuestionDto с тэгами, " +
             "за месяц по наибольшим голосам, ответам и просмотрам.")
-    @ApiResponse(code = 200, message = "status OK")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "status OK"),
+            @ApiResponse(code = 400, message = "error in trackedTag or ignoredTag lists")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndViewsByMonth(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
