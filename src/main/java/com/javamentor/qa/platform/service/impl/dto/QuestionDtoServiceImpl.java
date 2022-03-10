@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
+import com.javamentor.qa.platform.dao.abstracts.dto.CommentDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
@@ -26,11 +27,20 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> 
     private QuestionDtoDao questionDtoDao;
 
     @Autowired
+    private CommentDtoDao commentDtoDao;
+
+    @Autowired
     private TagDtoDao tagDtoDao;
 
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
-        return questionDtoDao.getQuestionById(id);
+        Optional<QuestionDto> questionDto = questionDtoDao.getQuestionById(id);
+
+        questionDto.ifPresent((dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(id))));
+        System.out.println("тут");
+        commentDtoDao.getCommentDtosByQuestionId(id).stream().iterator().forEachRemaining(System.out::println);
+        questionDto.ifPresent(dto ->dto.setListTagDto(tagDtoDao.getTagsByOneQuestionId(id)) );
+        return questionDto;
     }
 
     @Override

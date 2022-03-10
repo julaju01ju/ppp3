@@ -273,7 +273,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/105")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/106")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
