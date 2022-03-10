@@ -3,7 +3,8 @@ $(document).ready(function () {
 })
 
 function authorizedRedirect() {
-    if (document.cookie) {
+
+    if (document.cookie.split(';').filter((item) => item.trim().startsWith('token=')).length) {
         window.location.href = '/main';
     }
 }
