@@ -23,7 +23,10 @@ public class PaginationAllUsersSortingByPersistDate implements PageDtoDao<UserDt
                 " user.imageLink,user.city," +
                 " (select CAST(COALESCE(sum(reputation.count), 0) as int) from Reputation reputation where reputation.author = user)) " +
                 " from User user" +
-                " order by user.persistDateTime desc", UserDto.class);
+                " WHERE user.email like concat('%', :filter, '%') " +
+                " or user.fullName like concat('%', :filter, '%') " +
+                " order by user.persistDateTime desc", UserDto.class)
+                .setParameter("filter", params.get("filter"));
         query.setFirstResult(((int) params.get("currentPageNumber") - 1) * (int) params.get("itemsOnPage"));
         query.setMaxResults((int) params.get("itemsOnPage"));
         return query.getResultList();
@@ -32,7 +35,10 @@ public class PaginationAllUsersSortingByPersistDate implements PageDtoDao<UserDt
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         Query queryTotal = entityManager.createQuery
-                ("Select CAST(count(user.id) as int) AS countUsers from User user");
+                ("Select CAST(count(user.id) as int) AS countUsers from User user" +
+                    " WHERE user.email like concat('%', :filter, '%') " +
+                    " or user.fullName like concat('%', :filter, '%') ")
+                .setParameter("filter", params.get("filter"));
         return (int) queryTotal.getSingleResult();
     }
 }
