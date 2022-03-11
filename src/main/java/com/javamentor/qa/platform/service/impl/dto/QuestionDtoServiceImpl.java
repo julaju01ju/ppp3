@@ -23,9 +23,9 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> implements QuestionDtoService {
 
-    private QuestionDtoDao questionDtoDao;
-    private CommentDtoDao commentDtoDao;
-    private TagDtoDao tagDtoDao;
+    private final QuestionDtoDao questionDtoDao;
+    private final CommentDtoDao commentDtoDao;
+    private final TagDtoDao tagDtoDao;
 
     @Autowired
     public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, CommentDtoDao commentDtoDao, TagDtoDao tagDtoDao) {

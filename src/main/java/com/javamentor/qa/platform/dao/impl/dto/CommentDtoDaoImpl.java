@@ -12,7 +12,7 @@ import java.util.List;
 public class CommentDtoDaoImpl implements CommentDtoDao {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public List<CommentDto> getCommentDtosByQuestionId(Long id) {

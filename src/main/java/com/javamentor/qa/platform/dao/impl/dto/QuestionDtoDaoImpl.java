@@ -14,9 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.TreeMap;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -28,13 +26,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private Map<Long,QuestionDto> questionDtoMap = new TreeMap<>();
-
     @SuppressWarnings("unchecked")
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
 
-        Optional<QuestionDto> questionDto = SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select q.id, " +
                                 "q.title, " +
                                 "q.description,  " +
@@ -74,11 +70,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setCountAnswer(((Long) tuple[11]).intValue());
                                               questionDto.setIsUserVote((Enum<VoteType>) tuple[12]);
 
-                                              if (!questionDtoMap.containsKey(id)){
-                                                  questionDtoMap.put(questionDto.getId(), questionDto);
-                                              }
-
-                                              return questionDtoMap.get(id);
+                                              return questionDto;
                                           }
 
                                           @Override
@@ -87,6 +79,5 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                           }
                                       }
                 ));
-        return questionDto;
     }
 }
