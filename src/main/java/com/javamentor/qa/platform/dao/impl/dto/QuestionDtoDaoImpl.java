@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
-import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.hibernate.query.Query;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +29,6 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
     private EntityManager entityManager;
 
     private Map<Long,QuestionDto> questionDtoMap = new TreeMap<>();
-    private Map<Long,TagDto> tagDtoMap = new TreeMap<>();
-//    private Map<Long,CommentDto> commentDtoMap = new TreeMap<>();
 
     @SuppressWarnings("unchecked")
     @Override

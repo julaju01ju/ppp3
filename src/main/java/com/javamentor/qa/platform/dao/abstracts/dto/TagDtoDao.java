@@ -13,5 +13,5 @@ public interface TagDtoDao {
 
     List<TagDto> getTop10FoundTags(String searchString);
 
-    List<TagDto> getTagsByOneQuestionId(Long id);
+    List<TagDto> getTagsByQuestionId(Long id);
 }

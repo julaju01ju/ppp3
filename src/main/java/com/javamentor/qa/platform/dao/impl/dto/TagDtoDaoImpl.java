@@ -28,7 +28,7 @@ public class TagDtoDaoImpl implements TagDtoDao {
     }
 
     @Override
-    public List<TagDto> getTagsByOneQuestionId(Long id) {
+    public List<TagDto> getTagsByQuestionId(Long id) {
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto." +
                 "TagDto(tag.id, tag.name, tag.description) " +
                 "from Tag tag " +

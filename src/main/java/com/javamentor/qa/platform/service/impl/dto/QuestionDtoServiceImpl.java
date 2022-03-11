@@ -23,23 +23,22 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> implements QuestionDtoService {
 
-    @Autowired
     private QuestionDtoDao questionDtoDao;
-
-    @Autowired
     private CommentDtoDao commentDtoDao;
+    private TagDtoDao tagDtoDao;
 
     @Autowired
-    private TagDtoDao tagDtoDao;
+    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, CommentDtoDao commentDtoDao, TagDtoDao tagDtoDao) {
+        this.questionDtoDao = questionDtoDao;
+        this.commentDtoDao = commentDtoDao;
+        this.tagDtoDao = tagDtoDao;
+    }
 
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
         Optional<QuestionDto> questionDto = questionDtoDao.getQuestionById(id);
-
-        questionDto.ifPresent((dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(id))));
-        System.out.println("тут");
-        commentDtoDao.getCommentDtosByQuestionId(id).stream().iterator().forEachRemaining(System.out::println);
-        questionDto.ifPresent(dto ->dto.setListTagDto(tagDtoDao.getTagsByOneQuestionId(id)) );
+        questionDto.ifPresent(dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(id)));
+        questionDto.ifPresent(dto -> dto.setListTagDto(tagDtoDao.getTagsByQuestionId(id)));
         return questionDto;
     }
 
