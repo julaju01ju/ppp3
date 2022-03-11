@@ -58,10 +58,13 @@ public class UserResourceController {
             "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
-                                                                                            defaultValue = "10") Integer items) {
+                                                                                            defaultValue = "10") Integer items,
+                                                                                    @RequestParam(value = "filter", required = false,
+                                                                                            defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("filter", filter);
 
         PageDto<UserDto> pageDto = userDtoService.getPageDto("paginationAllUsersSortingByPersistDate", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
@@ -69,13 +72,15 @@ public class UserResourceController {
 
     @GetMapping("/api/user/reputation")
     @ApiOperation("Получение списка всех пользователей с пагинацией, отсортированных по репутации")
-    public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page
-            , @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
-
+    public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page,
+                                                                             @RequestParam(required = false, name = "items",
+                                                                                     defaultValue = "10") Integer itemsOnPage,
+                                                                             @RequestParam(value = "filter", required = false,
+                                                                                     defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
-
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
+        params.put("filter", filter);
 
         return new ResponseEntity<>(userDtoService.getPageDto(
                 "paginationAllUsersSortedByReputation", params), HttpStatus.OK);
@@ -85,10 +90,13 @@ public class UserResourceController {
     @ApiOperation("Получение всех пользователей с пагинацией отсортированных по сумме голосов, полученных за ответы и вопросы")
     public ResponseEntity<PageDto<UserDto>> getPageAllUsersSortedByVote(@RequestParam(value = "page") Integer currentPageNumber,
                                                                         @RequestParam(value = "items", required = false,
-                                                                                defaultValue = "10") Integer itemsOnPage) {
+                                                                                defaultValue = "10") Integer itemsOnPage,
+                                                                        @RequestParam(value = "filter", required = false,
+                                                                                defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", currentPageNumber);
         params.put("itemsOnPage", itemsOnPage);
+        params.put("filter", filter);
 
         return new ResponseEntity<>(userDtoService.getPageDto(
                 "paginationAllUsersSortedByVote", params), HttpStatus.OK);
