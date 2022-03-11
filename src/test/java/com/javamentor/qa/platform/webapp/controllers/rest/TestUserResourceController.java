@@ -126,6 +126,57 @@ public class TestUserResourceController extends AbstractControllerTest {
         Assertions.assertTrue((int) list.get(0).get("id") == 121);
     }
 
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
+            "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllUsersOrderByPersistDatePaginationWithPage1Items3AndFilter() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=1&items=3&filter=@mail")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(8))
+                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.items[0].id").value(122))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.items[1].id").value(121))
+                .andExpect(jsonPath("$.items[1].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.items[2].id").value(120))
+                .andExpect(jsonPath("$.items[2].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[2].fullName").value("Constantin"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
+            "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
+            "dataset/UserResourceController/reputations.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllUsersOrderByPersistDatePaginationWithPage1Items3AndEmptyFilter() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/new?page=1&items=3&filter=")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(8))
+                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.items[0].id").value(122))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"));
+    }
+
     @Test
     @DataSet(value = {"dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/roles.yml",
             "dataset/UserResourceController/GetAllUsersOrderByPersistDatePagination/users.yml",
@@ -189,6 +240,66 @@ public class TestUserResourceController extends AbstractControllerTest {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/reputation?page=1&items=5")
+                        .header(AUTHORIZATION, USER_TOKEN).header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(9))
+                .andExpect(jsonPath("$.itemsOnPage").value(5))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items.size()").value(5));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getPageAllUserSortedByReputationWithFilter() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/reputation?page=1&items=5&filter=mail")
+                        .header(AUTHORIZATION, USER_TOKEN).header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(9))
+                .andExpect(jsonPath("$.itemsOnPage").value(5))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
+                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
+                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items.size()").value(5));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getPageAllUserSortedByReputationWithEmptyFilter() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/reputation?page=1&items=5&filter=")
                         .header(AUTHORIZATION, USER_TOKEN).header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())

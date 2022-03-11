@@ -35,7 +35,7 @@ public class QuestionViewDtoResultTransformer implements ResultTransformer {
                     questionViewDtoTemp.setAuthorReputation(((BigInteger) tuple[8]).longValue());
                     questionViewDtoTemp.setCountValuable(((BigInteger) tuple[9]).intValue());
                     questionViewDtoTemp.setCountAnswer(((BigInteger) tuple[10]).intValue());
-                    questionViewDtoTemp.setViewCount(0);
+                    questionViewDtoTemp.setViewCount(((BigInteger) tuple[11]).intValue());
                     questionViewDtoTemp.setListTagDto(new ArrayList<>());
                     return questionViewDtoTemp;
                 }

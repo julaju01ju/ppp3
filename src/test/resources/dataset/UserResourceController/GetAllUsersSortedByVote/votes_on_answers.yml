@@ -3,79 +3,79 @@ votes_on_answers:
     user_id: 101
     answer_id: 105
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 102
     user_id: 102
     answer_id: 105
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 103
     user_id: 103
     answer_id: 105
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 104
     user_id: 104
     answer_id: 104
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 105
     user_id: 105
     answer_id: 104
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 106
     user_id: 106
     answer_id: 103
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 107
     user_id: 107
     answer_id: 102
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 108
     user_id: 108
     answer_id: 101
     persist_date: 2021-12-06 00:00:00
-    vote: 1
+    vote: UP_VOTE
   - id: 109
     user_id: 109
     answer_id: 106
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 110
     user_id: 109
     answer_id: 106
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 111
     user_id: 109
     answer_id: 106
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 112
     user_id: 109
     answer_id: 107
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 113
     user_id: 109
     answer_id: 107
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 114
     user_id: 109
     answer_id: 108
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 115
     user_id: 109
     answer_id: 108
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
   - id: 116
     user_id: 109
     answer_id: 109
     persist_date: 2021-12-06 00:00:00
-    vote: -1
+    vote: DOWN_VOTE
