@@ -26,7 +26,10 @@ public class PaginationAllUsersSortedByVote implements PageDtoDao<UserDto> {
                 " ((SELECT COALESCE(sum(case vQ.vote  when 'UP_VOTE' then 1 else -1 end), 0) FROM VoteQuestion vQ JOIN Question q ON vQ.question.id = q.id WHERE q.user.id = user.id) +" +
                 " (SELECT COALESCE(sum(case vA.vote  when 'UP_VOTE' then 1 else -1 end), 0) FROM VoteAnswer vA JOIN Answer ans ON vA.answer.id = ans.id WHERE ans.user.id = user.id)) AS sum1" +
                 " FROM User user " +
+                " WHERE user.email like concat('%', :filter, '%') " +
+                " or user.fullName like concat('%', :filter, '%') " +
                 " ORDER BY sum1 DESC, user.id")
+                .setParameter("filter", params.get("filter"))
                 .unwrap(org.hibernate.query.Query.class).setResultTransformer(new UserDtoResultTransformer());
         query.setFirstResult(((int) params.get("currentPageNumber") - 1) * (int) params.get("itemsOnPage"));
         query.setMaxResults((int) params.get("itemsOnPage"));
@@ -36,7 +39,10 @@ public class PaginationAllUsersSortedByVote implements PageDtoDao<UserDto> {
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         Query queryTotal = entityManager.createQuery
-                ("Select count(user.id) from User user");
+                ("Select count(user.id) from User user" +
+                " WHERE user.email like concat('%', :filter, '%') " +
+                " or user.fullName like concat('%', :filter, '%') ")
+                .setParameter("filter", params.get("filter"));
         return ((Long) queryTotal.getSingleResult()).intValue();
     }
 }
