@@ -253,11 +253,11 @@ public class TagResourceControllerTest
                 .andExpect(jsonPath("$.name").value("tagname1"))
                 .andExpect(jsonPath("$.description").value("description1"));
 
-        String sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 100";
+        String sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 100 and tt.user.id=101";
         List<Long> ttId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(ttId.size() == 1);
 
-        sql = "select it.ignoredTag.id from IgnoredTag it where it.id = 100";
+        sql = "select it.ignoredTag.id from IgnoredTag it where it.id = 100 and it.user.id=101";
         List<Long> itId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(itId.size() == 0);
     }
@@ -278,11 +278,11 @@ public class TagResourceControllerTest
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
-        String sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 102";
+        String sql = "select tt.trackedTag.id from TrackedTag tt where tt.id = 102 and tt.user.id=101";
         List<Long> ttId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(ttId.size() == 0);
 
-        sql = "select it.ignoredTag.id from IgnoredTag it where it.id = 102";
+        sql = "select it.ignoredTag.id from IgnoredTag it where it.id = 102 and it.user.id=101";
         List<Long> itId = entityManager.createQuery(sql).getResultList();
         Assertions.assertTrue(itId.size() == 1);
     }
