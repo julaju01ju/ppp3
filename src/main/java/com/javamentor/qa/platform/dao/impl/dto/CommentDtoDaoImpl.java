@@ -27,7 +27,7 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
                                 "FROM Comment comment " +
                                 "left JOIN CommentQuestion commentQuestion ON (comment.id = commentQuestion.comment.id) " +
                                 "WHERE commentQuestion.question.id = :id " +
-                                "order by comment.id"
+                                "order by comment.persistDateTime desc"
                         , CommentDto.class)
                 .setParameter("id", id)
                 .getResultList();

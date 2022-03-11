@@ -245,16 +245,16 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listTagDto.[2].id").value(109))
                 .andExpect(jsonPath("$.listTagDto.[2].name").value("TAG109"))
 
-                .andExpect(jsonPath("$.listCommentDto[0].id").value(102))
-                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 102"))
-                .andExpect(jsonPath("$.listCommentDto[0].userId").value(102))
-                .andExpect(jsonPath("$.listCommentDto[1].id").value(103))
-                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 103"))
-                .andExpect(jsonPath("$.listCommentDto[1].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[0].id").value(105))
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 105"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].id").value(104))
+                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 104"))
+                .andExpect(jsonPath("$.listCommentDto[1].userId").value(102))
                 .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.listCommentDto[2].id").value(104))
-                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 104"))
-                .andExpect(jsonPath("$.listCommentDto[2].userId").value(102));
+                .andExpect(jsonPath("$.listCommentDto[2].id").value(103))
+                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(103));
         
     }
 
@@ -1175,5 +1175,46 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(103))
                 .andExpect(jsonPath("$.items[1].id").value(102))
                 .andExpect(jsonPath("$.items[2].id").value(104));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/comment.yml",
+            "dataset/QuestionResourceController/comment_question.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionByIdAndCheckSortCommentDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(
+                        get("/api/user/question/101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(101))
+
+                .andExpect(jsonPath("$.listCommentDto[0].id").value(105))
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 105"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].id").value(104))
+                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 104"))
+                .andExpect(jsonPath("$.listCommentDto[1].userId").value(102))
+                .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.listCommentDto[2].id").value(103))
+                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[3].id").value(102))
+                .andExpect(jsonPath("$.listCommentDto[3].comment").value("Some text of comment 102"))
+                .andExpect(jsonPath("$.listCommentDto[3].userId").value(102));
+
     }
 }
