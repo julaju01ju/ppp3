@@ -55,7 +55,8 @@ public class UserResourceController {
     @GetMapping("/api/user/new")
     @ApiOperation("API получение всех пользователей, отсортированных по дате регистрации, с пагинацией. " +
             "Принимает параметры: page(обязательный) - текущая страница и " +
-            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
+            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10." +
+            "filter(необязательный) - фильтрация пользователей по email или fullname. По умолчанию пуст.")
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
                                                                                             defaultValue = "10") Integer items,
