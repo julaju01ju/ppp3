@@ -7,6 +7,7 @@ import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
@@ -49,7 +50,7 @@ public class AnswerResourceController {
             QuestionService questionService,
             VoteOnAnswerService voteOnAnswerService,
             ReputationService reputationService,
-            AnswerConverter answerConverter ) {
+            AnswerConverter answerConverter) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
@@ -64,14 +65,18 @@ public class AnswerResourceController {
             value = "Returns List of AnswerDtos corresponding questionId")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Valid List of AnswerDtos found"),
-            @ApiResponse(code = 404, message = "Answer of question id not found")
+            @ApiResponse(code = 404, message = "Question with id=* not found or answer on question with id=* not found")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
-        if (answerDtoList == null){
-            return new ResponseEntity<>("Answer of question id " + id + " not found!", HttpStatus.NOT_FOUND);
+        if (questionService.existsById(id)) {
+            List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
+            if (answerDtoList.isEmpty()) {
+                return new ResponseEntity<>("Answer on question with id " + id + " not found", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
+        } else {
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question with id = " + id + " not found");
         }
-        return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")

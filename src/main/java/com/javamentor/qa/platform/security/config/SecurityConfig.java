@@ -57,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         http.csrf().disable();
         http.cors().disable();
 
-        http.authorizeRequests().antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN");
-        http.authorizeRequests().antMatchers("/api/admin/**").hasRole("ADMIN");
+//        http.authorizeRequests().antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN");
+//        http.authorizeRequests().antMatchers("/api/admin/**").hasRole("ADMIN");
         http.authorizeRequests().antMatchers("/api/auth/token/").permitAll();
         http.authorizeRequests().antMatchers("/images/**").permitAll();
         http.authorizeRequests().antMatchers("/js/**").permitAll();

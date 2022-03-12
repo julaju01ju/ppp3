@@ -28,7 +28,8 @@ public class AdminResourceController {
     @ApiOperation( value = "Удаление пользователя по ID, через изменение значения свойства isEnabled с true, на false")
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "User is deleted"),
-            @ApiResponse(code = 404, message = "User with id=* not found")
+            @ApiResponse(code = 404, message = "User with id=* not found"),
+            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
     })
     public ResponseEntity<?> deleteUserById(@PathVariable("id") Long id) {
         Optional<User> optionalUser = userService.getById(id);
