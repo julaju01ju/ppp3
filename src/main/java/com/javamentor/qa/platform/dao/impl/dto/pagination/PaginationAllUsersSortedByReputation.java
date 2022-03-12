@@ -29,8 +29,11 @@ public class PaginationAllUsersSortedByReputation implements PageDtoDao<UserDto>
                         "u.city, " +
                         "coalesce(CAST(sum(rep.count) as integer), 0)) " +
                         "from User u left join Reputation rep on u.id = rep.author.id " +
+                        " WHERE u.email like concat('%', :filter, '%') " +
+                        " or u.fullName like concat('%', :filter, '%') " +
                         "group by u.id,rep.author.id " +
-                        "order by sum(rep.count) desc, u.id", UserDto.class);
+                        "order by sum(rep.count) desc, u.id", UserDto.class)
+                        .setParameter("filter", params.get("filter"));
         query.setFirstResult((page -1) * itemsOnPage);
         query.setMaxResults(itemsOnPage);
         return query.getResultList();
@@ -39,7 +42,10 @@ public class PaginationAllUsersSortedByReputation implements PageDtoDao<UserDto>
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         Query queryTotal = entityManager.createQuery
-                ("Select count(user.id) from User user");
+                ("Select count(user.id) from User user" +
+                    " WHERE user.email like concat('%', :filter, '%') " +
+                    " or user.fullName like concat('%', :filter, '%') ")
+                .setParameter("filter", params.get("filter"));
         return ((Long) queryTotal.getSingleResult()).intValue();
     }
 }
