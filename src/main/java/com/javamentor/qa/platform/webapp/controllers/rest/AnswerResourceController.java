@@ -62,10 +62,11 @@ public class AnswerResourceController {
 
     @GetMapping("/{questionId}/answer")
     @ApiOperation(
-            value = "Returns List of AnswerDtos corresponding questionId")
+            value = "Returns List of AnswerDtos that answered on question with id=*")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Valid List of AnswerDtos found"),
-            @ApiResponse(code = 404, message = "Question with id=* not found or answer on question with id=* not found")
+            @ApiResponse(code = 404, message = "Question with id=* not found or answer on question with id=* not found"),
+            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         if (questionService.existsById(id)) {
