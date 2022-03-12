@@ -14,6 +14,7 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
     if (response.ok) {
         let getToken = await response.json();
         document.cookie = "token=;max-age=-1";
+
         let token = Object.values(getToken);
         document.cookie = "token=" + token;
         window.location.href = '/main';
