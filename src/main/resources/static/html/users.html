@@ -9,7 +9,7 @@
           integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link href="../css/style.css" rel="stylesheet" media="screen">
 </head>
-<body onload="pagination(1, 10, getUsersSortedByReputation)">
+<body onload="pagination(1, 20, getUsersSortedByReputation)">
 
 <div class="container-fluid">
     <div id="app-header"></div>
@@ -27,7 +27,9 @@
 
 
                 <div class="col-5 btn-group justify-content-end" id="differentUsersBar">
-                    <button type="button" class="btn btn-sm active" onclick="pagination(1, 10, getUsersSortedByReputation)">Репутация</button>
+                    <button type="button" class="btn btn-sm active"
+                            onclick="pagination(1, 20, getUsersSortedByReputation)">Репутация
+                    </button>
                     <button type="button" href="#" class="btn btn-sm">Новые участники</button>
                     <button type="button" href="#" class="btn btn-sm">Голосующие</button>
                     <button type="button" href="#" class="btn btn-sm">Редакторы</button>
@@ -54,20 +56,9 @@
             </ul>
 
             <!-- USER GRID -->
-            <table class="table table-striped" id="usersTable">
-                <thead>
-                <tr>
-                    <th scope="col">User ID</th>
-                    <th scope="col">Full Name</th>
-                    <th scope="col">E-mail</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">City</th>
-                    <th scope="col">Reputation</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div class="row row-cols-1 row-cols-md-5" id="usersCardDeck">
+
+            </div>
 
             <a href="#" class="m-3">зал славы за неделю/месяц/квартал</a>
 
