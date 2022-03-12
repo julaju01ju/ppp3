@@ -75,13 +75,9 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        System.out.println(trackedTag + " " + ignoredTag);
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
-
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -209,11 +205,9 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
 
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -240,11 +234,8 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
-
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -276,11 +267,8 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
-
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -312,11 +300,8 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
-
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -343,11 +328,8 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
-        if ((trackedTag.get(0) != -1) || (ignoredTag.get(0) != -1)) {
-
-            if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         Map<String, Object> params = new HashMap<>();

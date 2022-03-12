@@ -33,7 +33,7 @@ public class TagDaoImpl extends ReadWriteDaoImpl<Tag, Long> implements TagDao {
                                 "where ((tt.trackedTag.id not in :trackedTag and -1 not in :trackedTag) or tt.trackedTag.id in :ignoredTag) " +
                                 "or ((it.ignoredTag.id not in :ignoredTag and -1 not in :ignoredTag) or it.ignoredTag.id in :trackedTag)")
                 .setParameter("ignoredTag", ignoredTag)
-                .setParameter("trackedTag",trackedTag)
+                .setParameter("trackedTag", trackedTag)
                 .getResultList()
                 .isEmpty();
     }
@@ -44,5 +44,5 @@ public class TagDaoImpl extends ReadWriteDaoImpl<Tag, Long> implements TagDao {
                 "it.ignoredTag.id =:tagId AND tt.trackedTag.id=:tagId AND it.user.id=:userId";
         return entityManager.createQuery(hql).setParameter("tagId", tagId).getFirstResult()==0;
     }
-    
+
 }
