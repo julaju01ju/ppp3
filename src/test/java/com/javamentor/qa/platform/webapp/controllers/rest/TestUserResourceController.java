@@ -53,6 +53,37 @@ public class TestUserResourceController extends AbstractControllerTest {
     }
 
     @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/users.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/answers.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/questions.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/reputations.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/question_has_tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getUserByIdWithTop3Tags() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.email").value("user@mail.ru"))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.linkImage").value("image"))
+                .andExpect(jsonPath("$.city").value("city"))
+                .andExpect(jsonPath("$.reputation").value(42))
+                .andExpect(jsonPath("$.topTags.length()").value(3))
+                .andExpect(jsonPath("$.topTags[0].name").value("spring"))
+                .andExpect(jsonPath("$.topTags[1].name").value("hibernate"))
+                .andExpect(jsonPath("$.topTags[2].name").value("postgres"));
+    }
+
+    @Test
     @DataSet(value = {"dataset/UserResourceController/users.yml",
             "dataset/UserResourceController/answers.yml",
             "dataset/UserResourceController/questions.yml",

@@ -29,7 +29,7 @@ public class UserDtoDaoImpl implements UserDtoDao {
                                 "t.id, " +
                                 "t.name, " +
                                 "t.description) " +
-                                "from Tag t join t.questions tq join tq.answers qa where qa.user.id =: id group by t.id order by count(t.id)"
+                                "from Tag t join t.questions tq join tq.answers qa where qa.user.id =: id group by t.id order by count(t.id) desc "
                         , TagDto.class)
                 .setParameter("id", id)
                 .setMaxResults(3)
