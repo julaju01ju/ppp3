@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,48 +63,48 @@ public class AnswerResourceController {
 
     @GetMapping("/{questionId}/answer")
     @ApiOperation(
-            value = "Returns List of AnswerDtos that answered on question with id=*")
+            value = "Возвращает ответы на вопрос с questionId=* в виде List<AnswerDto>")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Return List of AnswerDtos that exists for question with id=*"),
-            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long"),
-            @ApiResponse(code = 404, message = "Question with id=* not found or answer on question with id=* not found")
+            @ApiResponse(code = 200, message = "Получены ответы на вопрос с questionId=* в виде List<AnswerDto>"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного questionId (необходимо ввести целое положительное число)"),
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден, либо на вопрос с questionId=* пока еще никто не ответил")
     })
-    public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        if (questionService.existsById(id)) {
-            List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
+    public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long questionId) {
+        if (questionService.existsById(questionId)) {
+            List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(questionId);
             if (answerDtoList.isEmpty()) {
-                return new ResponseEntity<>("Answer on question with id " + id + " not found", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("На вопрос с questionId=" + questionId + " пока никто не ответил", HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
+            return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(questionId), HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Question with id = " + id + " not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Вопрос с questionId=" + questionId + " не найден");
         }
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")
-    @ApiOperation(value = "Удаление ответа по answerId")
+    @ApiOperation(value = "Удаление ответа с answerId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Answer with id=* deleted"),
-            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long"),
-            @ApiResponse(code = 404, message = "Answer with id=* not found")
+            @ApiResponse(code = 200, message = "Ответ с answerId=* удален"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного answerId (необходимо ввести целое положительное число)"),
+            @ApiResponse(code = 404, message = "Ответ с answerId=* не найден")
     })
     public ResponseEntity<?> deleteAnswerById(@PathVariable Long answerId) {
         if (answerId == null) {
-            return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
+            return ResponseEntity.badRequest().body("Ошибка уделения ответа с answerId=" + answerId + " (поле answerId не заполнено)");
         }
         if (answerService.existsById(answerId)) {
             answerService.deleteById(answerId);
             return ResponseEntity.ok().build();
         }
-        return new ResponseEntity("Answer with id= " + answerId + " not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity("Ответ с answerId=" + answerId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/{questionId}/answer/{answerId}/upVote")
-    @ApiOperation(value = "Запись в БД голосования за ответ со значением UP")
+    @ApiOperation(value = "Запись в БД голосования со значением UP за ответ c answerId=* на вопрос с questionId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Поднятие репутации прошло успешно"),
-            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или неверный формат введенного questionId/answerId"),
-            @ApiResponse(code = 404, message = "Answer with id=* не существует")
+            @ApiResponse(code = 200, message = "Поднятие репутации ответа с answerId=* прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или формат введенного questionId/answerId является не верным"),
+            @ApiResponse(code = 404, message = "Ответ с answerId=* не найден")
     })
     public ResponseEntity<?> insertUpVote(@PathVariable("questionId") Long questionId, @PathVariable("answerId") Long answerId) {
         User sender = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -118,15 +119,15 @@ public class AnswerResourceController {
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Answer with id= " + answerId + " не существует", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Ответ с answerId=" + answerId + " не найден", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/{questionId}/answer/{id}/downVote")
-    @ApiOperation(value = "Запись в БД голосования за ответ со значением Down")
+    @PostMapping("/{questionId}/answer/{answerId}/downVote")
+    @ApiOperation(value = "Запись в БД голосования со значением DOWN за ответ c answerId=* на вопрос с questionId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Вычитание репутации прошло успешно"),
-            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или неверный формат введенного questionId/answerId"),
-            @ApiResponse(code = 404, message = "Answer with id=* не существует")
+            @ApiResponse(code = 200, message = "Понижение репутации ответа с answerId=* прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или формат введенного questionId/answerId является не верным"),
+            @ApiResponse(code = 404, message = "Ответ с answerId=* не найден")
     })
     public ResponseEntity<?> insertDownVote(@PathVariable("questionId") Long questionId, @PathVariable("answerId") Long answerId) {
         User sender = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -141,15 +142,15 @@ public class AnswerResourceController {
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Answer with id= " + answerId + " не существует", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Ответ с answerId=*" + answerId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/{questionId}/answer/add")
-    @ApiOperation(value = "Добавление ответа к вопросу")
+    @ApiOperation(value = "Добавление ответа к вопросу с questionId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ответ добавлен"),
-            @ApiResponse(code = 400, message = "Ошибка добавления вопроса: на данный вопрос уже отвечали или неверный формат введенного questionId"),
-            @ApiResponse(code = 404, message = "Вопроса c id=* не существует")
+            @ApiResponse(code = 200, message = "Ответ к вопросу с questionId=* добавлен"),
+            @ApiResponse(code = 400, message = "Ошибка добавления вопроса: на данный вопрос пользователь уже отвечал или формат введенного questionId является неверным"),
+            @ApiResponse(code = 404, message = "Вопрос c questionId=* не найден")
     })
     public ResponseEntity<?> addAnswerByQuestionId(@Valid @RequestBody AnswerCreateDto answerCreateDto, @PathVariable("questionId") Long questionId) {
         User sender = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -162,12 +163,16 @@ public class AnswerResourceController {
                 answer.setHtmlBody(answerCreateDto.getBody());
                 answer.setUser(sender);
                 answer.setQuestion(question);
+                answer.setIsDeleted(false);
+                answer.setIsDeletedByModerator(false);
+                answer.setIsHelpful(false);
+                answer.setDateAcceptTime(LocalDateTime.now());
                 answerService.persist(answer);
                 return new ResponseEntity<>(answerConverter.answerToAnswerDto(answer), HttpStatus.OK);
             }
             return new ResponseEntity<>("Вы уже отвечали на данный вопрос", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Вопроса c id= " + questionId + " не существует", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Вопрос c questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND);
     }
 
 }

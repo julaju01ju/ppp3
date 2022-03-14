@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implements AnswerService {
@@ -22,6 +23,7 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
         answerDao.deleteById(id);
     }
 
+    @Transactional
     @Override
     public Boolean getIfNotExists(Long questionId, Long userId) {
         return answerDao.getIfNotExists(questionId, userId);

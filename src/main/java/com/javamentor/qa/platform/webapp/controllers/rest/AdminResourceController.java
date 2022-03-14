@@ -24,20 +24,20 @@ public class AdminResourceController {
         this.userService = userService;
     }
 
-    @DeleteMapping("delete/{id}")
-    @ApiOperation( value = "Удаление пользователя по ID, через изменение значения свойства isEnabled с true, на false")
+    @DeleteMapping("delete/{userId}")
+    @ApiOperation( value = "Удаление пользователя по userId, через изменение значения свойства isEnabled с true, на false")
     @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "User is deleted"),
-            @ApiResponse(code = 404, message = "User with id=* not found"),
-            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
+            @ApiResponse(code = 200, message = "Пользователь удален"),
+            @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного userId (необходимо ввести целое положительное число)")
     })
-    public ResponseEntity<?> deleteUserById(@PathVariable("id") Long id) {
-        Optional<User> optionalUser = userService.getById(id);
+    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
+        Optional<User> optionalUser = userService.getById(userId);
 
         if (optionalUser.isPresent()) {
             userService.disableUserByEmail(optionalUser.get().getEmail());
-            return ResponseEntity.ok().body("User is deleted");
+            return ResponseEntity.ok().body("Пользователь удален");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with id = " + id + " not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь с userId=" + userId + " не найден");
     }
 }

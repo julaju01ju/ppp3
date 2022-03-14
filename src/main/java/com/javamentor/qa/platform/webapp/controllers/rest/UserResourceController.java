@@ -7,6 +7,8 @@ import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +47,11 @@ public class UserResourceController {
 
     @GetMapping("/api/user/{userId}")
     @ApiOperation("Получение пользователя по ID")
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "Return user with id=*"),
+            @ApiResponse(code = 404, message = "User with id=* not found"),
+            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
+    })
     public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
 
         return userDtoService.getUserById(userId).isEmpty() ?
@@ -57,6 +64,11 @@ public class UserResourceController {
             "Принимает параметры: page(обязательный) - текущая страница и " +
             "items(необязательный) - количество элементов на страницу. По умолчанию равен 10." +
             "filter(необязательный) - фильтрация пользователей по email или fullname. По умолчанию пуст.")
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "User is deleted"),
+            @ApiResponse(code = 404, message = "User with id=* not found"),
+            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
+    })
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
                                                                                             defaultValue = "10") Integer items,
