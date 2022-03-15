@@ -159,15 +159,17 @@ public class TagResourceController {
     }
 
     @GetMapping("/popular")
-    @ApiOperation("API получение всех тегов, с пагинацией по популярности (популярность - количество вопросов за тегом)" +
-            "Принимает параметры: page(обязательный) - текущая страница и " +
-            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
+    @ApiOperation("Выводит все тэги, отсортированные по популярности, с учетом заданных параметров пагинации, " +
+            " где популярность определяется количеством вопросов закрепеленных за тегом)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все тэги, отсортированные по популярности, с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByPopularPagination(
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "items", required = false,
-                    defaultValue = "10") Integer items,
-            @RequestParam(value = "filter", required = false,
-                    defaultValue = "") String filter) {
+            @RequestParam(value = "items", required = false, defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -181,7 +183,7 @@ public class TagResourceController {
             value = "Удаляет тэг из отслеживаемых текущим пользователем по tagId")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Тэг с tagId=* успешно удален из отслеживаемых"),
-            @ApiResponse(code = 400, message = "Тэг с tagId= в отслеживаемых не найден")
+            @ApiResponse(code = 400, message = "Тэг с tagId= в отслеживаемых не найден или формат введенного tagId не верный")
     })
     @DeleteMapping("/{tagId}/tracked")
     public ResponseEntity<?> deleteTrackedTagByTagId(@PathVariable("tagId") Long tagId) {
@@ -200,7 +202,7 @@ public class TagResourceController {
             value = "Удаляет тэг из игнорируемых текущим пользователем по tagId")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Тэг с tagId=* успешно удален из игнорируемых"),
-            @ApiResponse(code = 400, message = "Тэг с tagId= в игнорируемых не найден")
+            @ApiResponse(code = 400, message = "Тэг с tagId= в игнорируемых не найден или формат введенного tagId не верный")
     })
     @DeleteMapping("/{tagId}/ignored")
     public ResponseEntity<?> deleteIgnoredTagByTagId(@PathVariable("tagId") Long tagId) {
