@@ -63,9 +63,12 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestions")
-    @ApiOperation("Paginate all QuestionDto with tags." +
-            "Sorted by votes, answers and views")
-    @ApiResponse(code = 200, message = "status OK")
+    @ApiOperation("Выводит все вопросы с тэгами по ним с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Вопросы отсортированы"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -82,19 +85,19 @@ public class QuestionResourceController {
                 "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/view")
-    @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос")
+    @PostMapping("/{questionId}/view")
+    @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос c questionId=*")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Вопрос просмотрен впервые"),
-            @ApiResponse(code = 404, message = "Вопрос с id =* не найден"),
-            @ApiResponse(code = 400, message = "Вопрос уже был просмотрен")
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден"),
+            @ApiResponse(code = 400, message = "Вопрос уже был просмотрен, либо формат введенного questionId является не верным")
     })
-    public ResponseEntity<?> insertAuthUserToQuestionViewedByQuestionId(@PathVariable("id") Long id) {
+    public ResponseEntity<?> insertAuthUserToQuestionViewedByQuestionId(@PathVariable("questionId") Long questionId) {
         User userPrincipal = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Optional<Question> question = questionService.getById(id);
+        Optional<Question> question = questionService.getById(questionId);
 
         if (!question.isPresent()) {
-            return new ResponseEntity<>("Вопрос с id = " + id + " не найден", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Вопрос с id = " + questionId + " не найден", HttpStatus.NOT_FOUND);
         }
 
         if (!questionViewedService.isUserViewedQuestion(userPrincipal.getEmail(), question.get().getId())) {

@@ -5,6 +5,8 @@ import com.javamentor.qa.platform.models.dto.JwtTokenDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +35,10 @@ public class AuthenticationResourceController {
 
     @PostMapping("/auth/token/")
     @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username, password и значение поля isRemember")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получен JWT токен"),
+            @ApiResponse(code = 400, message = "Ошибка аутентификации: имя или пароль неправильны")
+    })
     public ResponseEntity<JwtTokenDto> getToken(@RequestBody AuthenticationRequest request)
     {
         JwtTokenDto jwtTokenDTO = new JwtTokenDto();
@@ -48,12 +54,18 @@ public class AuthenticationResourceController {
             }
         }
         catch (BadCredentialsException exception) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", exception);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Имя или пароль неправильны", exception);
         }
         return new ResponseEntity<>(jwtTokenDTO, HttpStatus.OK);
     }
 
     @GetMapping("/user/check_auth")
+    @ApiOperation("В случае успешного прохождения автоизации пользователь перенаправляется на запрашиваемую страницу")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Авторизация успешно пройдена"),
+            @ApiResponse(code = 401, message = "Пользователь не авторизован. Перенаправление на страницу /login"),
+            @ApiResponse(code = 403, message = "Доступ запрещен")
+    })
     public ResponseEntity<Void> checkAuthorization() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
