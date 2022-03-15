@@ -33,7 +33,7 @@ import java.util.Map;
  */
 
 @RestController
-@Api("Rest Contoller to get a User by ID")
+@Api("User Api")
 public class UserResourceController {
 
     private UserDtoService userDtoService;
@@ -48,14 +48,14 @@ public class UserResourceController {
     @GetMapping("/api/user/{userId}")
     @ApiOperation("Получение пользователя по ID")
     @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "Return user with id=*"),
-            @ApiResponse(code = 404, message = "User with id=* not found"),
-            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
+            @ApiResponse(code = 200, message = "Пользователь с userId=* получен"),
+            @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного userId")
     })
     public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
 
         return userDtoService.getUserById(userId).isEmpty() ?
-                new ResponseEntity<>("User with id " + userId + " not found!", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>("Пользователь с userId=" + userId + " не найден", HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(userDtoService.getUserById(userId), HttpStatus.OK);
     }
 

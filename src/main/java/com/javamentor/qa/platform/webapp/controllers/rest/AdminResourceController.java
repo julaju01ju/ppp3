@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/admin/")
-@Api("Admin controller")
+@Api("Admin Api")
 public class AdminResourceController {
 
     private final UserService userService;

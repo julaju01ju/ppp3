@@ -38,7 +38,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/user/question")
-@Api("Rest Controller for Question")
+@Api("Question Api")
 public class QuestionResourceController {
 
     private TagService tagService;
@@ -65,7 +65,7 @@ public class QuestionResourceController {
     @GetMapping("/sortedQuestions")
     @ApiOperation("Выводит все вопросы с тэгами по ним с учетом заданных параметров пагинации")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Вопросы отсортированы"),
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных параметров пагинации"),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
@@ -114,18 +114,27 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @ApiOperation("Возвращает вопрос и тэги относящиеся к этому вопросу, по ИД вопроса.")
-    public ResponseEntity<?> getQuestionById(@PathVariable("id") Long id) {
+    @GetMapping("/{questionId}")
+    @ApiOperation("Возвращает вопрос и тэги, относящиеся к этому вопросу, по ИД вопроса")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Показан вопрос с questionId=* и тэги, относящиеся к этому вопросу"),
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден")
+    })
+    public ResponseEntity<?> getQuestionById(@PathVariable("questionId") Long questionId) {
 
-        Optional<QuestionDto> questionDto = questionDtoService.getQuestionById(id);
+        Optional<QuestionDto> questionDto = questionDtoService.getQuestionById(questionId);
         return questionDto.isEmpty()
-                ? new ResponseEntity<>("Wrong Question ID!", HttpStatus.NOT_FOUND)
+                ? new ResponseEntity<>("Вопрос с questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(questionDto, HttpStatus.OK);
     }
 
     @PostMapping("/{questionId}/upVote")
-    @ApiOperation("запись в БД голосования за вопрос со значением UP")
+    @ApiOperation("Запись в БД голосования со значением UP за вопрос c questionId=*")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Поднятие репутации вопроса с questionId=* прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или формат введенного questionId является не верным"),
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден")
+    })
     public ResponseEntity<?> insertUpVote(@PathVariable("questionId") Long questionId) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Optional<Question> optionalQuestion = questionService.getById(questionId);
@@ -139,11 +148,16 @@ public class QuestionResourceController {
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Такого question не существует", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Вопрос с questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/{questionId}/downVote")
-    @ApiOperation("запись в БД голосования за вопрос со значением DOWN")
+    @ApiOperation("Запись в БД голосования со значением DOWN за вопрос c questionId=*")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Понижение репутации вопроса с questionId=* прошло успешно"),
+            @ApiResponse(code = 400, message = "Ошибка голосования: голос уже учтен или формат введенного questionId является не верным"),
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден")
+    })
     public ResponseEntity<?> insertDownVote(@PathVariable("questionId") Long questionId) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Optional<Question> optionalQuestion = questionService.getById(questionId);
@@ -157,14 +171,15 @@ public class QuestionResourceController {
             }
             return new ResponseEntity<>("Ваш голос уже учтен", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Такого question не существует", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Вопрос с questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/")
-    @ApiOperation("API создания вопроса. Получает объект QuestionCreateDto. " +
-            "Возвращает объект QuestionDto. Поля Title, Description, Tag должны быть заполнены." +
-            "Если хотя бы одно поле не заполнено возвращается HttpStatus.BAD_REQUEST." +
-            "Проверяет есть ли присланный Tag в базе. Если нет - создает.")
+    @ApiOperation("Создание нового вопроса от пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ваш вопрос успешно создан"),
+            @ApiResponse(code = 400, message = "Поля title, description должны быть заполнены, в tags должен содержаться как минимум один объект")
+    })
     public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -206,7 +221,28 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
     }
-
+//    @GetMapping("/sortedQuestions")
+//    @ApiOperation("Выводит все вопросы с тэгами по ним с учетом заданных параметров пагинации")
+//    @ApiResponses(value = {
+//            @ApiResponse(code = 200, message = "Вопросы отсортированы"),
+//            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+//            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+//    })
+//    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
+//            @RequestParam("page") Integer page,
+//            @RequestParam(value = "items", defaultValue = "10") Integer items,
+//            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+//            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+//
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("currentPageNumber", page);
+//        params.put("itemsOnPage", items);
+//        params.put("trackedTag", trackedTag);
+//        params.put("ignoredTag", ignoredTag);
+//
+//        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+//                "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
+//    }
 
     @GetMapping("/mostPopularWeek")
     @ApiOperation("Получение пагинации QuestionDto за неделю с сортировкой по наибольшей популярности")

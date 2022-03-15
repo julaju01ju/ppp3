@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.dto.JwtTokenDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.security.jwt.JwtUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -22,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Collection;
 
 @RestController
+@Api("Authentication Api")
 @RequestMapping("/api")
 public class AuthenticationResourceController {
 

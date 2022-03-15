@@ -29,7 +29,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/tag")
-@Api("CRUD operations with Tags")
+@Api("Tag Api")
 public class TagResourceController {
 
     private final TrackedTagDtoService trackedTagDtoService;
@@ -54,10 +54,9 @@ public class TagResourceController {
         this.ignoredTagService = ignoredTagService;
     }
 
-    @ApiOperation(value = "Get all authorized user's tracked tags")
-    @ApiResponses(value =
-    @ApiResponse(code = 200, message = "Get all tracked tags"))
     @GetMapping("/tracked")
+    @ApiOperation(value = "Возвращает все отслеживаемые текущим пользователем тэги")
+    @ApiResponse(code = 200, message = "Получены все отслежиаемые текущим пользователем тэги")
     public ResponseEntity<List<TagDto>> getAllTrackedTags() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
@@ -65,9 +64,8 @@ public class TagResourceController {
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Get all authorized user's ignored tags")
-    @ApiResponses(value =
-    @ApiResponse(code = 200, message = "Get all ignored tags"))
+    @ApiOperation(value = "Возвращает все игнорируемые текущим пользователем тэги")
+    @ApiResponse(code = 200, message = "Получены все игнорируемые текущим пользователем тэги")
     @GetMapping("/ignored")
     public ResponseEntity<List<TagDto>> getAllIgnoredTags() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
@@ -76,9 +74,12 @@ public class TagResourceController {
     }
 
     @GetMapping("/name")
-    @ApiOperation("API получение всех тегов, отсортированных по имени, с пагинацией. " +
-            "Принимает параметры: page(обязательный) - текущая страница и " +
-            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10.")
+    @ApiOperation("Выводит все тэги, отсортированные по имени, с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все тэги, отсортированные по имени, с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByNamePagination(
             @RequestParam(value = "page") Integer page,
             @RequestParam(value = "items", required = false,
@@ -95,11 +96,14 @@ public class TagResourceController {
     }
 
     @ApiOperation(
-            value = "Add Tag into TrackedTag table")
+            value = "Добавляет с tagId=* в отслеживаемые текущим пользователем")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "Tag not found")})
-    @PostMapping("/{id}/tracked")
-    public ResponseEntity<?> addTrackedTag(@PathVariable("id") Long tagId) {
+            @ApiResponse(code = 200, message = "Тэг с tagId=* добавлен в отслеживаемые"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного tagId"),
+            @ApiResponse(code = 404, message = "Тэг с tagId=* не найден")
+    })
+    @PostMapping("/{tagId}/tracked")
+    public ResponseEntity<?> addTrackedTag(@PathVariable("tagId") Long tagId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
@@ -113,15 +117,18 @@ public class TagResourceController {
             TagDto tagDto = tagConverter.tagToTagDto(tag);
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Тэг с tagId=*" + tagId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @ApiOperation(
-            value = "Add Tag into IgnoredTag table")
+            value = "Добавляет с tagId=* в игнорируемые текущим пользователем")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "Tag not found")})
-    @PostMapping("/{id}/ignored")
-    public ResponseEntity<?> addIgnoredTag(@PathVariable("id") Long tagId) {
+            @ApiResponse(code = 200, message = "Тэг с tagId=* добавлен в игнорируемые"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного tagId"),
+            @ApiResponse(code = 404, message = "Тэг с tagId=* не найден")
+    })
+    @PostMapping("/{tagId}/ignored")
+    public ResponseEntity<?> addIgnoredTag(@PathVariable("tagId") Long tagId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<Tag> optionalTag = tagService.getById(tagId);
         if (optionalTag.isPresent()) {
@@ -135,13 +142,17 @@ public class TagResourceController {
             TagDto tagDto = tagConverter.tagToTagDto(tag);
             return new ResponseEntity<>(tagDto, HttpStatus.OK);
         }
-        return new ResponseEntity<>("Tag not found", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Тэг с tagId=" + tagId + " не найден", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/latter")
-    @ApiOperation("API поиск тегов по букве или слову. " +
+    @ApiOperation("Поиск тегов по букве или слову. " +
             "Выдается 10 самых популярных тегов для текущего поиска. " +
             "В качестве параметров передается searchString - строка или буква.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все тэги, содержащие в названии searchString=*"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: searchString")
+    })
     public ResponseEntity<List<TagDto>> getTop10FoundTags(@RequestParam(value = "searchString") String searchString) {
         List<TagDto> tagDtos = tagDtoService.getTop10FoundTags(searchString);
         return new ResponseEntity<>(tagDtos, HttpStatus.OK);
@@ -167,17 +178,18 @@ public class TagResourceController {
     }
 
     @ApiOperation(
-            value = "Delete Tag from TrackedTag table by tag id")
+            value = "Удаляет тэг из отслеживаемых текущим пользователем по tagId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "TrackedTag deleted successfully"),
-            @ApiResponse(code = 400, message = "TrackedTag not found")})
-    @DeleteMapping("/{id}/tracked")
-    public ResponseEntity<?> deleteTrackedTagByTagId(@PathVariable("id") Long tagId) {
+            @ApiResponse(code = 200, message = "Тэг с tagId=* успешно удален из отслеживаемых"),
+            @ApiResponse(code = 400, message = "Тэг с tagId= в отслеживаемых не найден")
+    })
+    @DeleteMapping("/{tagId}/tracked")
+    public ResponseEntity<?> deleteTrackedTagByTagId(@PathVariable("tagId") Long tagId) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (!trackedTagService.getTagIfNotExist(tagId, user.getId())) {
-            return ResponseEntity.badRequest().body("Error deleting TrackeTag by tag id" + tagId);
+            return ResponseEntity.badRequest().body("Тэг с tagId=" + tagId + " в отслеживаемых не найден");
         }
 
         trackedTagService.deleteTrackedTagByTagIdAndUserId(tagId, user.getId());
@@ -185,17 +197,18 @@ public class TagResourceController {
     }
 
     @ApiOperation(
-            value = "Delete Tag from IgnoredTag table by tag id")
+            value = "Удаляет тэг из игнорируемых текущим пользователем по tagId")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "IgnoredTag deleted successfully"),
-            @ApiResponse(code = 400, message = "IgnoredTag not found")})
-    @DeleteMapping("/{id}/ignored")
-    public ResponseEntity<?> deleteIgnoredTagByTagId(@PathVariable("id") Long tagId) {
+            @ApiResponse(code = 200, message = "Тэг с tagId=* успешно удален из игнорируемых"),
+            @ApiResponse(code = 400, message = "Тэг с tagId= в игнорируемых не найден")
+    })
+    @DeleteMapping("/{tagId}/ignored")
+    public ResponseEntity<?> deleteIgnoredTagByTagId(@PathVariable("tagId") Long tagId) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (!ignoredTagService.getTagIfNotExist(tagId, user.getId())) {
-            return ResponseEntity.badRequest().body("Error deleting IgnoredTag by tag id" + tagId);
+            return ResponseEntity.badRequest().body("Тэг с tagId=" + tagId + " в игнорируемых не найден");
         }
 
         ignoredTagService.deleteIgnoredTagByTagIdAndUserId(tagId, user.getId());
