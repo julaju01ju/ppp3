@@ -15,7 +15,7 @@
     <div id="app-header"></div>
     <div class="row" style="height: 80vh" id="main-content">
         <div class="col-2" id="app-side-bar" style="border-right: 1px solid lightgrey"></div>
-        <div class="col-7" style="height: 80vh; overflow: scroll">div c
+        <div class="col-7" style="height: 80vh; overflow: scroll">
             <div class="heading p-3 d-flex justify-content-between" style="width: 100%">
                 <h3 class="h3">Все вопросы</h3>
                 <a class="btn btn-primary" href="/question/add">Задать вопрос</a>
@@ -46,14 +46,13 @@
             <label for="amountPerPage">Items per page</label>
             <input type="number" value="50" min="1" max="100" onkeyup=imposeMinMax(this) id="amountPerPage"
                    style="width: 4pc">
-            <div id="questions_list">
-                <div class="row row-cols-1 row-cols-md-5 d-flex" id="questions-browser">
+            <div id="questions_browser">
+                <div class="row" id="questions_list">
                 </div>
                 <nav>
                     <ul class="pagination justify-content-end" id="paginationButtons"></ul>
                 </nav>
             </div>
-
         </div>
         <div class="col-3 d-flex flex-column p-3" style="color: #7b8185">
             <div class="card shadow p-3 rounded mb-3" style="background-color: lightyellow; border: 1px solid
@@ -103,7 +102,7 @@
 <script src="../js/layout/Footer.js"></script>
 <script src="../js/scripts.js"></script>
 <script src="../js/pagination.js"></script>
-<script src="../js/example/question.js"></script>
+<script src="../js/example/questions.js"></script>
 
 
 </body>
