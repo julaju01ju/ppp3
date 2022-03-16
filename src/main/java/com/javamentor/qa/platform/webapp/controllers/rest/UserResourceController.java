@@ -47,7 +47,7 @@ public class UserResourceController {
 
     @GetMapping("/api/user/{userId}")
     @ApiOperation("Получение пользователя по ID")
-    @ApiResponses( value = {
+    @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Пользователь с userId=* получен"),
             @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
             @ApiResponse(code = 400, message = "Неверный формат введенного userId")
@@ -64,11 +64,7 @@ public class UserResourceController {
             "Принимает параметры: page(обязательный) - текущая страница и " +
             "items(необязательный) - количество элементов на страницу. По умолчанию равен 10." +
             "filter(необязательный) - фильтрация пользователей по email или fullname. По умолчанию пуст.")
-    @ApiResponses( value = {
-            @ApiResponse(code = 200, message = "User is deleted"),
-            @ApiResponse(code = 404, message = "User with id=* not found"),
-            @ApiResponse(code = 400, message = "Wrong format for id: required type is Long")
-    })
+
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
                                                                                             defaultValue = "10") Integer items,
@@ -117,6 +113,13 @@ public class UserResourceController {
 
     @PutMapping("/api/{userId}/change/password")
     @ApiOperation("Смена пароля с шифрованием")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Пароль успешно изменён"),
+            @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
+            @ApiResponse(code = 400, message = "Вы можете менять только свой пароль" + "Пароль должен состоять минимум из шести символов и" +
+                    "содержать хотя бы одну маленькую латинскую букву, одну заглавню латинскую букву, " +
+                    "одну цифру, один из спецсимволов: @#$%. Пароль не должен совпадать с ранее существующим")
+    })
     public ResponseEntity<?> updatePasswordByEmail(@PathVariable("userId") long userId, @RequestBody String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -133,9 +136,12 @@ public class UserResourceController {
                 sc.setAuthentication(authentication);
 
                 return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Пароль должен состоять минимум из шести символов и" +
+                        "содержать хотя бы одну маленькую латинскую букву, одну заглавню латинскую букву, " +
+                        "одну цифру, один из спецсимволов: @#$%. Пароль не должен совпадать с ранее существующим", HttpStatus.BAD_REQUEST);
             }
         }
-
-        return new ResponseEntity<>("Пароль не соответствует требованиям", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Вы можете менять только свой пароль", HttpStatus.BAD_REQUEST);
     }
 }
