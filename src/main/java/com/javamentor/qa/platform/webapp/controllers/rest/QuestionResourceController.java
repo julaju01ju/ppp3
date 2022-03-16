@@ -63,9 +63,11 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestions")
-    @ApiOperation("Выводит все вопросы с тэгами по ним с учетом заданных параметров пагинации")
+    @ApiOperation("Выводит все QuestionDto с тэгами по ним с учетом заданных параметров пагинации. " +
+            "Вопросы сортируются по голосам, ответам и просмотрам")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
+                    "параметров пагинации. Вопросы отсортированы по голосам, ответам и просмотрам"),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
@@ -205,6 +207,12 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
+                    "параметров пагинациим"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestions(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -221,31 +229,16 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
     }
-//    @GetMapping("/sortedQuestions")
-//    @ApiOperation("Выводит все вопросы с тэгами по ним с учетом заданных параметров пагинации")
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = "Вопросы отсортированы"),
-//            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
-//            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
-//    })
-//    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndQuestionViewed(
-//            @RequestParam("page") Integer page,
-//            @RequestParam(value = "items", defaultValue = "10") Integer items,
-//            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-//            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
-//
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("currentPageNumber", page);
-//        params.put("itemsOnPage", items);
-//        params.put("trackedTag", trackedTag);
-//        params.put("ignoredTag", ignoredTag);
-//
-//        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
-//                "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
-//    }
 
     @GetMapping("/mostPopularWeek")
-    @ApiOperation("Получение пагинации QuestionDto за неделю с сортировкой по наибольшей популярности")
+    @ApiOperation("Выводит все QuestionDto за неделю с тэгами по ним с учетом заданных параметров пагинации. " +
+            "Вопросы сортируются по наибольшей популярности")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы за неделю с тэгами по ним с учетом заданных " +
+                    "параметров пагинации. Вопросы отмортированы по наибольшей популярности"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> mostPopularQuestionsWeek(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -263,7 +256,8 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/noAnswer")
-    @ApiOperation("Получение пагинации QuestionDto, где не на один вопрос не был дан ответ с тэгами. " +
+    @ApiOperation("Выводит все QuestionDto, по которым не было ответа с тэгами с учетом заданных" +
+            " параметров пагинации" +
             "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
             "page - обязательный параметр" +
             "items - не обязательный на фронте, по умолчанию на бэк 10" +
@@ -271,6 +265,12 @@ public class QuestionResourceController {
             " в которых есть хотя бы один из переданных тэгов" +
             "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
             " в которых нет данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы, по которым не было ответа с тэгами " +
+                    "с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsNoAnswer(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -289,6 +289,7 @@ public class QuestionResourceController {
 
     @GetMapping("/new")
     @ApiOperation("Получение всех QuestionDto с тэгами, отсортированное по дате добавление, сначала самые новые. " +
+            "с учетом заданных параметров пагинации" +
             "В качестве параметров принимает page, items, список trackedTag и ignoredTag " +
             "page - обязателен параметр " +
             "items - не обязательный на фронте, по умолчанию на бэк 10 " +
@@ -296,6 +297,12 @@ public class QuestionResourceController {
             "если что-то передали то мы должны отдавать те вопросы в которых есть хотя бы один из переданных тэгов " +
             "ignoredTag - не обязательный параметр, " +
             "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами, отсортированное по дате добавление, сначала самые новые " +
+                    "с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getAllQuestionDtoSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
@@ -314,9 +321,14 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestionsByMonth")
-    @ApiOperation("Получение пагинации QuestionDto с тэгами, " +
-            "за месяц по наибольшим голосам, ответам и просмотрам.")
-    @ApiResponse(code = 200, message = "status OK")
+    @ApiOperation("Выводит все QuestionDto за месяц с тэгами по ним с учетом заданных параметров пагинации. " +
+            "Вопросы сортируются по голосам, ответам и просмотрам")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы за месяц с тэгами по ним с учетом заданных " +
+                    "параметров пагинации. Вопросы отсортированы по голосам, ответам и просмотрам"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsSortedByVotesAndAnswersAndViewsByMonth(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
