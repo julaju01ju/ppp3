@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -76,6 +77,11 @@ public class QuestionResourceController {
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
@@ -215,6 +221,11 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -241,6 +252,10 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -265,6 +280,10 @@ public class QuestionResourceController {
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
@@ -291,6 +310,10 @@ public class QuestionResourceController {
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
@@ -316,6 +339,10 @@ public class QuestionResourceController {
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
