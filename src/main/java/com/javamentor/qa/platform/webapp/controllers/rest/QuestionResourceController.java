@@ -63,7 +63,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestions")
-    @ApiOperation("Выводит все PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации. " +
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации. " +
             "Вопросы сортируются по голосам, ответам и просмотрам")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
@@ -88,7 +88,7 @@ public class QuestionResourceController {
     }
 
     @PostMapping("/{questionId}/view")
-    @ApiOperation("Добавление авторизованного пользователя в QuestionViewed, при переходе на вопрос c questionId=*")
+    @ApiOperation("При переходе на вопрос c questionId=* авторизованного пользователя, вопрос добавляется в QuestionViewed")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Вопрос просмотрен впервые"),
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден"),
@@ -118,7 +118,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/{questionId}")
-    @ApiOperation("Возвращает вопрос=QuestionDto и тэги, относящиеся к этому вопросу, по ИД вопроса")
+    @ApiOperation("Возвращает вопрос как объект QuestionDto и тэги, относящиеся к этому вопросу по ИД вопроса")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Показан вопрос с questionId=* и тэги, относящиеся к этому вопросу"),
             @ApiResponse(code = 400, message = "Формат введенного questionId является не верным"),
@@ -202,14 +202,7 @@ public class QuestionResourceController {
 
 
     @GetMapping()
-    @ApiOperation("Выводит все PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации." +
-            "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
-            "page - обязательный параметр" +
-            "items - не обязательный на фронте, по умолчанию на бэк 10" +
-            "trackedTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
-            " в которых есть хотя бы один из переданных тэгов" +
-            "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
-            " в которых нет данных тэгов.")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
                     "параметров пагинациим"),
@@ -234,11 +227,11 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/mostPopularWeek")
-    @ApiOperation("Выводит все PageDto<QuestionViewDto> за неделю с тэгами по ним с учетом заданных параметров пагинации. " +
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> за неделю с тэгами по ним с учетом заданных параметров пагинации. " +
             "Вопросы сортируются по наибольшей популярности")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы за неделю с тэгами по ним с учетом заданных " +
-                    "параметров пагинации. Вопросы отмортированы по наибольшей популярности"),
+                    "параметров пагинации. Вопросы отсортированы по наибольшей популярности"),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
@@ -259,15 +252,8 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/noAnswer")
-    @ApiOperation("Выводит все QuestionDto, по которым не было ответа с тэгами с учетом заданных" +
-            " параметров пагинации" +
-            "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
-            "page - обязательный параметр" +
-            "items - не обязательный на фронте, по умолчанию на бэк 10" +
-            "trackedTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
-            " в которых есть хотя бы один из переданных тэгов" +
-            "ignoredTag - не обязательный параметр, если что-то передали, то отдаются те вопросы," +
-            " в которых нет данных тэгов.")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto>, по которым не было ответа " +
+            "с тэгами с учетом заданных параметров пагинации")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы, по которым не было ответа с тэгами " +
                     "с учетом заданных параметров пагинации"),
@@ -291,17 +277,10 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/new")
-    @ApiOperation("Получение всех QuestionDto с тэгами, отсортированное по дате добавление, сначала самые новые. " +
-            "с учетом заданных параметров пагинации" +
-            "В качестве параметров принимает page, items, список trackedTag и ignoredTag " +
-            "page - обязателен параметр " +
-            "items - не обязательный на фронте, по умолчанию на бэк 10 " +
-            "trackedTag - не обязательный параметр, " +
-            "если что-то передали то мы должны отдавать те вопросы в которых есть хотя бы один из переданных тэгов " +
-            "ignoredTag - не обязательный параметр, " +
-            "если что-то передали то мы должны отдавать те вопросы в которых нету данных тэгов.")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с учетом заданных параметров пагинации, " +
+            "Вопросы сотртируются по дате добавление: сначала самые новые.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами, отсортированное по дате добавление, сначала самые новые " +
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами, отсортированные по дате добавление, сначала самые новые " +
                     "с учетом заданных параметров пагинации"),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
@@ -324,7 +303,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestionsByMonth")
-    @ApiOperation("Выводит все QuestionDto за месяц с тэгами по ним с учетом заданных параметров пагинации. " +
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> за месяц с тэгами по ним с учетом заданных параметров пагинации. " +
             "Вопросы сортируются по голосам, ответам и просмотрам")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы за месяц с тэгами по ним с учетом заданных " +

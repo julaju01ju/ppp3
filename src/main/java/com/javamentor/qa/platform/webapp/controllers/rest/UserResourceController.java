@@ -60,11 +60,14 @@ public class UserResourceController {
     }
 
     @GetMapping("/api/user/new")
-    @ApiOperation("API получение всех пользователей, отсортированных по дате регистрации, с пагинацией. " +
-            "Принимает параметры: page(обязательный) - текущая страница и " +
-            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10." +
-            "filter(необязательный) - фильтрация пользователей по email или fullname. По умолчанию пуст.")
-
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по дате регистрации с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по дате регистрации с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
                                                                                             defaultValue = "10") Integer items,
@@ -80,7 +83,14 @@ public class UserResourceController {
     }
 
     @GetMapping("/api/user/reputation")
-    @ApiOperation("Получение списка всех пользователей с пагинацией, отсортированных по репутации")
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по репутации с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по репутации с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page,
                                                                              @RequestParam(required = false, name = "items",
                                                                                      defaultValue = "10") Integer itemsOnPage,
@@ -96,7 +106,14 @@ public class UserResourceController {
     }
 
     @GetMapping("api/user/vote")
-    @ApiOperation("Получение всех пользователей с пагинацией отсортированных по сумме голосов, полученных за ответы и вопросы")
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по сумме голосов, полученных за ответы и вопросы с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по сумме голосов, полученных за ответы и вопросы с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getPageAllUsersSortedByVote(@RequestParam(value = "page") Integer currentPageNumber,
                                                                         @RequestParam(value = "items", required = false,
                                                                                 defaultValue = "10") Integer itemsOnPage,
