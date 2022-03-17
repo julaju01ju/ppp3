@@ -13,11 +13,9 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
 
     if (response.ok) {
         let getToken = await response.json();
-        if (document.cookie.split(';').filter((item) => item.trim().startsWith('token=')).length) {
-            document.cookie = "token=;max-age=-1"; // отключает кеширование токена
-        }
-        let token = Object.values(getToken);
+        document.cookie = "token=;max-age=-1";
 
+        let token = Object.values(getToken);
         document.cookie = "token=" + token;
         window.location.href = '/main';
     }
