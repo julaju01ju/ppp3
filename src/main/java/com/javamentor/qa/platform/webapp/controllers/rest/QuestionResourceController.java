@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -79,7 +80,7 @@ public class QuestionResourceController {
 
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -222,7 +223,7 @@ public class QuestionResourceController {
 
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -252,7 +253,7 @@ public class QuestionResourceController {
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -281,7 +282,7 @@ public class QuestionResourceController {
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -310,7 +311,7 @@ public class QuestionResourceController {
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -340,7 +341,7 @@ public class QuestionResourceController {
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
         Map<String, Object> params = new HashMap<>();
