@@ -96,12 +96,6 @@ class AuthenticationResourceControllerTest {
 
         ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
 
-        mockMvc.perform(
-                        get("/api/testadmin/")
-                                .header(AUTHORIZATION, ADMIN_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().string("API ADMIN TEST"))
-                .andExpect(status().isOk());
     }
 
     @Test
@@ -122,12 +116,6 @@ class AuthenticationResourceControllerTest {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().string("API USER TEST"))
-                .andExpect(status().isOk());
     }
 
     @Test
@@ -148,11 +136,6 @@ class AuthenticationResourceControllerTest {
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
-        mockMvc.perform(
-                        get("/api/testadmin/")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -173,22 +156,5 @@ class AuthenticationResourceControllerTest {
 
         ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
 
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, ADMIN_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true,cleanBefore = true)
-    public void requestToUserApiWithoutToken() throws Exception {
-
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, ""))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().is3xxRedirection());
     }
 }
