@@ -64,13 +64,9 @@ public class AnswerResourceController {
             value = "Returns List of AnswerDtos corresponding questionId")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Valid List of AnswerDtos found"),
-            @ApiResponse(code = 404, message = "Answer of question id not found")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
-        if (answerDtoList == null){
-            return new ResponseEntity<>("Answer of question id " + id + " not found!", HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
     }
 
