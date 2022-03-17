@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -78,76 +76,4 @@ class AuthenticationResourceControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToAdminApiWithAdminRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("adminAUTH@mail.ru");
-
-        mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToUserApiWithUserRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToAdminApiWithUserRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToUserApiWithAdminRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("adminAUTH@mail.ru");
-
-        mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-    }
 }
