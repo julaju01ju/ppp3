@@ -63,7 +63,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/sortedQuestions")
-    @ApiOperation("Выводит все QuestionDto с тэгами по ним с учетом заданных параметров пагинации. " +
+    @ApiOperation("Выводит все PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации. " +
             "Вопросы сортируются по голосам, ответам и просмотрам")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
@@ -99,7 +99,7 @@ public class QuestionResourceController {
         Optional<Question> question = questionService.getById(questionId);
 
         if (!question.isPresent()) {
-            return new ResponseEntity<>("Вопрос с id = " + questionId + " не найден", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Вопрос с id=" + questionId + " не найден", HttpStatus.NOT_FOUND);
         }
 
         if (!questionViewedService.isUserViewedQuestion(userPrincipal.getEmail(), question.get().getId())) {
@@ -112,14 +112,16 @@ public class QuestionResourceController {
 
     @GetMapping("/count")
     @ApiOperation("Получение количества вопросов в базе данных")
+    @ApiResponse(code = 200, message = "Получено количество вопросов в базе данных")
     public ResponseEntity<?> getQuestionCount() {
         return new ResponseEntity<>(questionService.getQuestionCount(), HttpStatus.OK);
     }
 
     @GetMapping("/{questionId}")
-    @ApiOperation("Возвращает вопрос и тэги, относящиеся к этому вопросу, по ИД вопроса")
+    @ApiOperation("Возвращает вопрос=QuestionDto и тэги, относящиеся к этому вопросу, по ИД вопроса")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Показан вопрос с questionId=* и тэги, относящиеся к этому вопросу"),
+            @ApiResponse(code = 400, message = "Формат введенного questionId является не верным"),
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден")
     })
     public ResponseEntity<?> getQuestionById(@PathVariable("questionId") Long questionId) {
@@ -177,10 +179,11 @@ public class QuestionResourceController {
     }
 
     @PostMapping("/")
-    @ApiOperation("Создание нового вопроса от пользователя")
+    @ApiOperation("Создание нового вопроса от пользователя. В RequestBody ожидает объект QuestionCreateDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ваш вопрос успешно создан"),
-            @ApiResponse(code = 400, message = "Поля title, description должны быть заполнены, в tags должен содержаться как минимум один объект")
+            @ApiResponse(code = 400, message = "Объект QuestionCreateDto не передан в RequestBody. Поля объекта QuestionCreateDto title, " +
+                    "description должны быть заполнены, в tags должен содержаться как минимум один объект класса TagDto")
     })
     public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionCreateDto questionCreateDto) {
 
@@ -199,7 +202,7 @@ public class QuestionResourceController {
 
 
     @GetMapping()
-    @ApiOperation("Получение пагинации QuestionDto с тэгами. " +
+    @ApiOperation("Выводит все PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации." +
             "В качестве параметров принимает page, items, список trackedTag и ignoredTag" +
             "page - обязательный параметр" +
             "items - не обязательный на фронте, по умолчанию на бэк 10" +
@@ -231,7 +234,7 @@ public class QuestionResourceController {
     }
 
     @GetMapping("/mostPopularWeek")
-    @ApiOperation("Выводит все QuestionDto за неделю с тэгами по ним с учетом заданных параметров пагинации. " +
+    @ApiOperation("Выводит все PageDto<QuestionViewDto> за неделю с тэгами по ним с учетом заданных параметров пагинации. " +
             "Вопросы сортируются по наибольшей популярности")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы за неделю с тэгами по ним с учетом заданных " +

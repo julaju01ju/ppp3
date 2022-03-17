@@ -36,7 +36,8 @@ public class AuthenticationResourceController {
     }
 
     @PostMapping("/auth/token/")
-    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, который содержит username, password и значение поля isRemember")
+    @ApiOperation("Возвращает строку токена в виде объекта JwtTokenDto, на вход получает объект AuthenticationRequest, " +
+            "который содержит username, password и значение поля isRemember")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получен JWT токен"),
             @ApiResponse(code = 400, message = "Ошибка аутентификации: имя или пароль неправильны")
@@ -62,7 +63,7 @@ public class AuthenticationResourceController {
     }
 
     @GetMapping("/user/check_auth")
-    @ApiOperation("В случае успешного прохождения автоизации пользователь перенаправляется на запрашиваемую страницу")
+    @ApiOperation("В случае успешного прохождения авторизации пользователь перенаправляется на запрашиваемую страницу")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Авторизация успешно пройдена"),
             @ApiResponse(code = 401, message = "Пользователь не авторизован. Перенаправление на страницу /login"),
