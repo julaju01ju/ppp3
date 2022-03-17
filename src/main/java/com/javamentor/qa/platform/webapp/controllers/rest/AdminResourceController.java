@@ -29,7 +29,7 @@ public class AdminResourceController {
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "Пользователь удален"),
             @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
-            @ApiResponse(code = 400, message = "Неверный формат введенного userId (необходимо ввести целое положительное число)")
+            @ApiResponse(code = 400, message = "Неверный формат введенного userId")
     })
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
         Optional<User> optionalUser = userService.getById(userId);

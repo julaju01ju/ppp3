@@ -79,13 +79,12 @@ public class AnswerResourceController {
     @DeleteMapping("/{questionId}/answer/{answerId}")
     @ApiOperation(value = "Удаление ответа с answerId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Valid  Answer ID found"),
-            @ApiResponse(code = 404, message = "Answer ID with id not found"),
-            @ApiResponse(code = 400, message = "Invalid Answer ID entry")})
-    public ResponseEntity<?> deleteAnswerById(@ApiParam(name = "answerId") @PathVariable Long answerId) {
-        if (answerId == null) {
-            return ResponseEntity.badRequest().body("Error deleting an answer Id: " + answerId);
-        } if (answerService.existsById(answerId)) {
+            @ApiResponse(code = 200, message = "Ответ с answerId=* удален"),
+            @ApiResponse(code = 404, message = "Ответ с answerId=* не найден"),
+            @ApiResponse(code = 400, message = "Формат введенного answerId является не верным")
+    })
+    public ResponseEntity<?> deleteAnswerById(@PathVariable Long answerId) {
+        if (answerService.existsById(answerId)) {
             answerService.deleteById(answerId);
             return ResponseEntity.ok().build();
         }
@@ -142,7 +141,10 @@ public class AnswerResourceController {
     @ApiOperation(value = "Добавление ответа к вопросу")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ответ добавлен"),
-            @ApiResponse(code = 400, message = "Ошибка добавления вопроса")})
+            @ApiResponse(code = 400, message = "Ошибка добавления ответа: на данный вопрос пользователь уже отвечал, " +
+                    "либо формат введенного answerId является не верным"),
+            @ApiResponse(code = 404, message = "Вопрос с answerId=* не найден")
+    })
     public ResponseEntity<?> addAnswerByQuestionId(@Valid @RequestBody AnswerCreateDto answerCreateDto, @PathVariable("questionId") Long questionId) {
 
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
