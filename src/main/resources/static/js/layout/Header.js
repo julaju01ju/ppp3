@@ -49,8 +49,7 @@ class Header{
 
                         </ul>
                         <div class="d-flex justify-between align-content-center">
-                            <a href="/login" type="button" class="btn btn-outline-info" id="logout"\'>Выйти</a>
-                            </a>
+                            <a href="/login" type="button" class="btn btn-outline-info" id="logout"'>Выйти</a>
                         </div>
 
                     </div>
