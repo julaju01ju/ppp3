@@ -1,18 +1,20 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import javax.persistence.EntityManager;
-
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class TestAnswerResourceController
@@ -222,5 +224,36 @@ public class TestAnswerResourceController
                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/questions.yml",
+    }, disableConstraints = true, cleanBefore = true )
+    public void checkAddAnswerByQuestionId() throws Exception{
+
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto("Лучший совет-перезагрузка!");
+
+        mockMvc.perform(
+                        post("/api/user/question/103/answer/add")
+                                .content(new ObjectMapper().writeValueAsString(answerCreateDto))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/103/answer")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].questionId").value(103))
+                .andExpect(jsonPath("$[0].userId").value(101));
+
     }
 }
