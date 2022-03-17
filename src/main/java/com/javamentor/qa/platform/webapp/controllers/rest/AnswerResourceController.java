@@ -65,7 +65,7 @@ public class AnswerResourceController {
     @ApiOperation(
             value = "Возвращает ответы на вопрос с questionId=* в виде List<AnswerDto>")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Получены ответы на вопрос с questionId=* в виде List<AnswerDto>"),
+            @ApiResponse(code = 200, message = "Получены ответы на вопрос с questionId=*"),
             @ApiResponse(code = 400, message = "Неверный формат введенного questionId (необходимо ввести целое положительное число)"),
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден, либо на вопрос с questionId=* пока еще никто не ответил")
     })
@@ -146,10 +146,11 @@ public class AnswerResourceController {
     }
 
     @PostMapping("/{questionId}/answer/add")
-    @ApiOperation(value = "Добавление ответа к вопросу с questionId=*")
+    @ApiOperation(value = "Добавление ответа к вопросу с questionId=*. В RequestBody ожидает объект AnswerCreateDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ответ к вопросу с questionId=* добавлен"),
-            @ApiResponse(code = 400, message = "Ошибка добавления вопроса: на данный вопрос пользователь уже отвечал или формат введенного questionId является неверным"),
+            @ApiResponse(code = 400, message = "Ошибка добавления вопроса: на данный вопрос пользователь" +
+                    " уже отвечал, неверный формат введенного questionId или объект AnswerCreateDto не передан в RequestBody"),
             @ApiResponse(code = 404, message = "Вопрос c questionId=* не найден")
     })
     public ResponseEntity<?> addAnswerByQuestionId(@Valid @RequestBody AnswerCreateDto answerCreateDto, @PathVariable("questionId") Long questionId) {
