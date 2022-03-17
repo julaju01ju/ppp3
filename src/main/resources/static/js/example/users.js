@@ -1,6 +1,6 @@
 const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');
-myHeaders.append('Authorization','Bearer '+ document.cookie);
+myHeaders.append('Authorization','Bearer '+ getCookie('token'));
 
 function getUsersSortedByReputation(page, itemsOnPage) {
 
@@ -24,16 +24,20 @@ function getUsersSortedByVoteSum(page, itemsOnPage) {
 }
 
 function fillCard(elementItems) {
-    $('#usersTable > tbody').empty();
+    $('#usersCardDeck').empty();
+
     elementItems.forEach(function (item) {
-        let newElement = `<tr>
-                                <td> ${item.id} </td>
-                                <td> ${item.fullName} </td>
-                                <td> ${item.email} </td>
-                                <td> ${item.linkImage} </td>
-                                <td> ${item.city} </td>
-                                <td> ${item.reputation}</td>
-                            </tr>`;
-        $('#usersTable > tbody').append(newElement);
+        let newElement = `<div class="col mb-4">
+                            <div class="user-card">
+                              <div><img src="../images/userPage/noUserAvatar.png" class="avatar card-img-top" alt="..."></div>
+                              <div class="card-body">
+                                <div class="card-title"><a href="#">${item.fullName}</a></div>
+                                <div class="card-text small">${item.city}</div>
+                                <div class="card-text font-weight-bolder small">${item.reputation}</div>
+                              </div>
+                            </div>
+                          </div>`;
+
+        $('#usersCardDeck').append(newElement);
     });
 }

@@ -136,9 +136,13 @@ public class TestAnswerResourceController
                 .andExpect(status().isOk());
 
         mockMvc.perform(
-                        get("/api/user/question/3/answer").header(AUTHORIZATION, USER_TOKEN))
+                        delete("/api/user/question/102/answer/104").header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/102/answer").header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
                 .andExpect(jsonPath("$.id").doesNotExist());
     }
 
