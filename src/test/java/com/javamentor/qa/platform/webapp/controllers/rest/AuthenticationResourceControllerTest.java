@@ -33,7 +33,7 @@ class AuthenticationResourceControllerTest {
 
     @Test
     @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true ,cleanBefore = true)
+            disableConstraints = true, cleanBefore = true)
     public void returnTokenWithAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -87,14 +87,13 @@ class AuthenticationResourceControllerTest {
         authenticationRequest.setPassword("ADMIN");
         authenticationRequest.setUsername("adminAUTH@mail.ru");
 
-        String ADMIN_TOKEN = mockMvc.perform(
+        mockMvc.perform(
                         post("/api/auth/token/")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
 
     }
 
@@ -107,14 +106,12 @@ class AuthenticationResourceControllerTest {
         authenticationRequest.setPassword("USER");
         authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
+        mockMvc.perform(
                         post("/api/auth/token/")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
 
     }
 
@@ -127,34 +124,30 @@ class AuthenticationResourceControllerTest {
         authenticationRequest.setPassword("USER");
         authenticationRequest.setUsername("user@mail.ru");
 
-        String USER_TOKEN = mockMvc.perform(
+        mockMvc.perform(
                         post("/api/auth/token/")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
     }
 
     @Test
     @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true,cleanBefore = true)
+            disableConstraints = true, cleanBefore = true)
     public void requestToUserApiWithAdminRole() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
         authenticationRequest.setUsername("adminAUTH@mail.ru");
 
-        String ADMIN_TOKEN = mockMvc.perform(
+        mockMvc.perform(
                         post("/api/auth/token/")
                                 .content(new ObjectMapper().writeValueAsString(authenticationRequest))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-        ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
 
     }
 }
