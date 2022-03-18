@@ -5,5 +5,45 @@ reputation:
     type: 1
     answer_id: 1
     author_id: 1
-    question_id: 1
+    question_id:
+    sender_id: 2
+  - id: 2
+    count: 42
+    persist_date: 2021-12-06 00:00:00
+    type: 1
+    answer_id: 2
+    author_id: 1
+    question_id:
+    sender_id: 2
+  - id: 3
+    count: 42
+    persist_date: 2021-12-06 00:00:00
+    type: 1
+    answer_id: 3
+    author_id: 1
+    question_id:
+    sender_id: 2
+  - id: 4
+    count: 42
+    persist_date: 2021-12-06 00:00:00
+    type: 1
+    answer_id: 4
+    author_id: 1
+    question_id:
+    sender_id: 2
+  - id: 5
+    count: 42
+    persist_date: 2021-12-06 00:00:00
+    type: 1
+    answer_id: 5
+    author_id: 1
+    question_id:
+    sender_id: 2
+  - id: 6
+    count: 42
+    persist_date: 2021-12-06 00:00:00
+    type: 1
+    answer_id: 6
+    author_id: 1
+    question_id:
     sender_id: 2

@@ -16,18 +16,18 @@ user_entity:
     nickname: "USR"
     role_id: 1
   - id: 2
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmail@mail.com"
     full_name: "Constantin"
-    image_link: "link"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
     password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
     persist_date: 2021-12-06 00:00:00
+    last_redaction_date: 2021-12-06 00:00:00
+    email: "SomeEmail@mail.com"
+    about: "Something"
+    city: "Moscow"
+    link_site: "site@link"
+    link_github: "github@link"
+    link_vk: "vk@link"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "link"
+    nickname: "NickName"
     role_id: 1

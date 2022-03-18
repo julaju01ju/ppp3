@@ -1,0 +1,36 @@
+votes_on_answers:
+  - id: 1
+    user_id: 2
+    answer_id: 1
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE
+
+  - id: 2
+    user_id: 2
+    answer_id: 2
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE
+
+  - id: 3
+    user_id: 2
+    answer_id: 3
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE
+
+  - id: 4
+    user_id: 2
+    answer_id: 4
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE
+
+  - id: 5
+    user_id: 2
+    answer_id: 5
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE
+
+  - id: 6
+    user_id: 2
+    answer_id: 6
+    persist_date: 2021-12-06 00:00:00
+    vote: UP_VOTE

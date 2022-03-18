@@ -21,7 +21,10 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
 
     @Transactional
     public Optional<UserDto> getUserById(Long id) {
-        return userDtoDao.getUserById(id);
+        return userDtoDao.getUserById(id).map(dto -> {
+            dto.setTopTags(userDtoDao.getTop3UserTagsByReputation(id));
+            return dto;
+        });
     }
 
 }

@@ -80,7 +80,59 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.topTags.length()").value(3))
                 .andExpect(jsonPath("$.topTags[0].name").value("spring"))
                 .andExpect(jsonPath("$.topTags[1].name").value("hibernate"))
-                .andExpect(jsonPath("$.topTags[2].name").value("postgres"));
+                .andExpect(jsonPath("$.topTags[2].name").value("flyway"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/users.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/answers.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/questions.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/reputations.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/question_has_tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/votes_on_answers.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getUserByIdWithTop3TagsUserWithoutReputations() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/2")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.email").value("SomeEmail@mail.com"))
+                .andExpect(jsonPath("$.fullName").value("Constantin"))
+                .andExpect(jsonPath("$.linkImage").value("link"))
+                .andExpect(jsonPath("$.city").value("Moscow"))
+                .andExpect(jsonPath("$.reputation").value(0))
+                .andExpect(jsonPath("$.topTags.length()").value(0));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/users.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/answers.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/questions.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/reputations.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/question_has_tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/votes_on_answers.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getUserByIdWithTop3TagsNotExistsId() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/999")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.id").doesNotExist());
     }
 
     @Test
