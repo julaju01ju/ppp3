@@ -83,16 +83,4 @@ public class AuthenticationResourceController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-
-    @GetMapping("/testuser")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<String> usertest() {
-        return new ResponseEntity<>("API USER TEST", HttpStatus.OK);
-    }
-
-    @GetMapping("/testadmin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> admintest() {
-        return new ResponseEntity<>("API ADMIN TEST", HttpStatus.OK);
-    }
 }

@@ -16,8 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,7 +31,7 @@ class AuthenticationResourceControllerTest {
 
     @Test
     @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true ,cleanBefore = true)
+            disableConstraints = true, cleanBefore = true)
     public void returnTokenWithAuthentication() throws Exception {
 
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
@@ -78,117 +76,4 @@ class AuthenticationResourceControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToAdminApiWithAdminRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("adminAUTH@mail.ru");
-
-        String ADMIN_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        get("/api/testadmin/")
-                                .header(AUTHORIZATION, ADMIN_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().string("API ADMIN TEST"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToUserApiWithUserRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().string("API USER TEST"))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true, cleanBefore = true)
-    public void requestToAdminApiWithUserRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("USER");
-        authenticationRequest.setUsername("user@mail.ru");
-
-        String USER_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        get("/api/testadmin/")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true,cleanBefore = true)
-    public void requestToUserApiWithAdminRole() throws Exception {
-
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setPassword("ADMIN");
-        authenticationRequest.setUsername("adminAUTH@mail.ru");
-
-        String ADMIN_TOKEN = mockMvc.perform(
-                        post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(authenticationRequest))
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        ADMIN_TOKEN = "Bearer " + ADMIN_TOKEN.substring(ADMIN_TOKEN.indexOf(":") + 2, ADMIN_TOKEN.length() - 2);
-
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, ADMIN_TOKEN))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isForbidden());
-    }
-
-    @Test
-    @DataSet(value = "dataset/authenticationResourceControllerTest/user.yml",
-            disableConstraints = true,cleanBefore = true)
-    public void requestToUserApiWithoutToken() throws Exception {
-
-        mockMvc.perform(
-                        get("/api/testuser/")
-                                .header(AUTHORIZATION, ""))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().is3xxRedirection());
-    }
 }
