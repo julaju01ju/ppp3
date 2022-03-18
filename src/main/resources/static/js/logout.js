@@ -1,8 +1,4 @@
-document.getElementById("handleFormSubmit").addEventListener("click", async e => {
-        e.preventDefault();
-    })
-
-    function setCookie(name, value, options = {}) {
+function setCookie(name, value, options = {}) {
         options = {
             path: '/',
             ...options
