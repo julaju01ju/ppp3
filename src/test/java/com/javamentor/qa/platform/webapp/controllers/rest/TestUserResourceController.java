@@ -60,7 +60,8 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/GetUserByIdWithTop3Tags/reputations.yml",
             "dataset/UserResourceController/GetUserByIdWithTop3Tags/tag.yml",
             "dataset/UserResourceController/GetUserByIdWithTop3Tags/question_has_tag.yml",
-            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml"
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/votes_on_answers.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3Tags() throws Exception {
