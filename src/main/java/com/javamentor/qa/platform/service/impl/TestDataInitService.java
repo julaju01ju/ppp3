@@ -162,17 +162,17 @@ public class TestDataInitService {
             int random = (int) (Math.random() * 7);
 
             for (int j = 1; j <= random; j++) {
-            Answer answer = new Answer();
-            answer.setDateAcceptTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setHtmlBody("Answer Body " + j);
-            answer.setIsDeleted(false);
-            answer.setIsDeletedByModerator(false);
-            answer.setIsHelpful(true);
-            answer.setPersistDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
-            answer.setQuestion(questionList.get(i));
-            answerService.persist(answer);
+                Answer answer = new Answer();
+                answer.setDateAcceptTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setHtmlBody("Answer Body " + j);
+                answer.setIsDeleted(false);
+                answer.setIsDeletedByModerator(false);
+                answer.setIsHelpful(true);
+                answer.setPersistDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
+                answer.setQuestion(questionList.get(i));
+                answerService.persist(answer);
             }
         }
     }
@@ -202,7 +202,6 @@ public class TestDataInitService {
                 }).forEach(voteOnQuestionService::persist);
 
         answerService.getAll().stream()
-                .filter(Answer::getIsHelpful)
                 .filter(answer -> (long) LocalDateTime.now().getNano() % answer.getId() == 0)
                 .map(answer -> {
                     VoteAnswer voteAnswer = new VoteAnswer();
