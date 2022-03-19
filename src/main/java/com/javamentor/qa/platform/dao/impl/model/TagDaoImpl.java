@@ -23,9 +23,22 @@ public class TagDaoImpl extends ReadWriteDaoImpl<Tag, Long> implements TagDao {
     }
 
     @Override
+    public boolean isTagsMappingToTrackedAndIgnoredCorrect(List<Long> trackedTag, List<Long> ignoredTag) {
+        return entityManager.createQuery(
+                        "select tt, it from TrackedTag tt, IgnoredTag it " +
+                                "where ((tt.trackedTag.id not in :trackedTag and -1 not in :trackedTag) or tt.trackedTag.id in :ignoredTag) " +
+                                "or ((it.ignoredTag.id not in :ignoredTag and -1 not in :ignoredTag) or it.ignoredTag.id in :trackedTag)")
+                .setParameter("ignoredTag", ignoredTag)
+                .setParameter("trackedTag", trackedTag)
+                .getResultList()
+                .isEmpty();
+    }
+
+    @Override
     public boolean checkedAndIgnoredContainTag(Long tagId, Long userId) {
         String hql = "SELECT count(it) FROM IgnoredTag it JOIN TrackedTag tt ON it.user.id=tt.user.id WHERE " +
                 "it.ignoredTag.id =:tagId AND tt.trackedTag.id=:tagId AND it.user.id=:userId";
         return entityManager.createQuery(hql).setParameter("tagId", tagId).getFirstResult()==0;
     }
+
 }

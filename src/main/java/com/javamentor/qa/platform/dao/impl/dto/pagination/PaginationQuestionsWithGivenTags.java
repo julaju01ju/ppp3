@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -40,7 +39,8 @@ public class PaginationQuestionsWithGivenTags implements PageDtoDao<QuestionView
                                 "(SELECT coalesce(count(down.vote), 0) FROM votes_on_questions down " +
                                 "   WHERE down.vote = 'DOWN_VOTE' AND down.question_id = q.id) AS votes, " +
                                 "(SELECT coalesce(count(a.id),0) FROM answer a " +
-                                "   WHERE a.question_id = q.id) AS answers " +
+                                "   WHERE a.question_id = q.id) AS answers, " +
+                                "(select count(qv.id) from question_viewed qv where qv.question_id = q.id) " +
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +

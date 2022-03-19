@@ -22,4 +22,5 @@ document.getElementById("handleFormSubmit").addEventListener("click", async e =>
     if (!response.ok) {
         document.getElementById("errorCode").hidden = false;
     }
+
 });

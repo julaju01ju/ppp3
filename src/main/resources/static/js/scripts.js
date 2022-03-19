@@ -4,11 +4,14 @@ window.addEventListener('load', () => {
     const appSidebar = document.getElementById("app-side-bar");
     const appFooter = document.getElementById("app-footer");
     const headerProfile = document.getElementById("profile-header");
-    if(appHeader != null){
+    if (appHeader != null) {
         appHeader.innerHTML = `${Header.createHeader()}`;
+
+        document.querySelector("#logout").addEventListener("click", logout);
     }
-    if(headerProfile != null){
+    if (headerProfile != null) {
         headerProfile.innerHTML = `${Header.createHeaderProfile()}`;
+
     }
     appSidebar.innerHTML = `${SideBar.createSideBar()}`;
     appFooter.innerHTML = `${Footer.createFooter()}`;
@@ -16,10 +19,11 @@ window.addEventListener('load', () => {
     SideBar.activeStyle();
     console.log("Hello from KataAacademy!");
 })
-
 function setGlobalStyles() {
     const body = document.body;
     body.style.margin = "0";
     body.style.padding = "0";
     body.style.boxSizing = "border-box";
 }
+
+
