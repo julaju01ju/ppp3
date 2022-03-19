@@ -38,26 +38,4 @@ public class UserDtoDaoImpl implements UserDtoDao {
                 .getResultStream()
                 .findAny();
     }
-
-    @Override
-    public List<TagDto> getTop3UserTagsByReputation(Long id) {
-        return entityManager.createQuery(
-                        "select new com.javamentor.qa.platform.models.dto.TagDto(" +
-                                "t.id, " +
-                                "t.name, " +
-                                "t.description) " +
-                                "from Reputation reputation " +
-                                "join reputation.answer reputation_answer " +
-                                "join reputation_answer.question reputation_answer_question " +
-                                "join reputation_answer_question.tags t " +
-                                "join reputation_answer.voteAnswers vote_answers " +
-                                "where reputation.author.id =: id " +
-                                "and vote_answers.vote = 'UP_VOTE' " +
-                                "group by t.id " +
-                                "order by count(vote_answers.id) desc"
-                        , TagDto.class)
-                .setParameter("id", id)
-                .setMaxResults(3)
-                .getResultList();
-    }
 }

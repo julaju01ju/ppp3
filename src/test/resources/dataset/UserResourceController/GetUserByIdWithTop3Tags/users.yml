@@ -31,3 +31,19 @@ user_entity:
     image_link: "link"
     nickname: "NickName"
     role_id: 1
+  - id: 3
+    full_name: "Oleg"
+    password: "$2a$10$A8hhVbU3TqwgxHBl4pJv0uZTtWXDbNwUdWyonJmxP.zV3vKTVMOB6"
+    persist_date: 2021-12-06 00:00:00
+    last_redaction_date: 2021-12-06 00:00:00
+    email: "toxic@mail.com"
+    about: "Something"
+    city: "Moscow"
+    link_site: "site@link"
+    link_github: "github@link"
+    link_vk: "vk@link"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "link"
+    nickname: "toxic88"
+    role_id: 1

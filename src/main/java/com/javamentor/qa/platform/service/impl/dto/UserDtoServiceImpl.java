@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
+import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
@@ -18,11 +19,13 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
 
     @Autowired
     private UserDtoDao userDtoDao;
+    @Autowired
+    private TagDtoDao tagDtoDao;
 
     @Transactional
     public Optional<UserDto> getUserById(Long id) {
         return userDtoDao.getUserById(id).map(dto -> {
-            dto.setTopTags(userDtoDao.getTop3UserTagsByReputation(id));
+            dto.setTopTags(tagDtoDao.getTop3UserTagsByReputation(id));
             return dto;
         });
     }

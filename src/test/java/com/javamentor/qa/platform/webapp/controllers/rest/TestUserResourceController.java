@@ -125,6 +125,35 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/GetUserByIdWithTop3Tags/votes_on_answers.yml"
     },
             disableConstraints = true, cleanBefore = true)
+    public void getUserByIdWithTop3TagsUserWithDownVotesMustNotBeReputation() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(3))
+                .andExpect(jsonPath("$.email").value("toxic@mail.com"))
+                .andExpect(jsonPath("$.fullName").value("Oleg"))
+                .andExpect(jsonPath("$.linkImage").value("link"))
+                .andExpect(jsonPath("$.city").value("Moscow"))
+                .andExpect(jsonPath("$.reputation").value(0))
+                .andExpect(jsonPath("$.topTags.length()").value(0));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/users.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/answers.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/questions.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/reputations.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/question_has_tag.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/roles.yml",
+            "dataset/UserResourceController/GetUserByIdWithTop3Tags/votes_on_answers.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsNotExistsId() throws Exception {
 
         String USER_TOKEN = getToken("user@mail.ru", "USER");

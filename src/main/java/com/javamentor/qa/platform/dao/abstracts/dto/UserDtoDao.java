@@ -12,5 +12,4 @@ import java.util.Optional;
 
 public interface UserDtoDao {
     Optional<UserDto> getUserById(Long id);
-    List<TagDto> getTop3UserTagsByReputation(Long id);
 }
