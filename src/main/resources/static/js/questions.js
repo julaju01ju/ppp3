@@ -69,8 +69,9 @@ function fillCard(elementItems) {
                         .attr("style", "margin-left: 2rem; overflow: hidden; height: 5rem; margin-bottom: .7rem")
                         .append($('<h3 class="question-card-title">')
                             .attr("style", "font-weight: 400;word-break: break-word !important;overflow-wrap: break-word !important;display: block;font-size: 1rem;line-height: 1.3;margin: 0 0 1em;")
-                            .append($('<a href="#" class="question-heading">')
-                                .attr("style", "text-decoration: none").text(item.title)))
+                            .append($('<a class="question-heading">')
+                                .attr("style", "text-decoration: none").text(item.title)
+                                .attr("href", "/question/" + item.id)))
                         .append($('<div class="question-content">')
                             .attr("style", "font-size: .8rem; margin-top: 1rem")
                             .append($('<p>').text(item.description))))
@@ -81,14 +82,14 @@ function fillCard(elementItems) {
                             .append(
                                 $.map(item.listTagDto, function (itemTag) {
                                         return $('<a class="list-item" href="#">')
-                                            .attr("style", "margin-left: 1rem; font-size: 12px; background-color: lightblue; color: blue; padding: .3rem .5rem;border-width: 1px;border-style: solid; border-radius: .2rem; text-decoration: none;display: inline-block;white-space: nowrap;text-align: center;line-height: 1;")
+                                            .attr("style", "margin-left: 1rem; font-size: 12px; background-color: lightblue; color: blue; padding: .3rem .5rem;border-width: 1px;border-style: solid; border-radius: .2rem; text-decoration: none;display: inline-block;white-space: nowrap;text-align: center;line-height: 1;margin-right: 0.5rem")
                                             .text(itemTag.name)
                                     }
                                 ))
                             .append($('<div class="user-card user-car_minimal">')
                                 .attr("style", "display: flex; align-items: center; gap: 4px; margin: 0;padding: 0;border: 0;font: inherit;vertical-align: baseline; flex-wrap: wrap; margin-left: auto; justify-content: flex-end;")
                                 .append($('<a href="#" class="avatar avatar_16 user-card-avatar">')
-                                    .attr("style", "display: inline-block; position: relative; width: 16px; height: 16px; border-radius: 3px;margin: 0;padding: 0;border: 0;font: inherit; background-color: hsl(0,0%,100%); background-repeat: no-repeat; background-size: 100%;align-items: center; vertical-align: bottom;")
+                                    .attr("style", "display: inline-block; position: relative; width: 16px; height: 16px; border-radius: 3px;margin: 0;padding: 0;border: 0;font: inherit; background-color: hsl(0,0%,100%); background-repeat: no-repeat; background-size: 100%;align-items: center; vertical-align: bottom; margin-right: 0.2rem")
                                     .append($('<div class="gravatar-wrapper-16">')
                                         .attr("style", "overflow: hidden;align-items: center; margin: 0;padding: 0;border: 0;font: inherit;vertical-align: baseline;")
                                         .append($('<img src="https://www.gravatar.com/avatar/9881fc9963d4fdff1dd454becd37a250?s=32&amp;d=identicon&amp;r=PG&amp;f=1" alt="" width="16" ,="" height="16" class="avatar--image">')
@@ -99,7 +100,7 @@ function fillCard(elementItems) {
                                     .append($('<div class="user-card--link d-flex gs4">')
                                         .attr("style", "margin: -2px;display: flex !important;white-space: nowrap;min-width: 0;font-size: 12px;align-items: center;flex-wrap: wrap;overflow-wrap: break-word;")
                                         .append($('<a href="#" class="flex--item">')
-                                            .attr("style", "margin: 2px;text-decoration: none;")
+                                            .attr("style", "margin: 2px;text-decoration: none; margin-right: 0.4rem")
                                             .text(item.authorName))
                                         .append($('<ul class="user-card--awards">')
                                             .attr("style", "list-style: none;margin: 0;padding: 0;align-items: center;display: flex;gap: 6px;")
@@ -138,13 +139,13 @@ function timeDifference(previous) {
 
     if (elapsed < msPerMinute) {
         return Math.round(elapsed / 1000) + ' seconds ago';
-    } else if (elapsed < msPerHour) {
+    } if (elapsed < msPerHour) {
         return Math.round(elapsed / msPerMinute) + ' minutes ago';
-    } else if (elapsed < msPerDay) {
+    } if (elapsed < msPerDay) {
         return Math.round(elapsed / msPerHour) + ' hours ago';
-    } else if (elapsed < msPerMonth) {
+    } if (elapsed < msPerMonth) {
         return Math.round(elapsed / msPerDay) + ' days ago';
-    } else if (elapsed < msPerYear) {
+    } if (elapsed < msPerYear) {
         return Math.round(elapsed / msPerMonth) + ' months ago';
     } else {
         return Math.round(elapsed / msPerYear) + ' years ago';
