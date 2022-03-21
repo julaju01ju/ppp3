@@ -20,14 +20,11 @@ class SideBar{
                          <a class="nav-link sidebar-menu-item" href="/tags"  style="color: #333333">
                             Тэги</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-menu-item" href="#" style="color: #333333">Метки</a>
+                         <li class="nav-item">
+                            <a class="nav-link sidebar-menu-item" href="/users" style="color: #333333">Участники</a>
                         </li> 
                          <li class="nav-item">
-                            <a class="nav-link sidebar-menu-item" href="#" style="color: #333333">Участники</a>
-                        </li> 
-                         <li class="nav-item">
-                            <a class="nav-link sidebar-menu-item" href="#" style="color: #333333">Неотвеченные</a>
+                            <a class="nav-link sidebar-menu-item" href="/unanswered" style="color: #333333">Неотвеченные</a>
                         </li>
                     </ul>
                 </li>

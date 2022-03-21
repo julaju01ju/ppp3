@@ -1,3 +1,9 @@
+function logoutStart() {
+    var script = document.createElement("script");
+    script.setAttribute("src", "/js/logout.js");
+    document.getElementsByTagName("head")[0].appendChild(script);
+}
+logoutStart()
 class Header{
    static header = `<div class="row header" style="border-bottom: 1px solid lightgrey">
         <div class="col">
@@ -49,10 +55,7 @@ class Header{
 
                         </ul>
                         <div class="d-flex justify-between align-content-center">
-                            <a href="/login" type="button" class="btn btn-outline-info">Войти</a>
-                            <a href="/registration" type="button" class="btn btn-info"
-                                    style="color: white; margin-left: .5rem">Регистрация
-                            </a>
+                            <a href="/login" type="button" class="btn btn-outline-info" id="logout">Выйти</a>
                         </div>
 
                     </div>
@@ -128,4 +131,7 @@ class Header{
    static createHeaderProfile(){
        return this.profileHeader;
    }
+
 }
+
+
