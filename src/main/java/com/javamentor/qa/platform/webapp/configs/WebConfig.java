@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addRedirectViewController("/logout", "/login");
         registry.addViewController("/question/add").setViewName("/html/question/add.html");
         registry.addViewController("/questions").setViewName("/html/question/questions.html");
+        registry.addViewController("/question/{id}").setViewName("/html/question/question.html");
         registry.addViewController("/user/profile").setViewName("/html/user/profile.html");
         registry.addViewController("/main").setViewName("/html/main.html");
         registry.addViewController("/users").setViewName("/html/users.html");

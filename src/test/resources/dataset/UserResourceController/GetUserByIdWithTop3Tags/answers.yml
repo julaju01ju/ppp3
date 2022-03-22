@@ -1,0 +1,88 @@
+answer:
+  - id: 1
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 1
+    user_id: 1
+
+  - id: 2
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 2
+    user_id: 1
+
+  - id: 3
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 3
+    user_id: 1
+
+  - id: 4
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 4
+    user_id: 1
+
+  - id: 5
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 5
+    user_id: 1
+
+  - id: 6
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 6
+    user_id: 1
+
+  - id: 7
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 7
+    user_id: 3
+
+  - id: 8
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some Body"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: false
+    persist_date: 2021-12-06 00:00:00
+    update_date: 2021-12-06 00:00:00
+    question_id: 7
+    user_id: 3
