@@ -45,11 +45,11 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(101))
-                .andExpect(jsonPath("$.email").value("SomeEmail@mail.com"))
+                .andExpect(jsonPath("$.email").value("Constantin@mail.mail"))
                 .andExpect(jsonPath("$.fullName").value("Constantin"))
-                .andExpect(jsonPath("$.linkImage").value("link"))
-                .andExpect(jsonPath("$.city").value("Moscow"))
-                .andExpect(jsonPath("$.reputation").value(101));
+                .andExpect(jsonPath("$.linkImage").value("linkTest1"))
+                .andExpect(jsonPath("$.city").value("TestCity1"))
+                .andExpect(jsonPath("$.reputation").value(10));
     }
 
     @Test
@@ -96,8 +96,8 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(3))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(10));
     }
 
@@ -116,14 +116,14 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(2))
-                .andExpect(jsonPath("$.totalPageCount").value(23))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalPageCount").value(20))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(1))
                 .andReturn().getResponse().getContentAsString();
 
         List<HashMap> list = JsonPath.read(pageUsers, "$.items");
         Assertions.assertTrue(list.size() == 1);
-        Assertions.assertTrue((int) list.get(0).get("id") == 121);
+        Assertions.assertTrue((int) list.get(0).get("id") == 118);
     }
 
 
@@ -141,18 +141,18 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(8))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalPageCount").value(7))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
-                .andExpect(jsonPath("$.items[0].id").value(122))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
-                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.items[1].id").value(121))
-                .andExpect(jsonPath("$.items[1].email").value("SomeEmail@mail.mail"))
-                .andExpect(jsonPath("$.items[1].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.items[2].id").value(120))
-                .andExpect(jsonPath("$.items[2].email").value("SomeEmail@mail.mail"))
-                .andExpect(jsonPath("$.items[2].fullName").value("Constantin"));
+                .andExpect(jsonPath("$.items[0].id").value(119))
+                .andExpect(jsonPath("$.items[0].email").value("Farhad@mail.mail"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Farhad"))
+                .andExpect(jsonPath("$.items[1].id").value(118))
+                .andExpect(jsonPath("$.items[1].email").value("Leonid@mail.mail"))
+                .andExpect(jsonPath("$.items[1].fullName").value("Leonid"))
+                .andExpect(jsonPath("$.items[2].id").value(117))
+                .andExpect(jsonPath("$.items[2].email").value("Denis@mail.mail"))
+                .andExpect(jsonPath("$.items[2].fullName").value("Denis"));
     }
 
     @Test
@@ -169,12 +169,12 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(8))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalPageCount").value(7))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
-                .andExpect(jsonPath("$.items[0].id").value(122))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.mail"))
-                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"));
+                .andExpect(jsonPath("$.items[0].id").value(119))
+                .andExpect(jsonPath("$.items[0].email").value("Farhad@mail.mail"))
+                .andExpect(jsonPath("$.items[0].fullName").value("Farhad"));
     }
 
     @Test
@@ -191,12 +191,12 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(50))
                 .andReturn().getResponse().getContentAsString();
 
         List<HashMap> list = JsonPath.read(pageUsers, "$.items");
-        Assertions.assertTrue(list.size() == 23);
+        Assertions.assertTrue(list.size() == 20);
     }
 
     @Test
@@ -213,17 +213,17 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(5))
-                .andExpect(jsonPath("$.totalResultCount").value(23))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
                 .andReturn().getResponse().getContentAsString();
 
         List<HashMap> list = JsonPath.read(pageUsers, "$.items");
-        Assertions.assertTrue((int) list.get(0).get("id") == 122);
-        Assertions.assertTrue((int) list.get(1).get("id") == 121);
-        Assertions.assertTrue((int) list.get(2).get("id") == 120);
-        Assertions.assertTrue((int) list.get(3).get("id") == 119);
-        Assertions.assertTrue((int) list.get(4).get("id") == 118);
+        Assertions.assertTrue((int) list.get(0).get("id") == 119);
+        Assertions.assertTrue((int) list.get(1).get("id") == 118);
+        Assertions.assertTrue((int) list.get(2).get("id") == 117);
+        Assertions.assertTrue((int) list.get(3).get("id") == 116);
+        Assertions.assertTrue((int) list.get(4).get("id") == 115);
     }
 
     @Test
@@ -244,15 +244,15 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(9))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
-                .andExpect(jsonPath("$.items[0].id").value(101))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
-                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
-                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].email").value("user@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("USER"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("image"))
+                .andExpect(jsonPath("$.items[0].city").value("city"))
+                .andExpect(jsonPath("$.items[0].reputation").value(0))
                 .andExpect(jsonPath("$.items.size()").value(5));
     }
 
@@ -274,15 +274,15 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(9))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
-                .andExpect(jsonPath("$.items[0].id").value(101))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
-                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
-                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].email").value("user@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("USER"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("image"))
+                .andExpect(jsonPath("$.items[0].city").value("city"))
+                .andExpect(jsonPath("$.items[0].reputation").value(0))
                 .andExpect(jsonPath("$.items.size()").value(5));
     }
 
@@ -304,15 +304,15 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(9))
+                .andExpect(jsonPath("$.totalPageCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(20))
                 .andExpect(jsonPath("$.itemsOnPage").value(5))
-                .andExpect(jsonPath("$.items[0].id").value(101))
-                .andExpect(jsonPath("$.items[0].email").value("SomeEmail@mail.com"))
-                .andExpect(jsonPath("$.items[0].fullName").value("Constantin"))
-                .andExpect(jsonPath("$.items[0].linkImage").value("link"))
-                .andExpect(jsonPath("$.items[0].city").value("Moscow"))
-                .andExpect(jsonPath("$.items[0].reputation").value(202))
+                .andExpect(jsonPath("$.items[0].id").value(100))
+                .andExpect(jsonPath("$.items[0].email").value("user@mail.ru"))
+                .andExpect(jsonPath("$.items[0].fullName").value("USER"))
+                .andExpect(jsonPath("$.items[0].linkImage").value("image"))
+                .andExpect(jsonPath("$.items[0].city").value("city"))
+                .andExpect(jsonPath("$.items[0].reputation").value(0))
                 .andExpect(jsonPath("$.items.size()").value(5));
     }
 
