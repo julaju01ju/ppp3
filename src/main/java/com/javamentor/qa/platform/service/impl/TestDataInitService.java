@@ -1,10 +1,9 @@
 package com.javamentor.qa.platform.service.impl;
 
-import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
-import com.javamentor.qa.platform.models.entity.question.Question;
-import com.javamentor.qa.platform.models.entity.question.Tag;
-import com.javamentor.qa.platform.models.entity.question.TrackedTag;
+import com.javamentor.qa.platform.models.entity.question.*;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
+import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TestDataInitService {
@@ -36,19 +36,25 @@ public class TestDataInitService {
 
     private IgnoredTagService ignoredTagService;
 
+    private VoteOnAnswerService voteOnAnswerService;
+
+    private VoteOnQuestionService voteOnQuestionService;
 
     public TestDataInitService() {
     }
 
     @Autowired
-    public TestDataInitService(@Lazy RoleService roleService,
-                               @Lazy UserService userService,
-                               @Lazy AnswerService answerService,
-                               @Lazy QuestionService questionService,
-                               @Lazy ReputationService reputationService,
-                               @Lazy TagService tagService,
-                               @Lazy TrackedTagService trackedTagService,
-                               @Lazy IgnoredTagService ignoredTagService) {
+    public TestDataInitService(
+            @Lazy RoleService roleService,
+            @Lazy UserService userService,
+            @Lazy AnswerService answerService,
+            @Lazy QuestionService questionService,
+            @Lazy ReputationService reputationService,
+            @Lazy TagService tagService,
+            @Lazy TrackedTagService trackedTagService,
+            @Lazy IgnoredTagService ignoredTagService,
+            @Lazy VoteOnAnswerService voteOnAnswerService,
+            @Lazy VoteOnQuestionService voteOnQuestionService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -57,6 +63,8 @@ public class TestDataInitService {
         this.tagService = tagService;
         this.trackedTagService = trackedTagService;
         this.ignoredTagService = ignoredTagService;
+        this.voteOnAnswerService = voteOnAnswerService;
+        this.voteOnQuestionService = voteOnQuestionService;
     }
 
     public void createRole() {
@@ -154,38 +162,65 @@ public class TestDataInitService {
             int random = (int) (Math.random() * 7);
 
             for (int j = 1; j <= random; j++) {
-            Answer answer = new Answer();
-            answer.setDateAcceptTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setHtmlBody("Answer Body " + j);
-            answer.setIsDeleted(false);
-            answer.setIsDeletedByModerator(false);
-            answer.setIsHelpful(true);
-            answer.setPersistDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
-            answer.setQuestion(questionList.get(i));
-            answerService.persist(answer);
+                Answer answer = new Answer();
+                answer.setDateAcceptTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setHtmlBody("Answer Body " + j);
+                answer.setIsDeleted(false);
+                answer.setIsDeletedByModerator(false);
+                answer.setIsHelpful(true);
+                answer.setPersistDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
+                answer.setQuestion(questionList.get(i));
+                answerService.persist(answer);
             }
         }
     }
 
     public void createReputation() {
         List<User> userList = userService.getAll();
-        for (int i = 0; i < userList.size(); i++) {
-            Reputation reputation = new Reputation();
-            reputation.setCount((int) (Math.random() * 50));
-            reputation.setPersistDate(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
-            if (i % 2 == 0) {
-                reputation.setAuthor(userService.getAll().get(i));
-                reputation.setType(ReputationType.Question);
-                reputation.setQuestion(questionService.getAll().get(i));
-            } else {
-                reputation.setAuthor(userService.getAll().get(i));
-                reputation.setType(ReputationType.Answer);
-                reputation.setAnswer(answerService.getAll().get(i));
-            }
-            reputationService.persist(reputation);
-        }
+
+        questionService.getAll().stream()
+                .filter(question -> (long) LocalDateTime.now().getNano() % question.getId() == 0)
+                .map(question -> {
+                    VoteQuestion voteQuestion = new VoteQuestion();
+                    Collections.shuffle(userList);
+                    voteQuestion.setLocalDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                    voteQuestion.setQuestion(question);
+                    voteQuestion.setUser(
+                            userList.stream()
+                                    .filter(user -> !user.getId().equals(question.getUser().getId()))
+                                    .collect(Collectors.toList()).get(0)
+                    );
+                    int random = (int) (Math.random() * 3);
+                    if (random == 1) {
+                        voteQuestion.setVote(VoteType.UP_VOTE);
+                    } else {
+                        voteQuestion.setVote(VoteType.DOWN_VOTE);
+                    }
+                    return voteQuestion;
+                }).forEach(voteOnQuestionService::persist);
+
+        answerService.getAll().stream()
+                .filter(answer -> (long) LocalDateTime.now().getNano() % answer.getId() == 0)
+                .map(answer -> {
+                    VoteAnswer voteAnswer = new VoteAnswer();
+                    Collections.shuffle(userList);
+                    voteAnswer.setPersistDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
+                    voteAnswer.setUser(
+                            userList.stream()
+                                    .filter(user -> !user.getId().equals(answer.getUser().getId()))
+                                    .collect(Collectors.toList()).get(0)
+                    );
+                    int random = (int) (Math.random() * 3);
+                    if (random == 1) {
+                        voteAnswer.setVote(VoteType.UP_VOTE);
+                    } else {
+                        voteAnswer.setVote(VoteType.DOWN_VOTE);
+                    }
+                    voteAnswer.setAnswer(answer);
+                    return voteAnswer;
+                }).forEach(voteOnAnswerService::persist);
     }
 
     public void createTrackedTag() {
