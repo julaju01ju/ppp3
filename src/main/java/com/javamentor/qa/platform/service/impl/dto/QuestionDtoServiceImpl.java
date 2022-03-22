@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
+import com.javamentor.qa.platform.dao.abstracts.dto.CommentDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
@@ -22,15 +23,23 @@ import java.util.stream.Collectors;
 @Service
 public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> implements QuestionDtoService {
 
-    @Autowired
-    private QuestionDtoDao questionDtoDao;
+    private final QuestionDtoDao questionDtoDao;
+    private final CommentDtoDao commentDtoDao;
+    private final TagDtoDao tagDtoDao;
 
     @Autowired
-    private TagDtoDao tagDtoDao;
+    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, CommentDtoDao commentDtoDao, TagDtoDao tagDtoDao) {
+        this.questionDtoDao = questionDtoDao;
+        this.commentDtoDao = commentDtoDao;
+        this.tagDtoDao = tagDtoDao;
+    }
 
     @Override
     public Optional<QuestionDto> getQuestionById(Long id) {
-        return questionDtoDao.getQuestionById(id);
+        Optional<QuestionDto> questionDto = questionDtoDao.getQuestionById(id);
+        questionDto.ifPresent(dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(id)));
+        questionDto.ifPresent(dto -> dto.setListTagDto(tagDtoDao.getTagsByQuestionId(id)));
+        return questionDto;
     }
 
     @Override

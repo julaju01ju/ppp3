@@ -7,6 +7,8 @@ import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 
 @RestController
-@Api("Rest Contoller to get a User by ID")
+@Api("User Api")
 public class UserResourceController {
 
     private UserDtoService userDtoService;
@@ -45,18 +47,27 @@ public class UserResourceController {
 
     @GetMapping("/api/user/{userId}")
     @ApiOperation("Получение пользователя по ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Пользователь с userId=* получен"),
+            @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного userId")
+    })
     public ResponseEntity<?> getUserById(@PathVariable("userId") Long userId) {
 
         return userDtoService.getUserById(userId).isEmpty() ?
-                new ResponseEntity<>("User with id " + userId + " not found!", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>("Пользователь с userId=" + userId + " не найден", HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(userDtoService.getUserById(userId), HttpStatus.OK);
     }
 
     @GetMapping("/api/user/new")
-    @ApiOperation("API получение всех пользователей, отсортированных по дате регистрации, с пагинацией. " +
-            "Принимает параметры: page(обязательный) - текущая страница и " +
-            "items(необязательный) - количество элементов на страницу. По умолчанию равен 10." +
-            "filter(необязательный) - фильтрация пользователей по email или fullname. По умолчанию пуст.")
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по дате регистрации с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по дате регистрации с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getAllUsersOrderByPersistDatePagination(@RequestParam(value = "page") Integer page,
                                                                                     @RequestParam(value = "items", required = false,
                                                                                             defaultValue = "10") Integer items,
@@ -72,7 +83,14 @@ public class UserResourceController {
     }
 
     @GetMapping("/api/user/reputation")
-    @ApiOperation("Получение списка всех пользователей с пагинацией, отсортированных по репутации")
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по репутации с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по репутации с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getPageAllUserSortedByReputation(@RequestParam("page") Integer page,
                                                                              @RequestParam(required = false, name = "items",
                                                                                      defaultValue = "10") Integer itemsOnPage,
@@ -88,7 +106,14 @@ public class UserResourceController {
     }
 
     @GetMapping("api/user/vote")
-    @ApiOperation("Получение всех пользователей с пагинацией отсортированных по сумме голосов, полученных за ответы и вопросы")
+    @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
+            "по сумме голосов, полученных за ответы и вопросы с учетом заданных параметров пагинации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все пользователи, отсортированные " +
+                    "по сумме голосов, полученных за ответы и вопросы с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<UserDto>> getPageAllUsersSortedByVote(@RequestParam(value = "page") Integer currentPageNumber,
                                                                         @RequestParam(value = "items", required = false,
                                                                                 defaultValue = "10") Integer itemsOnPage,
@@ -105,6 +130,13 @@ public class UserResourceController {
 
     @PutMapping("/api/{userId}/change/password")
     @ApiOperation("Смена пароля с шифрованием")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Пароль успешно изменён"),
+            @ApiResponse(code = 404, message = "Пользователь с userId=* не найден"),
+            @ApiResponse(code = 400, message = "Вы можете менять только свой пароль. " + "Пароль должен состоять минимум из шести символов и " +
+                    "содержать хотя бы одну маленькую латинскую букву, одну заглавню латинскую букву, " +
+                    "одну цифру, один из спецсимволов: @#$%. Пароль не должен совпадать с ранее существующим")
+    })
     public ResponseEntity<?> updatePasswordByEmail(@PathVariable("userId") long userId, @RequestBody String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -121,9 +153,12 @@ public class UserResourceController {
                 sc.setAuthentication(authentication);
 
                 return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Пароль должен состоять минимум из шести символов и" +
+                        "содержать хотя бы одну маленькую латинскую букву, одну заглавню латинскую букву, " +
+                        "одну цифру, один из спецсимволов: @#$%. Пароль не должен совпадать с ранее существующим", HttpStatus.BAD_REQUEST);
             }
         }
-
-        return new ResponseEntity<>("Пароль не соответствует требованиям", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Вы можете менять только свой пароль", HttpStatus.BAD_REQUEST);
     }
 }

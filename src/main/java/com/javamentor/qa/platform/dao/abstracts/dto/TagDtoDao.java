@@ -9,9 +9,12 @@ public interface TagDtoDao {
 
     List<TagDto> getIgnoredTags(Long userId);
 
-    Map<Long, List<TagDto>> getTagsByQuestionIds (List<?> ids);
+    Map<Long, List<TagDto>> getTagsByQuestionIds(List<?> ids);
 
     List<TagDto> getTop10FoundTags(String searchString);
 
     List<TagDto> getTop3UserTagsByReputation(Long userId);
+
+    List<TagDto> getTagsByQuestionId(Long id);
+
 }

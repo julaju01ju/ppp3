@@ -1,6 +1,7 @@
 package com.javamentor.qa.platform.security.jwt;
 
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.DisabledException;
@@ -59,6 +60,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.setStatus(401);
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", exception.getMessage());
+                response.setContentType("application/json");
+                new ObjectMapper().writeValue(response.getOutputStream(), error);
+            } catch (JWTVerificationException exception) {
+                response.setHeader("error", exception.getMessage());
+                response.setStatus(401);
+                Map<String, String> error = new HashMap<>();
+                error.put("JWT verification exception", exception.getMessage());
                 response.setContentType("application/json");
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
