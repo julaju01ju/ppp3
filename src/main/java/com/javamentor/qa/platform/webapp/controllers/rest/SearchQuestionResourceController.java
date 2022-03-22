@@ -23,31 +23,31 @@ import java.util.regex.Pattern;
 public class SearchQuestionResourceController {
 
 
-    private final GetQuestion getQuestion;
-    private final GetParam getParam;
+    private final SearchQuestion searchQuestion;
+    private final SearchQuestionParam searchQuestionParam;
 
-    public SearchQuestionResourceController(GetQuestion getQuestion, GetParam getParam) {
-        this.getQuestion = getQuestion;
-        this.getParam = getParam;
+    public SearchQuestionResourceController(SearchQuestion searchQuestion, SearchQuestionParam searchQuestionParam) {
+        this.searchQuestion = searchQuestion;
+        this.searchQuestionParam = searchQuestionParam;
     }
 
     @GetMapping("/api/search")
     @ApiOperation("Поиск вопросов")
     public ResponseEntity<List<QuestionViewDto>> getQuestion(@RequestParam(value = "request") String request) {
 
-        Map<String, String> params = new HashMap<>();
-        params.put("request", request);
-        Map<String, Object> par = getParam.getParam(params);
-        List<QuestionViewDto> allUser = getQuestion.getItems(par);
-        return new ResponseEntity<>(allUser, HttpStatus.OK);
+        Map<String, String> inputParams = new HashMap<>();
+        inputParams.put("request", request);
+        Map<String, Object> param = searchQuestionParam.getAllParam(inputParams);
+        return new ResponseEntity<>(searchQuestion.getItems(param), HttpStatus.OK);
     }
 }
+
 @Component
-class GetQuestion {
+class SearchQuestion {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<QuestionViewDto> getItems(Map<String, Object> resultParams) {
+    public List<QuestionViewDto> getItems(Map<String, Object> inputParams) {
         return entityManager.createNativeQuery(
                         "SELECT " +
                                 "distinct q.id AS q_id, " +
@@ -70,51 +70,122 @@ class GetQuestion {
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +
+//                                "WHERE CASE " +
+//                                "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
+//                                "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
+//                                "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
+//                                "   (" +
+//                                "       SELECT q_ign.id FROM question q_ign " +
+//                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+//                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+//                                "   ) " +
+//                                "   ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
+//                                "   (" +
+//                                "       SELECT q_ign.id FROM question q_ign " +
+//                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
+//                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
+//                                "   ) " +
+//                                "   END " +
                                 "where q.title like concat('%', :title, '%')" +
                                 "or q.description like concat('%', :body, '%')" +
-//                                "or (u.id like :userId and q.title like concat('%', :requestUser, '%'))" +
+//                                "or u.id like :userId " +
+//                                "or (q.title like concat ('%', :request, '%')" +
+//                                "or q.description like concat ('%', :request, '%'))" +
+//                                "or (q.title and q.body) like :fullMatch" +
                                 "ORDER BY q.id")
-//                .setParameter("request", resultParams.get("request"))
-                .setParameter("title", resultParams.get("Title:"))
-                .setParameter("body", resultParams.get("Body:"))
-//                .setParameter("userId", resultParams.get("User:"))
-//                .setParameter("requestUser", resultParams.get("requestUser"))
+                .setParameter("title", inputParams.get("title"))
+                .setParameter("body", inputParams.get("body"))
+//                .setParameter("userId", Integer.valueOf((String) inputParams.get("user")))
+//                .setParameter("request", inputParams.get("request"))
+//                .setParameter("tag", inputParams.get("request"))
+//                .setParameter("fullMatch", inputParams.get("fullMatch"))
                 .getResultList();
     }
 }
+
 @Component
-class GetParam{
-    public Map<String, Object> getParam(Map<String, String> params){
-        String input = params.get("request");
-        //надо делать split не через пробел
-        //очень дыряво, не считывает последующие слова
-        String[] allString = input.split("\\s");
-        List<String> patt = new ArrayList<>();
-        patt.add("Title:");
-        patt.add("Body:");
-        patt.add("User:");
+class SearchQuestionOutputParam {
+    private final List<String> listWords;
+    private final Map<String, Object> keyWords;
+    private Map<String, Object> outputParam = new HashMap<>();
+    private Matcher matcher;
+    private Pattern pattern;
 
-        Map<String, Object> param = new HashMap<>();
+    public SearchQuestionOutputParam(List<String> listWord, Map<String, Object> keyWords) {
+        this.listWords = listWord;
+        this.keyWords = keyWords;
+    }
 
-        for (String oneMatch : patt){
-            for(String singleInput : allString) {
-                Pattern pattern = Pattern.compile(oneMatch);
-                Matcher matcher = pattern.matcher(singleInput);
+    public void keyWordCheck() {
+        for (String keyWord : keyWords.keySet()){
+//            short i = 0;
+//            short match = 0;
+            pattern = Pattern.compile((String) keyWords.get(keyWord));
+            for (String word : listWords) {
+                matcher = pattern.matcher(word);
                 if (matcher.find()) {
-                    param.put(oneMatch, matcher.replaceAll(""));
+                    if(((String) keyWords.get(keyWord)).contains("*")) {
+                        outputParam.put(keyWord, word.substring(1, word.length()-1));
+                    } else {
+                        outputParam.put(keyWord, word.substring(matcher.end()));
+                    }
+//                    match = i;
                 }
-                //все равно много if начинает появляться
-                //добавляет ПОСЛЕДНЕЕ слово
-                //
-                if (param.containsKey("User:")){
-                    param.put("requestUser", singleInput);
-                }
+//                i++;
             }
+//            listWords.remove(match);
         }
-        if (param.isEmpty()){
-            param.put("request", input);
-        }
-        return param;
+//        способ создания через удаление дает ошибку
+//        for (String word : listWords) {
+//            outputParam.merge("request", word, (a,b) -> a + " " + b);
+//        }
+    }
+
+    public Map<String, Object> getOutputParam(){
+        return outputParam;
     }
 }
 
+@Component
+class SearchQuestionInputParam {
+
+    private Map<String, Object> keyWords = new HashMap<>();
+    private List<String> listWords = new ArrayList<>();
+
+    public SearchQuestionInputParam() {
+    }
+
+    public Map<String, Object> getKeyWords() {
+        keyWords.put("user", "User:");
+        keyWords.put("body", "Body:");
+        keyWords.put("title", "Title:");
+        keyWords.put("tag", "^[\\[](.*)[\\]]$");
+        keyWords.put("fullMatch", "^[\"](.*)[\"]$");
+        return keyWords;
+    }
+
+    public List<String> getListWords(Map<String, String> params) {
+        for (String oneWord : params.get("request").split("\\s")) {
+            listWords.add(oneWord);
+        }
+        return listWords;
+    }
+}
+
+@Component
+class SearchQuestionParam {
+
+    private SearchQuestionInputParam listWordsParam = new SearchQuestionInputParam();
+    private SearchQuestionInputParam keyWordsParam = new SearchQuestionInputParam();
+
+    public SearchQuestionParam() {
+    }
+
+    public Map<String, Object> getAllParam(Map<String, String> params) {
+        List<String> listWords = listWordsParam.getListWords(params);
+        Map<String, Object> keyWords = keyWordsParam.getKeyWords();
+        SearchQuestionOutputParam searchQuestionOutputParam = new SearchQuestionOutputParam(listWords, keyWords);
+        searchQuestionOutputParam.keyWordCheck();
+        return searchQuestionOutputParam.getOutputParam();
+    }
+}
