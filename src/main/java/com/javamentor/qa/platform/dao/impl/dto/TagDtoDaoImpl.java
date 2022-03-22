@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,16 @@ public class TagDtoDaoImpl implements TagDtoDao {
                                 "from IgnoredTag it where it.user.id = :userId", TagDto.class)
                 .setParameter("userId", userId)
                 .getResultList();
+    }
+
+    @Override
+    public List<TagDto> getTagsByQuestionId(Long id) {
+        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto." +
+                "TagDto(tag.id, tag.name, tag.description) " +
+                "from Tag tag " +
+                "left join tag.questions as questions " +
+                "where questions.id=: id " +
+                "order by tag.id", TagDto.class).setParameter("id", id).getResultList();
     }
 
     @Override
@@ -78,6 +87,28 @@ public class TagDtoDaoImpl implements TagDtoDao {
                         "ORDER BY t.questions.size DESC", TagDto.class)
                 .setParameter("searchString", "%" + searchString + "%")
                 .setMaxResults(10)
+                .getResultList();
+    }
+
+    @Override
+    public List<TagDto> getTop3UserTagsByReputation(Long userId) {
+        return entityManager.createQuery(
+                        "select new com.javamentor.qa.platform.models.dto.TagDto(" +
+                                "t.id, " +
+                                "t.name, " +
+                                "t.description) " +
+                                "from Reputation reputation " +
+                                "join reputation.answer reputation_answer " +
+                                "join reputation_answer.question reputation_answer_question " +
+                                "join reputation_answer_question.tags t " +
+                                "join reputation_answer.voteAnswers vote_answers " +
+                                "where reputation.author.id =: id " +
+                                "and vote_answers.vote = 'UP_VOTE' " +
+                                "group by t.id " +
+                                "order by count(vote_answers.id) desc"
+                        , TagDto.class)
+                .setParameter("id", userId)
+                .setMaxResults(3)
                 .getResultList();
     }
 }

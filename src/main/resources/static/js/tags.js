@@ -71,9 +71,9 @@ $(function() {
                     terms.push(ui.item.value);
                     terms.push("");
                     this.value = terms.join("");
-                    log(`{"name":"${ui.item.value}","id": ${ui.item.id}, "description": "${ui.item.description}"}` );
+                    log(`{"name":"${ui.item.value}", "id": ${ui.item.id}, "description": "${ui.item.description}"}, ` );
                     gtag = document.getElementById("log").textContent;
-                    tag = JSON.stringify(JSON.parse(gtag));
+                    tag = JSON.stringify(JSON.parse("[" + gtag.slice(0, -2) + "]"));
                     return false;
                 }
         })
