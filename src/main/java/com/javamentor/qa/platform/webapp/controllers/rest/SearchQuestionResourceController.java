@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,18 +83,19 @@ class SearchQuestion {
 //                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
 //                                "   ) " +
 //                                "   END " +
-                                "where q.title like concat('%', :title, '%')" +
-                                "or q.description like concat('%', :body, '%')" +
-//                                "or u.id like :userId " +
-//                                "or (q.title like concat ('%', :request, '%')" +
-//                                "or q.description like concat ('%', :request, '%'))" +
-//                                "or (q.title and q.body) like :fullMatch" +
-                                "ORDER BY q.id")
+                                " where q.title like concat ('%', :title, '%')" +
+                                " and q.description like concat ('%', :body, '%')" +
+                                " and u.full_name like concat ('%', :userName, '%')" +
+
+                                " and (q.title like concat ('%', :request, '%')"+
+                                " or q.description like concat ('%', :request, '%'))"+
+                                "ORDER BY q.id ")
+
                 .setParameter("title", inputParams.get("title"))
                 .setParameter("body", inputParams.get("body"))
-//                .setParameter("userId", Integer.valueOf((String) inputParams.get("user")))
-//                .setParameter("request", inputParams.get("request"))
-//                .setParameter("tag", inputParams.get("request"))
+                .setParameter("request", inputParams.get("request"))
+                .setParameter("userName",inputParams.get("user"))
+//                .setParameter("tag", inputParams.get("tag"))
 //                .setParameter("fullMatch", inputParams.get("fullMatch"))
                 .getResultList();
     }
@@ -118,27 +116,26 @@ class SearchQuestionOutputParam {
 
     public void keyWordCheck() {
         for (String keyWord : keyWords.keySet()){
-//            short i = 0;
-//            short match = 0;
             pattern = Pattern.compile((String) keyWords.get(keyWord));
-            for (String word : listWords) {
-                matcher = pattern.matcher(word);
+            for (Iterator<String> listWordIterator = listWords.listIterator();
+                 listWordIterator.hasNext();) {
+                String nextListWord = listWordIterator.next();
+                matcher = pattern.matcher(nextListWord);
                 if (matcher.find()) {
                     if(((String) keyWords.get(keyWord)).contains("*")) {
-                        outputParam.put(keyWord, word.substring(1, word.length()-1));
+                        outputParam.put(keyWord, nextListWord.substring(1, nextListWord.length()-1));
                     } else {
-                        outputParam.put(keyWord, word.substring(matcher.end()));
+                        outputParam.put(keyWord, nextListWord.substring(matcher.end()));
                     }
-//                    match = i;
+                    listWordIterator.remove();
                 }
-//                i++;
             }
-//            listWords.remove(match);
         }
-//        способ создания через удаление дает ошибку
-//        for (String word : listWords) {
-//            outputParam.merge("request", word, (a,b) -> a + " " + b);
-//        }
+
+        for (String word : listWords) {
+            outputParam.merge("request", word, (a,b) -> a + " " + b);
+        }
+
     }
 
     public Map<String, Object> getOutputParam(){
