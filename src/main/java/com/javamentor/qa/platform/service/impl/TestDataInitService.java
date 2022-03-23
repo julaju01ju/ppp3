@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl;
 
+import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.*;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
@@ -40,6 +41,8 @@ public class TestDataInitService {
 
     private VoteOnQuestionService voteOnQuestionService;
 
+    private BookMarksService bookMarksService;
+
     public TestDataInitService() {
     }
 
@@ -54,7 +57,8 @@ public class TestDataInitService {
             @Lazy TrackedTagService trackedTagService,
             @Lazy IgnoredTagService ignoredTagService,
             @Lazy VoteOnAnswerService voteOnAnswerService,
-            @Lazy VoteOnQuestionService voteOnQuestionService) {
+            @Lazy VoteOnQuestionService voteOnQuestionService,
+            @Lazy BookMarksService bookMarksService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -65,6 +69,7 @@ public class TestDataInitService {
         this.ignoredTagService = ignoredTagService;
         this.voteOnAnswerService = voteOnAnswerService;
         this.voteOnQuestionService = voteOnQuestionService;
+        this.bookMarksService = bookMarksService;
     }
 
     public void createRole() {
@@ -257,6 +262,20 @@ public class TestDataInitService {
         }
     }
 
+    public void createBookmark(int count) {
+        for (int i = 0; i <= count; i++) {
+            BookMarks bookMarks = new BookMarks();
+            bookMarks.setPersistDateTime(LocalDateTime.of(2023, 03, 20, 0, 0));
+            List<User> userList = new ArrayList<>();
+            userList.add(userService.getAll().get(1));
+            bookMarks.setUser(userService.getAll().get((int) (Math.random() * 50)));
+            List<Question> questionList = new ArrayList<>();
+            questionList.add(questionService.getAll().get(1));
+            bookMarks.setQuestion(questionService.getAll().get(i));
+            bookMarksService.persist(bookMarks);
+        }
+    }
+
 
     public void init() {
         createRole();
@@ -267,5 +286,6 @@ public class TestDataInitService {
         createReputation();
         createTrackedTag();
         createIgnoredTag();
+        createBookmark(50);
     }
 }
