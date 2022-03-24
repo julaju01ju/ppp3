@@ -7,6 +7,8 @@ import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,12 @@ public class SearchQuestionResourceController {
 
     @GetMapping("/api/search")
     @ApiOperation("Поиск вопросов с пагинацией отсортированных по ID вопроса")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
+                    "параметров поиска и пагинации. Вопросы отсортированы по ID"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
     public ResponseEntity<PageDto<QuestionViewDto>> getPageSearchQuestionsPaginationById(@RequestParam(value = "request") String request,
                                                                             @RequestParam("page") Integer page,
                                                                             @RequestParam(required = false, name = "items",
