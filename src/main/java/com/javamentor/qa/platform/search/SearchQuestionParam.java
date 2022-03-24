@@ -12,8 +12,8 @@ public class SearchQuestionParam {
     public SearchQuestionParam() {
     }
 
-    public Map<String, Object> getAllParam(String params) {
-        List<String> listWords = listWordsParam.getListWords(params);
+    public Map<String, Object> getAllParam(String request) {
+        List<String> listWords = listWordsParam.getListWords(request);
         Map<String, Object> keyWords = keyWordsParam.getKeyWords();
         SearchQuestionOutputParam searchQuestionOutputParam = new SearchQuestionOutputParam(listWords, keyWords);
         return searchQuestionOutputParam.getOutputParam();

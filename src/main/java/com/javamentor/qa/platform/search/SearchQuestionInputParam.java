@@ -18,13 +18,13 @@ public class SearchQuestionInputParam {
         keyWords.put("user", "User:");
         keyWords.put("body", "Body:");
         keyWords.put("title", "Title:");
-        keyWords.put("tag", "^[\\[](.*)[\\]]$");
+        keyWords.put("trackedTag", "^[\\[](.*)[\\]]$");
         keyWords.put("fullMatch", "^[\"](.*)[\"]$");
         return keyWords;
     }
 
-    public List<String> getListWords(String params) {
-        for (String oneWord : params.split("\\s")) {
+    public List<String> getListWords(String request) {
+        for (String oneWord : request.split("\\s")) {
             listWords.add(oneWord);
         }
         return listWords;
