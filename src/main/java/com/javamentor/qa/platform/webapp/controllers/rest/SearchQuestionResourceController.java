@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.search.SearchQuestionParam;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +23,12 @@ public class SearchQuestionResourceController {
 
     private final SearchQuestionParam searchQuestionParam;
     private final QuestionDtoService questionDtoService;
+    private final TagService tagService;
 
-    public SearchQuestionResourceController(SearchQuestionParam searchQuestionParam, QuestionDtoService questionDtoService) {
+    public SearchQuestionResourceController(SearchQuestionParam searchQuestionParam, QuestionDtoService questionDtoService, TagService tagService) {
         this.searchQuestionParam = searchQuestionParam;
         this.questionDtoService = questionDtoService;
+        this.tagService = tagService;
     }
 
     @GetMapping("/api/search")
@@ -32,11 +36,20 @@ public class SearchQuestionResourceController {
     public ResponseEntity<PageDto<QuestionViewDto>> getPageSearchQuestionsPaginationById(@RequestParam(value = "request") String request,
                                                                             @RequestParam("page") Integer page,
                                                                             @RequestParam(required = false, name = "items",
-                                                                            defaultValue = "10") Integer itemsOnPage) {
+                                                                            defaultValue = "10") Integer itemsOnPage,
+                                                                            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+                                                                            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
+
         Map<String, Object> params = searchQuestionParam.getAllParam(request);
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
-        PageDto<QuestionViewDto> pageDto = questionDtoService.getPageDto("paginationSearchQuestionsSortedById", params);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+//        PageDto<QuestionViewDto> pageDto = questionDtoService.getPageDto("paginationSearchQuestionsSortedById", params);
+        PageDto<QuestionViewDto> pageDto = questionDtoService.getPageQuestionsWithTags("paginationSearchQuestionsSortedById", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 }

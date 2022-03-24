@@ -18,7 +18,7 @@ public class SearchQuestionInputParam {
         keyWords.put("user", "User:");
         keyWords.put("body", "Body:");
         keyWords.put("title", "Title:");
-        keyWords.put("trackedTag", "^[\\[](.*)[\\]]$");
+        keyWords.put("tag", "^[\\[](.*)[\\]]$");
         keyWords.put("fullMatch", "^[\"](.*)[\"]$");
         return keyWords;
     }
