@@ -50,13 +50,11 @@ public class SearchQuestionResourceController {
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
-
         Map<String, Object> params = searchQuestionParam.getAllParam(request);
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
-//        PageDto<QuestionViewDto> pageDto = questionDtoService.getPageDto("paginationSearchQuestionsSortedById", params);
         PageDto<QuestionViewDto> pageDto = questionDtoService.getPageQuestionsWithTags("paginationSearchQuestionsSortedById", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
