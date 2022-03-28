@@ -1,0 +1,97 @@
+user_entity:
+  - id: 100
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmail@mail.com"
+    full_name: "Constantin"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1
+  - id: 101
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmail@mail.mail"
+    full_name: "Igor"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1
+  - id: 102
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmaiaal@mail.mail"
+    full_name: "Dmitry"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 2
+  - id: 103
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEddmail@mail.mail"
+    full_name: "Maxim"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1
+  - id: 104
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEddmail@mail.mail"
+    full_name: "Nikolay"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1
+  - id: 105
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEddmail@mail.mail"
+    full_name: "Petr"
+    image_link: "link"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 1

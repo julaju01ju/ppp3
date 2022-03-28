@@ -45,23 +45,7 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "where CASE " +
-                                "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
-                                "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
-                                "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
-                                "   (" +
-                                "       SELECT q_ign.id FROM question q_ign " +
-                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                "   ) " +
-                                "   ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
-                                "   (" +
-                                "       SELECT q_ign.id FROM question q_ign " +
-                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                "   ) " +
-                                "   END " +
-                                " and q.title like concat ('%', :title, '%')" +
+                                " where q.title like concat ('%', :title, '%')" +
                                 " and q.description like concat ('%', :body, '%')" +
                                 " and u.full_name like concat ('%', :userName, '%')" +
                                 " and (q.title like concat ('%', :request, '%')"+
@@ -71,8 +55,6 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
                         .setParameter("body", params.get("body"))
                         .setParameter("request", params.get("request"))
                         .setParameter("userName",params.get("user"))
-                        .setParameter("ignoredTag", params.get("ignoredTag"))
-                        .setParameter("trackedTag", params.get("trackedTag"))
                         .setFirstResult((page - 1) * itemsOnPage)
                         .setMaxResults(itemsOnPage)
                         .unwrap(org.hibernate.query.Query.class)
@@ -87,23 +69,7 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
                                 "COUNT(DISTINCT q.id) FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
                                 "JOIN question_has_tag qht ON q.id = qht.question_id " +
-                                "WHERE CASE " +
-                                "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
-                                "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
-                                "   WHEN -1 IN :trackedTag THEN q.id NOT IN " +
-                                "   (" +
-                                "       SELECT q_ign.id FROM question q_ign " +
-                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                "   ) " +
-                                "   ELSE qht.tag_id IN :trackedTag AND q.id NOT IN " +
-                                "   (" +
-                                "       SELECT q_ign.id FROM question q_ign " +
-                                "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
-                                "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
-                                "   ) " +
-                                "END " +
-                                " and q.title like concat ('%', :title, '%')" +
+                                " where q.title like concat ('%', :title, '%')" +
                                 " and q.description like concat ('%', :body, '%')" +
                                 " and u.full_name like concat ('%', :userName, '%')" +
                                 " and (q.title like concat ('%', :request, '%')"+
@@ -112,8 +78,6 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
                 .setParameter("body", params.get("body"))
                 .setParameter("request", params.get("request"))
                 .setParameter("userName",params.get("user"))
-                .setParameter("ignoredTag", params.get("ignoredTag"))
-                .setParameter("trackedTag", params.get("trackedTag"))
                 .getSingleResult()).intValue();
     }
 }

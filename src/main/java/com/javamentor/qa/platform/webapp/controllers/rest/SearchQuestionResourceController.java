@@ -25,12 +25,10 @@ public class SearchQuestionResourceController {
 
     private final SearchQuestionParam searchQuestionParam;
     private final QuestionDtoService questionDtoService;
-    private final TagService tagService;
 
-    public SearchQuestionResourceController(SearchQuestionParam searchQuestionParam, QuestionDtoService questionDtoService, TagService tagService) {
+    public SearchQuestionResourceController(SearchQuestionParam searchQuestionParam, QuestionDtoService questionDtoService) {
         this.searchQuestionParam = searchQuestionParam;
         this.questionDtoService = questionDtoService;
-        this.tagService = tagService;
     }
 
     @GetMapping("/api/search")
@@ -41,20 +39,14 @@ public class SearchQuestionResourceController {
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
-    public ResponseEntity<PageDto<QuestionViewDto>> getPageSearchQuestionsPaginationById(@RequestParam(value = "request") String request,
-                                                                            @RequestParam("page") Integer page,
-                                                                            @RequestParam(required = false, name = "items",
-                                                                            defaultValue = "10") Integer itemsOnPage,
-                                                                            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-                                                                            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
-        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
-        }
+    public ResponseEntity<PageDto<QuestionViewDto>> getPageSearchQuestionsPaginationById(
+            @RequestParam(value = "request") String request,
+            @RequestParam("page") Integer page,
+            @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
+
         Map<String, Object> params = searchQuestionParam.getAllParam(request);
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
-        params.put("trackedTag", trackedTag);
-        params.put("ignoredTag", ignoredTag);
         PageDto<QuestionViewDto> pageDto = questionDtoService.getPageQuestionsWithTags("paginationSearchQuestionsSortedById", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
