@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
@@ -8,7 +7,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserProfileQuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
-import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -29,11 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
+import java.util.*;
 
 /**
  * @author Ali Veliev 29.11.2021
@@ -43,13 +37,14 @@ import java.util.Optional;
 @Api("User Api")
 public class UserResourceController {
 
-    private UserDtoService userDtoService;
-    private UserService userService;
-    private UserDetailsService userDetailsService;
-    private UserProfileQuestionDtoService userProfileQuestionDtoService;
+    private final UserDtoService userDtoService;
+    private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    private final UserProfileQuestionDtoService userProfileQuestionDtoService;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userService,
+    public UserResourceController(UserDtoService userDtoService,
+                                  UserService userService,
                                   UserDetailsService userDetailsService,
                                   UserProfileQuestionDtoService userProfileQuestionDtoService) {
         this.userDtoService = userDtoService;
@@ -181,9 +176,14 @@ public class UserResourceController {
             @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
             @ApiResponse(code = 500, message = "Страницы пока что не существует")
     })
-    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions(Principal principal) {
+    public ResponseEntity<List<?>> getAllUserQuestions(Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
         List<UserProfileQuestionDto> list = userProfileQuestionDtoService.getAllQuestionsByUserId(user.getId());
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return list.isEmpty()
+                ? new ResponseEntity<>(Collections.singletonList("у авторизованного пользователя с ID: {" +
+                        user.getId() + "} и c EMAIL: {" +
+                        user.getEmail() + "} нет заданных вопросов"), HttpStatus.NOT_FOUND)
+                : new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
+
