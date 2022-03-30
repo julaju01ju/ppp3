@@ -1,10 +1,14 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.UserProfileQuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -15,17 +19,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -38,11 +45,17 @@ public class UserResourceController {
 
     private UserDtoService userDtoService;
     private UserService userService;
+    private UserDetailsService userDetailsService;
+    private UserProfileQuestionDtoService userProfileQuestionDtoService;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userService) {
+    public UserResourceController(UserDtoService userDtoService, UserService userService,
+                                  UserDetailsService userDetailsService,
+                                  UserProfileQuestionDtoService userProfileQuestionDtoService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
+        this.userDetailsService = userDetailsService;
+        this.userProfileQuestionDtoService = userProfileQuestionDtoService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -160,5 +173,17 @@ public class UserResourceController {
             }
         }
         return new ResponseEntity<>("Вы можете менять только свой пароль", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/api/user/profile/questions")
+    @ApiOperation("Возвращает все вопросы, которые задавал авторизованный пользователь")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
+            @ApiResponse(code = 500, message = "Страницы пока что не существует")
+    })
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions(Principal principal) {
+        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
+        List<UserProfileQuestionDto> list = userProfileQuestionDtoService.getAllQuestionsByUserId(user.getId());
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
