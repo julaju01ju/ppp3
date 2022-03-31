@@ -550,8 +550,9 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileQuestionDto() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/questions")
-                            .header(AUTHORIZATION, USER_TOKEN))
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].questionId").value(100))
