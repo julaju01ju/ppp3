@@ -549,13 +549,13 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/questions")
                             .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].questionId").value(100))
-                .andExpect(jsonPath("$[0].title").value("title"))
+                .andExpect(jsonPath("$[0].title").value("title 100"))
                 .andExpect(jsonPath("$[0].listTagDto.[0].id").value(100))
                 .andExpect(jsonPath("$[0].listTagDto.[0].name").value("TAG100"))
                 .andExpect(jsonPath("$[0].listTagDto.[0].description").value("This is tag 100"))
