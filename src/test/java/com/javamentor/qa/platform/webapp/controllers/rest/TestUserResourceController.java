@@ -549,7 +549,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user1@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/questions")
                             .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())

@@ -3,4 +3,8 @@ question_has_tag:
    tag_id: 100
  - question_id: 100
    tag_id: 101
+ - question_id: 101
+   tag_id: 101
+ - question_id: 101
+   tag_id: 102
 
