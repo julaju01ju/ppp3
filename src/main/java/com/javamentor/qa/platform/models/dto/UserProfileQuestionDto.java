@@ -17,4 +17,11 @@ public class UserProfileQuestionDto {
     private List<TagDto> listTagDto;
     private Long countAnswer;
     private LocalDateTime persistDate;
+
+    public UserProfileQuestionDto(Long questionId, String title, Long countAnswer, LocalDateTime persistDate) {
+        this.questionId = questionId;
+        this.title = title;
+        this.countAnswer = countAnswer;
+        this.persistDate = persistDate;
+    }
 }

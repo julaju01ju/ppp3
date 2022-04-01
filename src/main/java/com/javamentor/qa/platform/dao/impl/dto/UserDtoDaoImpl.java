@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -41,37 +42,19 @@ public class UserDtoDaoImpl implements UserDtoDao {
                 .getResultStream()
                 .findAny();
     }
+
     @Override
     public List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id) {
-        final String query =
-                "select q.id, " +
+        return entityManager.createQuery(
+                "select new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
+                        "q.id, " +
                         "q.title, " +
-                        "(select count(ans.id) from Answer as ans where ans.question.id = q.id), " +
-                        "q.persistDateTime " +
-                        "from Question q where q.user.id = :id";
-
-
-        return (List<UserProfileQuestionDto>) entityManager.createQuery(query)
+                        //"q.tags," +
+                        "(select (count(ans.id)) from Answer as ans where ans.question.id = q.id), " +
+                        "q.persistDateTime)" +
+                        "from Question q where q.user.id = :id", UserProfileQuestionDto.class)
                 .setParameter("id", id)
-                .unwrap(Query.class)
-                .setResultTransformer(
-                        new ResultTransformer() {
-                            @Override
-                            public Object transformTuple(Object[] tuple, String[] aliases) {
-                                UserProfileQuestionDto userProfileQuestionDto =new UserProfileQuestionDto();
-                                userProfileQuestionDto.setQuestionId((Long) tuple[0]);
-                                userProfileQuestionDto.setTitle((String) tuple[1]);
-                                userProfileQuestionDto.setCountAnswer((Long) tuple[2]);
-                                userProfileQuestionDto.setPersistDate((LocalDateTime) tuple[3]);
+                .getResultList();
 
-                                return userProfileQuestionDto;
-                            }
-
-                            @Override
-                            public List transformList(List list) {
-                                return list;
-                            }
-                        }
-                ).getResultList();
     }
 }
