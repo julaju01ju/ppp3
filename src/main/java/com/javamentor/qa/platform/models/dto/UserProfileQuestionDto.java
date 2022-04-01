@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
+import com.javamentor.qa.platform.models.entity.question.Tag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 public class UserProfileQuestionDto {
     private Long questionId;
     private String title;
-    private List<TagDto> listTagDto;
+    private List<Tag> listTagDto;
     private Long countAnswer;
     private LocalDateTime persistDate;
 

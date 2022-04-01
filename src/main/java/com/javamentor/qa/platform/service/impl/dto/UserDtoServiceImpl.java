@@ -39,11 +39,11 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
     @Override
     public List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id) {
         List<UserProfileQuestionDto> list = userDtoDao.getAllQuestionsByUserId(id);
-        for(UserProfileQuestionDto e : list) {
-            if(e.getListTagDto() == null) {
-                e.setListTagDto(tagDtoDao.getTagsByQuestionId(e.getQuestionId()));
-            }
-        }
+//        for(UserProfileQuestionDto e : list) {
+//            if(e.getListTagDto() == null) {
+//                e.setListTagDto(tagDtoDao.getTagsByQuestionId(e.getQuestionId()));
+//            }
+//        }
         return list;
     }
 

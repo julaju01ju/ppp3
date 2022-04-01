@@ -176,8 +176,7 @@ public class UserResourceController {
     })
     public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions(Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
-        List<UserProfileQuestionDto> list = userDtoService.getAllQuestionsByUserId(user.getId());
-        return new ResponseEntity<>(list, HttpStatus.OK);
+        return new ResponseEntity<>(userDtoService.getAllQuestionsByUserId(user.getId()), HttpStatus.OK);
     }
 }
 
