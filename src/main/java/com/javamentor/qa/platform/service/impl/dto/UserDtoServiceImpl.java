@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
+import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Ali Veliev 29.11.2021
@@ -38,13 +41,18 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
 
     @Override
     public List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id) {
-        List<UserProfileQuestionDto> list = userDtoDao.getAllQuestionsByUserId(id);
-//        for(UserProfileQuestionDto e : list) {
-//            if(e.getListTagDto() == null) {
-//                e.setListTagDto(tagDtoDao.getTagsByQuestionId(e.getQuestionId()));
-//            }
-//        }
-        return list;
+        List<UserProfileQuestionDto> listUserProfileQuestionDto = userDtoDao.getAllQuestionsByUserId(id);
+        List<Long> listIdQuestion = listUserProfileQuestionDto
+                .stream()
+                .map(UserProfileQuestionDto::getQuestionId)
+                .collect(Collectors.toList());
+        Map<Long, List<TagDto>> tags = tagDtoDao.getTagsByQuestionIds(listIdQuestion);
+
+        for (UserProfileQuestionDto e : listUserProfileQuestionDto) {
+            e.setListTagDto(tags.get(e.getQuestionId()));
+        }
+
+        return listUserProfileQuestionDto;
     }
 
 }

@@ -49,12 +49,10 @@ public class UserDtoDaoImpl implements UserDtoDao {
                 "select new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
                         "q.id, " +
                         "q.title, " +
-                        //"q.tags," +
                         "(select (count(ans.id)) from Answer as ans where ans.question.id = q.id), " +
                         "q.persistDateTime)" +
                         "from Question q where q.user.id = :id", UserProfileQuestionDto.class)
                 .setParameter("id", id)
                 .getResultList();
-
     }
 }
