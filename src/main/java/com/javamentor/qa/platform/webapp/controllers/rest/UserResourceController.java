@@ -5,7 +5,6 @@ import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
-import com.javamentor.qa.platform.service.abstracts.dto.UserProfileQuestionDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Ali Veliev 29.11.2021
@@ -40,17 +41,14 @@ public class UserResourceController {
     private final UserDtoService userDtoService;
     private final UserService userService;
     private final UserDetailsService userDetailsService;
-    private final UserProfileQuestionDtoService userProfileQuestionDtoService;
 
     @Autowired
     public UserResourceController(UserDtoService userDtoService,
                                   UserService userService,
-                                  UserDetailsService userDetailsService,
-                                  UserProfileQuestionDtoService userProfileQuestionDtoService) {
+                                  UserDetailsService userDetailsService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
         this.userDetailsService = userDetailsService;
-        this.userProfileQuestionDtoService = userProfileQuestionDtoService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -176,14 +174,10 @@ public class UserResourceController {
             @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
             @ApiResponse(code = 500, message = "Страницы пока что не существует")
     })
-    public ResponseEntity<List<?>> getAllUserQuestions(Principal principal) {
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions(Principal principal) {
         User user = (User) userDetailsService.loadUserByUsername(principal.getName());
-        List<UserProfileQuestionDto> list = userProfileQuestionDtoService.getAllQuestionsByUserId(user.getId());
-        return list.isEmpty()
-                ? new ResponseEntity<>(Collections.singletonList("у авторизованного пользователя с ID: {" +
-                        user.getId() + "} и c EMAIL: {" +
-                        user.getEmail() + "} нет заданных вопросов"), HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(list, HttpStatus.OK);
+        List<UserProfileQuestionDto> list = userDtoService.getAllQuestionsByUserId(user.getId());
+        return new ResponseEntity<>(list, HttpStatus.OK);
     }
 }
 
