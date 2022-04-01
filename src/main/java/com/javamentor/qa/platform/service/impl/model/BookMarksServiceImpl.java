@@ -3,9 +3,13 @@ package com.javamentor.qa.platform.service.impl.model;
 import com.javamentor.qa.platform.dao.abstracts.model.BookMarksDao;
 import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
 import com.javamentor.qa.platform.models.entity.BookMarks;
+import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class BookMarksServiceImpl extends ReadWriteServiceImpl<BookMarks, Long> implements BookMarksService {
@@ -16,5 +20,10 @@ public class BookMarksServiceImpl extends ReadWriteServiceImpl<BookMarks, Long> 
         super((ReadWriteDao<BookMarks, Long>) bookmarkQuestionsDao);
         this.bookmarkQuestionsDao = bookmarkQuestionsDao;
     }
-
+    @Transactional
+    @Override
+    public boolean isQuestionAlreadyExistOnUserBookmarks(long userId, long questionId) {
+        Optional<BookMarks> bookMark = bookmarkQuestionsDao.getBookmarkByUserEmailAndQuestionId(userId, questionId);
+        return bookMark.isPresent();
+    }
 }

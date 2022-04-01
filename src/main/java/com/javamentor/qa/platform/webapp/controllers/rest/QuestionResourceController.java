@@ -4,23 +4,21 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
-import com.javamentor.qa.platform.service.abstracts.model.TagService;
-import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.*;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +48,10 @@ public class QuestionResourceController {
     private QuestionService questionService;
     private VoteOnQuestionService voteOnQuestionService;
     private QuestionViewedService questionViewedService;
+    private BookMarksService bookMarksService;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService) {
+    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -61,6 +60,7 @@ public class QuestionResourceController {
         this.tagConverter = tagConverter;
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
+        this.bookMarksService = bookMarksService;
     }
 
     @GetMapping("/sortedQuestions")
@@ -107,7 +107,6 @@ public class QuestionResourceController {
         if (!question.isPresent()) {
             return new ResponseEntity<>("Вопрос с id=" + questionId + " не найден", HttpStatus.NOT_FOUND);
         }
-
         if (!questionViewedService.isUserViewedQuestion(userPrincipal.getEmail(), question.get().getId())) {
             questionViewedService.persistQuestionViewed(new QuestionViewed(userPrincipal, question.get(), LocalDateTime.now()));
             return new ResponseEntity<>("Вопрос просмотрен впервые", HttpStatus.OK);
@@ -352,5 +351,31 @@ public class QuestionResourceController {
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);
+    }
+    @PostMapping("/{id}/bookmark")
+    @ApiOperation("При переходе на вопрос c questionId=*, вопрос добавляется в BookMarks авторизованного пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Вопрос успешно добавлен в закладки"),
+            @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден"),
+            @ApiResponse(code = 400, message = "Вопрос уже был добавлен, либо формат введенного questionId является не верным")
+    })
+    public ResponseEntity<?> insertQuestionToBookmarksByQuestionId(@PathVariable("id") Long questionId) {
+        User userPrincipal = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<Question> question = questionService.getById(questionId);
+
+        if (question.isEmpty()) {
+            return new ResponseEntity<>("Вопрос с id=" + questionId + " не найден", HttpStatus.NOT_FOUND);
+        }
+
+        if (!bookMarksService.isQuestionAlreadyExistOnUserBookmarks(userPrincipal.getId(), question.get().getId())) {
+            BookMarks bookMark = new BookMarks();
+            bookMark.setUser(userPrincipal);
+            bookMark.setQuestion(question.get());
+            bookMark.setPersistDateTime(LocalDateTime.now());
+            bookMarksService.persist(bookMark);
+            return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Вопрос уже был добавлен в закладки", HttpStatus.BAD_REQUEST);
     }
 }
