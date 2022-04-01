@@ -17,7 +17,7 @@ public class BookMarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long>implement
     private EntityManager entityManager;
     @Override
     public Optional<BookMarks> getBookmarkByUserEmailAndQuestionId(long userId, long questionId){
-        String hql = "select BookMarks from BookMarks bookmark where bookmark.question.id = :questionId and bookmark.user.id = :userId";
+        String hql = "select bookmark from BookMarks bookmark where bookmark.question.id = :questionId and bookmark.user.id = :userId";
         TypedQuery<BookMarks> query = entityManager.createQuery(hql, BookMarks.class).setParameter("userId", userId).setParameter("questionId", questionId);
         return SingleResultUtil.getSingleResultOrNull(query);
     }
