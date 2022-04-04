@@ -1572,4 +1572,35 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/question/questionQuestionApi.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addBookmarksByQuestionId() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(
+                        post("/api/user/question/101/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(
+                        post("/api/user/question/101/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest()
+        );
+        mockMvc.perform(
+                        post("/api/user/question/102/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+        mockMvc.perform(
+                        post("/api/user/question/1001/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound()
+                );
+    }
 }
