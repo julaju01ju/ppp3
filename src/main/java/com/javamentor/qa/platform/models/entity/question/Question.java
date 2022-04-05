@@ -125,4 +125,5 @@ public class Question implements Serializable {
     public int hashCode() {
         return Objects.hash(id, title, description, persistDateTime, user, tags, lastUpdateDateTime, isDeleted);
     }
+
 }

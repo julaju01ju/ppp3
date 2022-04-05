@@ -53,7 +53,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     )
     public void getQuestionsSortedByVotesAndAnswersAndQuestionViewed() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/sortedQuestions?page=1&items=3")
@@ -131,11 +131,11 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     )
     public void insertAuthUserToQuestionViewedByQuestionId() throws Exception {
 
-        String USER_TOKEN = super.getToken("user120@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user120@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/110/view")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -151,7 +151,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     )
     public void insertAuthUserToQuestionViewedByQuestionIdNotFound() throws Exception {
 
-        String USER_TOKEN = super.getToken("user100@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user100@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/155/view")
@@ -170,11 +170,11 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     )
     public void insertAuthUserToQuestionViewedByQuestionIdAfterUserBeenInserted() throws Exception {
 
-        String USER_TOKEN = super.getToken("user100@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user100@mail.ru", "USER");
 
         mockMvc.perform(
                         post("/api/user/question/110/view")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
 
@@ -195,7 +195,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/api/user/question/count")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.content().string("8"))
                 .andExpect(status().isOk());
@@ -221,7 +221,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/api/user/question/101")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(101))
@@ -255,7 +255,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[2].id").value(103))
                 .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
                 .andExpect(jsonPath("$.listCommentDto[2].userId").value(103));
-        
+
     }
 
     @Test
@@ -939,6 +939,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(0));
     }
+
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
@@ -1107,7 +1108,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
         mockMvc.perform(
                         get("/api/user/question/mostPopularWeek?page=1&ignoredTag=102&items=5&trackedTag=101")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
@@ -1117,7 +1118,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[2].id").value(102))
                 .andExpect(jsonPath("$.itemsOnPage").value(5));
     }
-
 
 
     @Test
@@ -1137,7 +1137,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/api/user/question/new?page=1&ignoredTag=102&items=4")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
@@ -1166,7 +1166,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         mockMvc.perform(
                         get("/api/user/question/sortedQuestionsByMonth?page=1&ignoredTag=103&trackedTag=102&items=4")
-                .header(AUTHORIZATION, USER_TOKEN))
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
@@ -1226,7 +1226,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void getQuestionsSortedByVotesAndAnswersAndQuestionViewedWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/sortedQuestions?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1285,7 +1285,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void getQuestionsdWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1345,7 +1345,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void mostPopularQuestionsWeekWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/mostPopularWeek?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1404,7 +1404,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void getQuestionsNoAnswerWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/noAnswer?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1463,7 +1463,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void getAllQuestionDtoSortedByPersistDateWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/new?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1522,7 +1522,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/TagResourceController/ignoredTag.yml"
     }, disableConstraints = true, cleanBefore = true)
     public void getQuestionsSortedByVotesAndAnswersAndViewsByMonthWithTagsInParams() throws Exception {
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(
                         get("/api/user/question/sortedQuestionsByMonth?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
@@ -1571,5 +1571,44 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/question/questionQuestionApi.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addBookmarksByQuestionId() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/question/101/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        String sql = "select count(bookmark) from BookMarks bookmark where bookmark.question.id = 101 and bookmark.user.id = 101";
+        long count = (long) entityManager.createQuery(sql).getSingleResult();
+        Assertions.assertEquals(1, count);
+
+        mockMvc.perform(
+                        post("/api/user/question/101/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest()
+                );
+
+        mockMvc.perform(
+                        post("/api/user/question/102/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        post("/api/user/question/1001/bookmark")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound()
+                );
     }
 }
