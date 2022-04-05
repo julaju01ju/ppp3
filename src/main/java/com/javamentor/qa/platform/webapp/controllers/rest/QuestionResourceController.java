@@ -11,14 +11,18 @@ import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.*;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -367,15 +371,14 @@ public class QuestionResourceController {
             return new ResponseEntity<>("Вопрос с id=" + questionId + " не найден", HttpStatus.NOT_FOUND);
         }
 
-        if (!bookMarksService.isQuestionAlreadyExistOnUserBookmarks(userPrincipal.getId(), question.get().getId())) {
-            BookMarks bookMark = new BookMarks();
-            bookMark.setUser(userPrincipal);
-            bookMark.setQuestion(question.get());
-            bookMark.setPersistDateTime(LocalDateTime.now());
-            bookMarksService.persist(bookMark);
-            return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
+        if (bookMarksService.isQuestionAlreadyExistOnUserBookmarks(userPrincipal.getId(), question.get().getId())) {
+            return new ResponseEntity<>("Вопрос уже был добавлен в закладки", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("Вопрос уже был добавлен в закладки", HttpStatus.BAD_REQUEST);
+        BookMarks bookMark = new BookMarks();
+        bookMark.setUser(userPrincipal);
+        bookMark.setQuestion(question.get());
+        bookMarksService.persist(bookMark);
+        return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
     }
 }
