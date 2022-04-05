@@ -31,3 +31,19 @@ user_entity:
     image_link: "image2"
     nickname: "USR2"
     role_id: 100
+  - id: 102
+    full_name: "USER_NULL"
+    password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
+    persist_date: 2021-12-04 00:00:00
+    last_redaction_date: 2021-12-04 00:00:00
+    email: "user_null@mail.ru"
+    about: "about2"
+    city: "cit2"
+    link_site: "site2"
+    link_github: "github2"
+    link_vk: "vk2"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image2"
+    nickname: "USR2"
+    role_id: 100
