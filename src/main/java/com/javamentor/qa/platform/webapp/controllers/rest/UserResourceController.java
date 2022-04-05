@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -40,15 +38,12 @@ public class UserResourceController {
 
     private final UserDtoService userDtoService;
     private final UserService userService;
-    private final UserDetailsService userDetailsService;
 
     @Autowired
     public UserResourceController(UserDtoService userDtoService,
-                                  UserService userService,
-                                  UserDetailsService userDetailsService) {
+                                  UserService userService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
-        this.userDetailsService = userDetailsService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -174,9 +169,10 @@ public class UserResourceController {
             @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
             @ApiResponse(code = 500, message = "Страницы пока что не существует")
     })
-    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions(Principal principal) {
-        User user = (User) userDetailsService.loadUserByUsername(principal.getName());
-        return new ResponseEntity<>(userDtoService.getAllQuestionsByUserId(user.getId()), HttpStatus.OK);
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        List<UserProfileQuestionDto> listAllUserQuestions = userDtoService.getAllQuestionsByUserId(userId);
+        return new ResponseEntity<>(listAllUserQuestions, HttpStatus.OK);
     }
 }
 
