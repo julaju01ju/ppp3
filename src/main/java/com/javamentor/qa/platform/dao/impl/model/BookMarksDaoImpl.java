@@ -15,7 +15,7 @@ public class BookMarksDaoImpl extends ReadWriteDaoImpl<BookMarks, Long> implemen
     private EntityManager entityManager;
 
     @Override
-    public boolean getBookmarkByUserIdAndQuestionId(long userId, long questionId) {
+    public boolean isQuestionAlreadyExistOnUserBookmarks(long userId, long questionId) {
         String hql = "select count(bookmark) from BookMarks bookmark where bookmark.question.id = :questionId and bookmark.user.id = :userId";
         Query query = entityManager.createQuery(hql).setParameter("userId", userId).setParameter("questionId", questionId);
         long count = (long) query.getSingleResult();

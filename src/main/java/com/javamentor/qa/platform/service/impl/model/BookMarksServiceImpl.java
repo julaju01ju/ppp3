@@ -21,6 +21,6 @@ public class BookMarksServiceImpl extends ReadWriteServiceImpl<BookMarks, Long> 
 
     @Override
     public boolean isQuestionAlreadyExistOnUserBookmarks(long userId, long questionId) {
-        return bookmarkQuestionsDao.getBookmarkByUserIdAndQuestionId(userId, questionId);
+        return bookmarkQuestionsDao.isQuestionAlreadyExistOnUserBookmarks(userId, questionId);
     }
 }

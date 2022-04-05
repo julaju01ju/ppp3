@@ -4,5 +4,5 @@ import com.javamentor.qa.platform.models.entity.BookMarks;
 
 
 public interface BookMarksDao extends ReadWriteDao<BookMarks, Long> {
-    boolean getBookmarkByUserIdAndQuestionId(long userId, long questionId);
+    boolean isQuestionAlreadyExistOnUserBookmarks(long userId, long questionId);
 }
