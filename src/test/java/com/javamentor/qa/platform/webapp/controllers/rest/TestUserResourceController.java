@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -438,7 +440,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/GetAllUsersSortedByVote/answers.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_questions.yml",
             "dataset/UserResourceController/GetAllUsersSortedByVote/votes_on_answers.yml"
-            }, disableConstraints = true, cleanBefore = true)
+    }, disableConstraints = true, cleanBefore = true)
     public void getPageAllUsersSortedByVoteCheckSortingDESCWithPage1Items5() throws Exception {
 
         String USER_TOKEN = getToken("user@mail.ru", "USER");
@@ -534,7 +536,55 @@ public class TestUserResourceController extends AbstractControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
-                  .andDo(print())
-                  .andExpect(status().isOk());
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getUserProfileQuestionDto/users.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/questions.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/question_has_tag.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/tag.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/answers.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getUserProfileQuestionDto() throws Exception {
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].questionId").value(100))
+                .andExpect(jsonPath("$[0].title").value("title 100"))
+                .andExpect(jsonPath("$[0].listTagDto.[0].id").value(100))
+                .andExpect(jsonPath("$[0].listTagDto.[0].name").value("TAG100"))
+                .andExpect(jsonPath("$[0].listTagDto.[0].description").value("This is tag 100"))
+                .andExpect(jsonPath("$[0].listTagDto.[1].id").value(101))
+                .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
+                .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
+                .andExpect(jsonPath("$[0].countAnswer").value(2))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.size()").value(1));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getUserProfileQuestionDto/users.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/questions.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/question_has_tag.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/tag.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/answers.yml",
+            "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getUserProfileQuestionDtoEmpty() throws Exception {
+        String USER_TOKEN = getToken("user_null@mail.ru", "USER");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/user/profile/questions")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
     }
 }

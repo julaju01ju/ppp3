@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -17,16 +18,15 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
-
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Ali Veliev 29.11.2021
@@ -36,11 +36,12 @@ import java.util.Map;
 @Api("User Api")
 public class UserResourceController {
 
-    private UserDtoService userDtoService;
-    private UserService userService;
+    private final UserDtoService userDtoService;
+    private final UserService userService;
 
     @Autowired
-    public UserResourceController(UserDtoService userDtoService, UserService userService) {
+    public UserResourceController(UserDtoService userDtoService,
+                                  UserService userService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
     }
@@ -161,4 +162,17 @@ public class UserResourceController {
         }
         return new ResponseEntity<>("Вы можете менять только свой пароль", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/api/user/profile/questions")
+    @ApiOperation("Возвращает все вопросы, которые задавал авторизованный пользователь")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
+            @ApiResponse(code = 500, message = "Страницы пока что не существует")
+    })
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserQuestions() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        List<UserProfileQuestionDto> listAllUserQuestions = userDtoService.getAllQuestionsByUserId(userId);
+        return new ResponseEntity<>(listAllUserQuestions, HttpStatus.OK);
+    }
 }
+
