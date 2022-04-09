@@ -36,8 +36,8 @@ import java.util.Map;
 @Api("User Api")
 public class UserResourceController {
 
-    private UserDtoService userDtoService;
-    private UserService userService;
+    private final UserDtoService userDtoService;
+    private final UserService userService;
 
     @Autowired
     public UserResourceController(UserDtoService userDtoService, UserService userService) {

@@ -44,15 +44,15 @@ import java.util.*;
 @Api("Question Api")
 public class QuestionResourceController {
 
-    private TagService tagService;
-    private QuestionDtoService questionDtoService;
-    private QuestionConverter questionConverter;
-    private TagConverter tagConverter;
-    private ReputationService reputationService;
-    private QuestionService questionService;
-    private VoteOnQuestionService voteOnQuestionService;
-    private QuestionViewedService questionViewedService;
-    private BookMarksService bookMarksService;
+    private final TagService tagService;
+    private final QuestionDtoService questionDtoService;
+    private final QuestionConverter questionConverter;
+    private final TagConverter tagConverter;
+    private final ReputationService reputationService;
+    private final QuestionService questionService;
+    private final VoteOnQuestionService voteOnQuestionService;
+    private final QuestionViewedService questionViewedService;
+    private final BookMarksService bookMarksService;
 
     @Autowired
     public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService) {

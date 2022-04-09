@@ -2,23 +2,24 @@ const myHeaders = new Headers();
 myHeaders.append('Content-Type', 'application/json');
 myHeaders.append('Authorization','Bearer '+ getCookie('token'));
 
-function getUsersSortedByReputation(page, itemsOnPage) {
 
-    return fetch(`/api/user/reputation?page=${page}&items=${itemsOnPage}`,
+function getUsersSortedByReputation(page, itemsOnPage) {
+    const filter = document.getElementById('inputFilterUser').value
+    return fetch(`/api/user/reputation?page=${page}&items=${itemsOnPage}&filter=${filter}`,
         {method: 'GET',
             headers: myHeaders});
 }
 
 function getUsersSortedByNew(page, itemsOnPage) {
-
-    return fetch(`/api/user/new?page=${page}&items=${itemsOnPage}`,
+    const filter = document.getElementById('inputFilterUser').value
+    return fetch(`/api/user/new?page=${page}&items=${itemsOnPage}&filter=${filter}`,
         {method: 'GET',
             headers: myHeaders});
 }
 
 function getUsersSortedByVoteSum(page, itemsOnPage) {
-
-    return fetch(`/api/user/vote?page=${page}&items=${itemsOnPage}`,
+    const filter = document.getElementById('inputFilterUser').value
+    return fetch(`/api/user/vote?page=${page}&items=${itemsOnPage}&filter=${filter}`,
         {method: 'GET',
             headers: myHeaders});
 }
