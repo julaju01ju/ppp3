@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
+import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
@@ -33,7 +34,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Optional;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -44,18 +48,30 @@ import java.util.*;
 @Api("Question Api")
 public class QuestionResourceController {
 
-    private final TagService tagService;
-    private final QuestionDtoService questionDtoService;
-    private final QuestionConverter questionConverter;
-    private final TagConverter tagConverter;
-    private final ReputationService reputationService;
-    private final QuestionService questionService;
-    private final VoteOnQuestionService voteOnQuestionService;
-    private final QuestionViewedService questionViewedService;
-    private final BookMarksService bookMarksService;
+    private TagService tagService;
+    private QuestionDtoService questionDtoService;
+    private QuestionConverter questionConverter;
+    private TagConverter tagConverter;
+    private ReputationService reputationService;
+    private QuestionService questionService;
+    private VoteOnQuestionService voteOnQuestionService;
+    private QuestionViewedService questionViewedService;
+    private BookMarksService bookMarksService;
+    private CommentConverter commentConverter;
+    private CommentQuestionService commentQuestionService;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService) {
+    public QuestionResourceController(TagService tagService,
+                                      QuestionDtoService questionDtoService,
+                                      ReputationService reputationService,
+                                      QuestionService questionService,
+                                      QuestionConverter questionConverter,
+                                      TagConverter tagConverter,
+                                      VoteOnQuestionService voteOnQuestionService,
+                                      QuestionViewedService questionViewedService,
+                                      BookMarksService bookMarksService,
+                                      CommentConverter commentConverter,
+                                      CommentQuestionService commentQuestionService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -65,6 +81,8 @@ public class QuestionResourceController {
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
+        this.commentConverter = commentConverter;
+        this.commentQuestionService = commentQuestionService;
     }
 
     @GetMapping("/sortedQuestions")
@@ -356,6 +374,7 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);
     }
+
     @PostMapping("/{id}/bookmark")
     @ApiOperation("При переходе на вопрос c questionId=*, вопрос добавляется в BookMarks авторизованного пользователя")
     @ApiResponses(value = {

@@ -1611,4 +1611,31 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isNotFound()
                 );
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/checkAddCommentByQuestionId/users.yml",
+            "dataset/QuestionResourceController/checkAddCommentByQuestionId/role.yml",
+            "dataset/QuestionResourceController/checkAddCommentByQuestionId/questions.yml"
+    })
+    public void checkAddCommentByQuestionId() throws Exception {
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String text = "В любой не понятной ситуации пей чай =)";
+
+        mockMvc.perform(post("/api/user/question/100/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/user/question/100")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listCommentDto[0].id").value(1))
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("\"В любой не понятной ситуации пей чай =)\""))
+                .andExpect(jsonPath("$.listCommentDto[0].fullName").value("USER"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(100));
+    }
 }
