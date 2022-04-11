@@ -398,9 +398,10 @@ public class QuestionResourceController {
     }
 
     @PostMapping("/{id}/comment")
-    @ApiOperation("Добавление комментария в вопрос")
+    @ApiOperation("Добавление комментария в вопрос по questionId=*")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос")
+            @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос"),
+            @ApiResponse(code = 500, message = "Вопрос с questionId=* не найден")
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("id") Long id, @Valid @RequestBody String text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
