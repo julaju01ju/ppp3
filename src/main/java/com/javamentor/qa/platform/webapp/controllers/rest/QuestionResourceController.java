@@ -411,7 +411,6 @@ public class QuestionResourceController {
         commentQuestion.setQuestion(question);
         commentQuestion.setText(text);
         commentQuestion.setUser(sender);
-
         commentQuestionService.persist(commentQuestion);
         return new ResponseEntity<>(commentConverter.commentToCommentDto(commentQuestion.getComment()), HttpStatus.OK);
     }
