@@ -5,18 +5,16 @@ import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
+import com.javamentor.qa.platform.models.entity.Comment;
+import com.javamentor.qa.platform.models.entity.CommentType;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
-import com.javamentor.qa.platform.service.abstracts.model.TagService;
-import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
-import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
+import com.javamentor.qa.platform.service.abstracts.model.*;
+import com.javamentor.qa.platform.webapp.converters.CommentConverter;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
@@ -53,9 +51,11 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
     private QuestionViewedService questionViewedService;
     private BookMarksService bookMarksService;
+    private CommentService commentService;
+    private CommentConverter commentConverter;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService) {
+    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService, CommentService commentService, CommentConverter commentConverter) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -65,6 +65,8 @@ public class QuestionResourceController {
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
+        this.commentService = commentService;
+        this.commentConverter = commentConverter;
     }
 
     @GetMapping("/sortedQuestions")
@@ -356,6 +358,7 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);
     }
+
     @PostMapping("/{id}/bookmark")
     @ApiOperation("При переходе на вопрос c questionId=*, вопрос добавляется в BookMarks авторизованного пользователя")
     @ApiResponses(value = {
@@ -380,5 +383,23 @@ public class QuestionResourceController {
         bookMark.setQuestion(question.get());
         bookMarksService.persist(bookMark);
         return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/comment")
+    @ApiOperation("Добавление комментария в вопрос")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос")
+    })
+    public ResponseEntity<?> addCommentByQuestionId(@PathVariable("id") Long id, @Valid @RequestBody String text) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        Comment comment = new Comment();
+        comment.setText(text);
+        comment.setCommentType(CommentType.QUESTION);
+        comment.setUser(sender);
+
+        commentService.persist(comment);
+
+        return new ResponseEntity<>(commentConverter.commentToCommentDto(comment), HttpStatus.OK);
     }
 }
