@@ -5,8 +5,7 @@ import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
-import com.javamentor.qa.platform.models.entity.Comment;
-import com.javamentor.qa.platform.models.entity.CommentType;
+import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
@@ -54,11 +53,21 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
     private QuestionViewedService questionViewedService;
     private BookMarksService bookMarksService;
-    private CommentService commentService;
     private CommentConverter commentConverter;
+    private CommentQuestionService commentQuestionService;
 
     @Autowired
-    public QuestionResourceController(TagService tagService, QuestionDtoService questionDtoService, ReputationService reputationService, QuestionService questionService, QuestionConverter questionConverter, TagConverter tagConverter, VoteOnQuestionService voteOnQuestionService, QuestionViewedService questionViewedService, BookMarksService bookMarksService, CommentService commentService, CommentConverter commentConverter) {
+    public QuestionResourceController(TagService tagService,
+                                      QuestionDtoService questionDtoService,
+                                      ReputationService reputationService,
+                                      QuestionService questionService,
+                                      QuestionConverter questionConverter,
+                                      TagConverter tagConverter,
+                                      VoteOnQuestionService voteOnQuestionService,
+                                      QuestionViewedService questionViewedService,
+                                      BookMarksService bookMarksService,
+                                      CommentConverter commentConverter,
+                                      CommentQuestionService commentQuestionService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -68,8 +77,8 @@ public class QuestionResourceController {
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
-        this.commentService = commentService;
         this.commentConverter = commentConverter;
+        this.commentQuestionService = commentQuestionService;
     }
 
     @GetMapping("/sortedQuestions")
@@ -395,14 +404,14 @@ public class QuestionResourceController {
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("id") Long id, @Valid @RequestBody String text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Question question = questionService.getById(id).get();
 
-        Comment comment = new Comment();
-        comment.setText(text);
-        comment.setCommentType(CommentType.QUESTION);
-        comment.setUser(sender);
+        CommentQuestion commentQuestion = new CommentQuestion();
+        commentQuestion.setQuestion(question);
+        commentQuestion.setText(text);
+        commentQuestion.setUser(sender);
 
-        commentService.persist(comment);
-
-        return new ResponseEntity<>(commentConverter.commentToCommentDto(comment), HttpStatus.OK);
+        commentQuestionService.persist(commentQuestion);
+        return new ResponseEntity<>(commentConverter.commentToCommentDto(commentQuestion.getComment()), HttpStatus.OK);
     }
 }
