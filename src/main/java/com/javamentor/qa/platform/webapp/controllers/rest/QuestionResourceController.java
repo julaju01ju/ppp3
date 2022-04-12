@@ -406,7 +406,8 @@ public class QuestionResourceController {
     }
 
     @PostMapping("/{id}/comment")
-    @ApiOperation("Добавление комментария в вопрос по questionId=*")
+    @ApiOperation("Добавление комментария в вопрос по questionId=*, далее посредством запроса в б/д возвращает" +
+            "данный комментарий как CommentDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос"),
             @ApiResponse(code = 500, message = "Вопрос с questionId=* не найден")
