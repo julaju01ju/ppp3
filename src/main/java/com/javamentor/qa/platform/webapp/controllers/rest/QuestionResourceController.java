@@ -1,9 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -19,7 +19,6 @@ import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
 import com.javamentor.qa.platform.service.abstracts.model.CommentQuestionService;
-import com.javamentor.qa.platform.webapp.converters.CommentConverter;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
@@ -31,7 +30,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -59,7 +64,6 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
     private QuestionViewedService questionViewedService;
     private BookMarksService bookMarksService;
-    private CommentConverter commentConverter;
     private CommentQuestionService commentQuestionService;
 
     @Autowired
@@ -72,7 +76,6 @@ public class QuestionResourceController {
                                       VoteOnQuestionService voteOnQuestionService,
                                       QuestionViewedService questionViewedService,
                                       BookMarksService bookMarksService,
-                                      CommentConverter commentConverter,
                                       CommentQuestionService commentQuestionService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
@@ -83,7 +86,6 @@ public class QuestionResourceController {
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
-        this.commentConverter = commentConverter;
         this.commentQuestionService = commentQuestionService;
     }
 
@@ -418,6 +420,7 @@ public class QuestionResourceController {
         commentQuestion.setText(text);
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
-        return new ResponseEntity<>(commentConverter.commentToCommentDto(commentQuestion.getComment()), HttpStatus.OK);
+
+        return new ResponseEntity<>(commentQuestionService.checkMyCommentDto(id, text, sender.getId()), HttpStatus.OK);
     }
 }
