@@ -22,7 +22,7 @@ public class CommentAnswerDaoImpl extends ReadWriteDaoImpl<CommentAnswer,Long> i
                                 "comment.text, " +
                                 "comment.user.id, " +
                                 "comment.user.fullName, " +
-                                "(SELECT SUM (r.count) FROM Reputation r WHERE r.author.id = comment.user.id), " +
+                                "(SELECT (sum(r.count)) FROM Reputation r WHERE r.author.id = comment.user.id), " +
                                 "comment.persistDateTime)" +
                                 "FROM Comment comment " +
                                 "left JOIN CommentAnswer commentAnswer ON (comment.id = commentAnswer.comment.id) " +
