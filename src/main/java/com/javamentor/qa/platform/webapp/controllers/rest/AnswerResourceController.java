@@ -4,14 +4,12 @@ import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.CommentAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
-import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
-import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.*;
 import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,7 @@ public class AnswerResourceController {
     private final VoteOnAnswerService voteOnAnswerService;
     private final ReputationService reputationService;
     private final AnswerConverter answerConverter;
+    private final CommentAnswerService commentAnswerService;
 
     @Autowired
     public AnswerResourceController(
@@ -50,7 +49,8 @@ public class AnswerResourceController {
             QuestionService questionService,
             VoteOnAnswerService voteOnAnswerService,
             ReputationService reputationService,
-            AnswerConverter answerConverter ) {
+            AnswerConverter answerConverter,
+            CommentAnswerService commentAnswerService) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
@@ -58,6 +58,7 @@ public class AnswerResourceController {
         this.voteOnAnswerService = voteOnAnswerService;
         this.reputationService = reputationService;
         this.answerConverter = answerConverter;
+        this.commentAnswerService = commentAnswerService;
     }
 
     @GetMapping("/{questionId}/answer")
@@ -167,6 +168,22 @@ public class AnswerResourceController {
             return new ResponseEntity<>("Вы уже отвечали на данный вопрос", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Вопрос c questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/{questionId}/answer/{answerId}/comment")
+    public ResponseEntity<?> addCommentToAnswerByQuestionIdAndAnswerId(@PathVariable("questionId") Long questionId,
+                                                                       @PathVariable("answerId") Long answerId,
+                                                                       @Valid @RequestBody String text) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Answer answer = answerService.getById(answerId).get();
+
+        CommentAnswer commentAnswer = new CommentAnswer();
+        commentAnswer.setText(text);
+        commentAnswer.setUser(sender);
+        commentAnswer.setAnswer(answer);
+        commentAnswerService.persist(commentAnswer);
+
+        return new ResponseEntity<>("юхуууу" ,HttpStatus.OK);
     }
 
 }
