@@ -171,11 +171,19 @@ public class AnswerResourceController {
     }
 
     @PostMapping("/{questionId}/answer/{answerId}/comment")
+    @ApiOperation(value = "добавление комментария к ответу по questionId=* и answerId=*")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Комментарий успешно добавлен"),
+            @ApiResponse(code = 404, message = "У вопроса с questionId=*, не найден ответ с answerId=*")
+    })
     public ResponseEntity<?> addCommentToAnswerByQuestionIdAndAnswerId(@PathVariable("questionId") Long questionId,
                                                                        @PathVariable("answerId") Long answerId,
                                                                        @Valid @RequestBody String text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Answer answer = answerService.getById(answerId).get();
+        if (answer.getQuestion().getId() != questionId) {
+            return new ResponseEntity<>("У вопроса с ID = " + questionId + ", не найдено ответа с ID = " + answerId, HttpStatus.NOT_FOUND);
+        }
 
         CommentAnswer commentAnswer = new CommentAnswer();
         commentAnswer.setText(text);
@@ -183,7 +191,7 @@ public class AnswerResourceController {
         commentAnswer.setAnswer(answer);
         commentAnswerService.persist(commentAnswer);
 
-        return new ResponseEntity<>("юхуууу" ,HttpStatus.OK);
+        return new ResponseEntity<>("коммент добавлен" ,HttpStatus.OK);
     }
 
 }
