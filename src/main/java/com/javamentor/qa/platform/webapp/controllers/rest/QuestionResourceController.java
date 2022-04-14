@@ -10,6 +10,7 @@ import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
@@ -65,6 +66,7 @@ public class QuestionResourceController {
     private QuestionViewedService questionViewedService;
     private BookMarksService bookMarksService;
     private CommentQuestionService commentQuestionService;
+    private CommentDtoService commentDtoService;
 
     @Autowired
     public QuestionResourceController(TagService tagService,
@@ -76,7 +78,8 @@ public class QuestionResourceController {
                                       VoteOnQuestionService voteOnQuestionService,
                                       QuestionViewedService questionViewedService,
                                       BookMarksService bookMarksService,
-                                      CommentQuestionService commentQuestionService) {
+                                      CommentQuestionService commentQuestionService,
+                                      CommentDtoService commentDtoService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -87,6 +90,7 @@ public class QuestionResourceController {
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
         this.commentQuestionService = commentQuestionService;
+        this.commentDtoService = commentDtoService;
     }
 
     @GetMapping("/sortedQuestions")
@@ -422,6 +426,6 @@ public class QuestionResourceController {
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
 
-        return new ResponseEntity<>(commentQuestionService.checkMyCommentDto(id, text, sender.getId()), HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.checkMyCommentDtoByQuestionId(id) , HttpStatus.OK);
     }
 }

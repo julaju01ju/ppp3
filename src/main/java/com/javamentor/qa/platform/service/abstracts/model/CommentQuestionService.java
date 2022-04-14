@@ -1,8 +1,6 @@
 package com.javamentor.qa.platform.service.abstracts.model;
 
-import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 
 public interface CommentQuestionService extends ReadWriteService<CommentQuestion, Long> {
-    CommentDto checkMyCommentDto(Long id, String text, Long userId);
 }
