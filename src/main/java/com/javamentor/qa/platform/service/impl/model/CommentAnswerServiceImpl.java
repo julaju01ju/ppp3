@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.service.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.CommentAnswerDao;
 import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
+import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.entity.question.answer.CommentAnswer;
 import com.javamentor.qa.platform.service.abstracts.model.CommentAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +17,10 @@ public class CommentAnswerServiceImpl extends ReadWriteServiceImpl<CommentAnswer
     public CommentAnswerServiceImpl(ReadWriteDao<CommentAnswer, Long> readWriteDao, CommentAnswerDao commentAnswerDao) {
         super(readWriteDao);
         this.commentAnswerDao = commentAnswerDao;
+    }
+
+    @Override
+    public CommentDto getCommentByAnswerId(Long id) {
+        return commentAnswerDao.getCommentByAnswerId(id);
     }
 }

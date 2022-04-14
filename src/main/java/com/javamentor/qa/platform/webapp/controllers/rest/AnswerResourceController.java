@@ -191,7 +191,7 @@ public class AnswerResourceController {
         commentAnswer.setAnswer(answer);
         commentAnswerService.persist(commentAnswer);
 
-        return new ResponseEntity<>("коммент добавлен" ,HttpStatus.OK);
+        return new ResponseEntity<>(commentAnswerService.getCommentByAnswerId(answerId) ,HttpStatus.OK);
     }
 
 }
