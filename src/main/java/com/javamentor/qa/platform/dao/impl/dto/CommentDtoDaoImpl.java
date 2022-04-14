@@ -32,4 +32,21 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
                 .setParameter("id", id)
                 .getResultList();
     }
+
+    @Override
+    public CommentDto getCommentDtoByAnswerId(Long id) {
+        return entityManager.createQuery(
+                        "SELECT new com.javamentor.qa.platform.models.dto.CommentDto" +
+                                "(comment.id," +
+                                "comment.text, " +
+                                "comment.user.id, " +
+                                "comment.user.fullName, " +
+                                "(SELECT (sum(r.count)) FROM Reputation r WHERE r.author.id = comment.user.id), " +
+                                "comment.persistDateTime)" +
+                                "FROM Comment comment " +
+                                "left JOIN CommentAnswer commentAnswer ON (comment.id = commentAnswer.comment.id) " +
+                                "WHERE commentAnswer.answer.id = :id ", CommentDto.class)
+                .setParameter("id", id)
+                .getResultList().stream().reduce((e1, e2) -> e2).orElse(null);
+    }
 }

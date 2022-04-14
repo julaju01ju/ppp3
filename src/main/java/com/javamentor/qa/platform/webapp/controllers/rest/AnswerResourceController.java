@@ -8,6 +8,7 @@ import com.javamentor.qa.platform.models.entity.question.answer.CommentAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.*;
 import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
@@ -40,6 +41,7 @@ public class AnswerResourceController {
     private final ReputationService reputationService;
     private final AnswerConverter answerConverter;
     private final CommentAnswerService commentAnswerService;
+    private final CommentDtoService commentDtoService;
 
     @Autowired
     public AnswerResourceController(
@@ -50,7 +52,8 @@ public class AnswerResourceController {
             VoteOnAnswerService voteOnAnswerService,
             ReputationService reputationService,
             AnswerConverter answerConverter,
-            CommentAnswerService commentAnswerService) {
+            CommentAnswerService commentAnswerService,
+            CommentDtoService commentDtoService) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
@@ -59,6 +62,7 @@ public class AnswerResourceController {
         this.reputationService = reputationService;
         this.answerConverter = answerConverter;
         this.commentAnswerService = commentAnswerService;
+        this.commentDtoService = commentDtoService;
     }
 
     @GetMapping("/{questionId}/answer")
@@ -191,7 +195,7 @@ public class AnswerResourceController {
         commentAnswer.setAnswer(answer);
         commentAnswerService.persist(commentAnswer);
 
-        return new ResponseEntity<>(commentAnswerService.getCommentByAnswerId(answerId) ,HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getCommentDtoByAnswerId(answerId) ,HttpStatus.OK);
     }
 
 }
