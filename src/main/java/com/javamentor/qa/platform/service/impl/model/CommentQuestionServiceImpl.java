@@ -8,10 +8,8 @@ import com.javamentor.qa.platform.service.abstracts.model.CommentQuestionService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class CommentQuestionServiceImpl extends ReadWriteServiceImpl<CommentQuestion,Long> implements CommentQuestionService {
+public class CommentQuestionServiceImpl extends ReadWriteServiceImpl<CommentQuestion, Long> implements CommentQuestionService {
 
     private final CommentDtoDao commentDtoDao;
 
@@ -23,12 +21,9 @@ public class CommentQuestionServiceImpl extends ReadWriteServiceImpl<CommentQues
 
     @Override
     public CommentDto checkMyCommentDto(Long id, String text, Long userId) {
-        List<CommentDto> list = commentDtoDao.getCommentDtosByQuestionId(id);
-        for (CommentDto e : list) {
-            if ((e.getComment()).equals(text) & (e.getUserId()).equals(userId)) {
-                return e;
-            }
-        }
-        return null;
+        return commentDtoDao.getCommentDtosByQuestionId(id)
+                .stream()
+                .reduce((e1, e2) -> e2)
+                .orElse(null);
     }
 }
