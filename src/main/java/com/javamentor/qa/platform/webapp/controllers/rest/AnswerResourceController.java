@@ -171,7 +171,7 @@ public class AnswerResourceController {
     }
 
     @PostMapping("/{questionId}/answer/{answerId}/comment")
-    @ApiOperation(value = "добавление комментария к ответу по questionId=* и answerId=*")
+    @ApiOperation(value = "Добавление комментария к ответу(answerId=*) на вопрос(questionId=*)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен"),
             @ApiResponse(code = 404, message = "У вопроса с questionId=*, не найден ответ с answerId=*")
