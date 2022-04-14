@@ -1,23 +1,25 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
-import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.QuestionDto;
+import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
-import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
 import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
+import com.javamentor.qa.platform.service.abstracts.model.CommentQuestionService;
 import com.javamentor.qa.platform.webapp.converters.QuestionConverter;
 import com.javamentor.qa.platform.webapp.converters.TagConverter;
 import io.swagger.annotations.Api;
@@ -29,7 +31,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -57,8 +65,8 @@ public class QuestionResourceController {
     private VoteOnQuestionService voteOnQuestionService;
     private QuestionViewedService questionViewedService;
     private BookMarksService bookMarksService;
-    private CommentConverter commentConverter;
     private CommentQuestionService commentQuestionService;
+    private CommentDtoService commentDtoService;
 
     @Autowired
     public QuestionResourceController(TagService tagService,
@@ -70,8 +78,8 @@ public class QuestionResourceController {
                                       VoteOnQuestionService voteOnQuestionService,
                                       QuestionViewedService questionViewedService,
                                       BookMarksService bookMarksService,
-                                      CommentConverter commentConverter,
-                                      CommentQuestionService commentQuestionService) {
+                                      CommentQuestionService commentQuestionService,
+                                      CommentDtoService commentDtoService) {
         this.tagService = tagService;
         this.questionDtoService = questionDtoService;
         this.reputationService = reputationService;
@@ -81,8 +89,8 @@ public class QuestionResourceController {
         this.voteOnQuestionService = voteOnQuestionService;
         this.questionViewedService = questionViewedService;
         this.bookMarksService = bookMarksService;
-        this.commentConverter = commentConverter;
         this.commentQuestionService = commentQuestionService;
+        this.commentDtoService = commentDtoService;
     }
 
     @GetMapping("/sortedQuestions")
@@ -399,5 +407,25 @@ public class QuestionResourceController {
         bookMark.setQuestion(question.get());
         bookMarksService.persist(bookMark);
         return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/comment")
+    @ApiOperation("Добавление комментария в вопрос по questionId=*, далее посредством запроса в б/д возвращает" +
+            "данный комментарий как CommentDto")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос"),
+            @ApiResponse(code = 500, message = "Вопрос с questionId=* не найден")
+    })
+    public ResponseEntity<?> addCommentByQuestionId(@PathVariable("id") Long id, @Valid @RequestBody String text) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Question question = questionService.getById(id).get();
+
+        CommentQuestion commentQuestion = new CommentQuestion();
+        commentQuestion.setQuestion(question);
+        commentQuestion.setText(text);
+        commentQuestion.setUser(sender);
+        commentQuestionService.persist(commentQuestion);
+
+        return new ResponseEntity<>(commentDtoService.checkMyCommentDtoByQuestionId(id) , HttpStatus.OK);
     }
 }
