@@ -47,6 +47,9 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
                                 "left JOIN CommentAnswer commentAnswer ON (comment.id = commentAnswer.comment.id) " +
                                 "WHERE commentAnswer.answer.id = :id ", CommentDto.class)
                 .setParameter("id", id)
-                .getResultList().stream().reduce((e1, e2) -> e2).orElse(null);
+                .getResultList()
+                .stream()
+                .reduce((e1, e2) -> e2)
+                .orElse(null);
     }
 }
