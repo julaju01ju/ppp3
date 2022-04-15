@@ -2,6 +2,8 @@ package com.javamentor.qa.platform.service.abstracts.dto;
 
 import com.javamentor.qa.platform.models.dto.CommentDto;
 
+import java.util.List;
+
 public interface CommentDtoService {
-    CommentDto getLastAddedCommentDtoByQuestionId(Long id);
+    List<CommentDto> getCommentDtoByQuestionId(Long id);
 }
