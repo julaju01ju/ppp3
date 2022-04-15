@@ -205,8 +205,9 @@ public class AnswerResourceController {
         commentAnswer.setUser(sender);
         commentAnswer.setAnswer(answer);
         commentAnswerService.persist(commentAnswer);
+        Long commentId = commentAnswer.getComment().getId();
 
-        return new ResponseEntity<>(commentDtoService.getLastAddedCommentDtoByAnswerId(answerId) ,HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(commentId) ,HttpStatus.OK);
     }
 
 }
