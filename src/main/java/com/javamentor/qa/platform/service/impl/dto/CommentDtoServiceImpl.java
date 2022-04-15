@@ -6,6 +6,8 @@ import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentDtoServiceImpl implements CommentDtoService {
 
@@ -17,10 +19,7 @@ public class CommentDtoServiceImpl implements CommentDtoService {
     }
 
     @Override
-    public CommentDto getLastAddedCommentDtoByQuestionId(Long id) {
-        return commentDtoDao.getCommentDtosByQuestionId(id)
-                .stream()
-                .reduce((e1, e2) -> e2)
-                .orElse(null);
+    public List<CommentDto> getCommentDtoByQuestionId(Long id) {
+        return commentDtoDao.getCommentDtosByQuestionId(id);
     }
 }
