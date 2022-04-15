@@ -1614,12 +1614,12 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {
-            "dataset/QuestionResourceController/checkAddCommentByQuestionId/users.yml",
-            "dataset/QuestionResourceController/checkAddCommentByQuestionId/role.yml",
-            "dataset/QuestionResourceController/checkAddCommentByQuestionId/questions.yml",
-            "dataset/QuestionResourceController/checkAddCommentByQuestionId/reputations.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
     })
-    public void checkAddCommentByQuestionId() throws Exception {
+    public void addCommentByQuestionId() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
         String text = "В любой не понятной ситуации пей чай =)";
 
@@ -1633,6 +1633,13 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.comment").value("\"В любой не понятной ситуации пей чай =)\""))
                 .andExpect(jsonPath("$.userId").value(100))
                 .andExpect(jsonPath("$.fullName").value("USER"))
-                .andExpect(jsonPath("$.reputation").value(15));
+                .andExpect(jsonPath("$.reputation").value(5));
+
+        mockMvc.perform(post("/api/user/question/103/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }

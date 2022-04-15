@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.NoSuchElementException;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -414,18 +415,22 @@ public class QuestionResourceController {
             "данный комментарий как CommentDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос"),
-            @ApiResponse(code = 500, message = "Вопрос с questionId=* не найден")
+            @ApiResponse(code = 404, message = "Вопрос с данным ID не найден.")
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("id") Long id, @Valid @RequestBody String text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Question question = questionService.getById(id).get();
-
+        Question question;
+        try {
+            question = questionService.getById(id).get();
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Вопрос с данным ID = " + id + ", не найден.", HttpStatus.NOT_FOUND);
+        }
         CommentQuestion commentQuestion = new CommentQuestion();
         commentQuestion.setQuestion(question);
         commentQuestion.setText(text);
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
 
-        return new ResponseEntity<>(commentDtoService.checkMyCommentDtoByQuestionId(id) , HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getLastAddedCommentDtoByQuestionId(id) , HttpStatus.OK);
     }
 }

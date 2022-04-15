@@ -1,9 +1,0 @@
-reputation:
-  - id: 102
-    count: 15
-    persist_date: 2021-12-06 00:00:00
-    type: 102
-    answer_id:
-    author_id: 100
-    question_id: 100
-    sender_id: 100

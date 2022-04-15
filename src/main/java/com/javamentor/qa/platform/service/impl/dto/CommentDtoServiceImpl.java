@@ -17,7 +17,7 @@ public class CommentDtoServiceImpl implements CommentDtoService {
     }
 
     @Override
-    public CommentDto checkMyCommentDtoByQuestionId(Long id) {
+    public CommentDto getLastAddedCommentDtoByQuestionId(Long id) {
         return commentDtoDao.getCommentDtosByQuestionId(id)
                 .stream()
                 .reduce((e1, e2) -> e2)
