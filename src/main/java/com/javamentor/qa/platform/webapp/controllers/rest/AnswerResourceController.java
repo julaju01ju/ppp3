@@ -206,7 +206,7 @@ public class AnswerResourceController {
         commentAnswer.setAnswer(answer);
         commentAnswerService.persist(commentAnswer);
 
-        return new ResponseEntity<>(commentDtoService.getCommentDtoByAnswerId(answerId) ,HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getLastAddedCommentDtoByAnswerId(answerId) ,HttpStatus.OK);
     }
 
 }

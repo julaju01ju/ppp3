@@ -3,5 +3,5 @@ package com.javamentor.qa.platform.service.abstracts.dto;
 import com.javamentor.qa.platform.models.dto.CommentDto;
 
 public interface CommentDtoService {
-    CommentDto getCommentDtoByAnswerId(Long id);
+    CommentDto getLastAddedCommentDtoByAnswerId(Long id);
 }

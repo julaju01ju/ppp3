@@ -17,7 +17,7 @@ public class CommentDtoServiceImpl implements CommentDtoService {
     }
 
     @Override
-    public CommentDto getCommentDtoByAnswerId(Long id) {
-        return commentDtoDao.getCommentDtoByAnswerId(id);
+    public CommentDto getLastAddedCommentDtoByAnswerId(Long id) {
+        return commentDtoDao.getLastAddedCommentDtoByAnswerId(id);
     }
 }

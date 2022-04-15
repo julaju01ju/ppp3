@@ -34,7 +34,7 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
     }
 
     @Override
-    public CommentDto getCommentDtoByAnswerId(Long id) {
+    public CommentDto getLastAddedCommentDtoByAnswerId(Long id) {
         return entityManager.createQuery(
                         "SELECT new com.javamentor.qa.platform.models.dto.CommentDto" +
                                 "(comment.id," +

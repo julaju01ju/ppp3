@@ -265,7 +265,6 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/reputations.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addCommentToAnswerByQuestionIdAndAnswerId() throws Exception {
-
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         String text = "Не знаешь че делать пей чай xD";
 
@@ -278,6 +277,36 @@ public class TestAnswerResourceController
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.comment").value("\"Не знаешь че делать пей чай xD\""))
+                .andExpect(jsonPath("$.userId").value(101))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.reputation").value(102));
+
+        String text1 = "типо коммент";
+
+        mockMvc.perform(post("/api/user/question/102/answer/102/comment")
+                        .content(new ObjectMapper().writeValueAsString(text1))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.comment").value("\"типо коммент\""))
+                .andExpect(jsonPath("$.userId").value(101))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.reputation").value(102));
+
+        String text2 = "java java java";
+
+        mockMvc.perform(post("/api/user/question/102/answer/103/comment")
+                        .content(new ObjectMapper().writeValueAsString(text2))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(3))
+                .andExpect(jsonPath("$.comment").value("\"java java java\""))
                 .andExpect(jsonPath("$.userId").value(101))
                 .andExpect(jsonPath("$.fullName").value("USER"))
                 .andExpect(jsonPath("$.reputation").value(102));
