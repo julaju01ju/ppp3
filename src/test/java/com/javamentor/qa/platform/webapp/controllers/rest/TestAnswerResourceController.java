@@ -264,7 +264,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
     }, disableConstraints = true, cleanBefore = true)
-    public void checkAddCommentToAnswerByQuestionIdAndAnswerId() throws Exception {
+    public void addCommentToAnswerByQuestionIdAndAnswerId() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru","USER");
         String text = "Не знаешь че делать пей чай xD";
@@ -281,5 +281,49 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$.userId").value(101))
                 .andExpect(jsonPath("$.fullName").value("USER"))
                 .andExpect(jsonPath("$.reputation").value(102));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addCommentToAnswerByQuestionIdAndAnswerIdNotFound() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+        String text = "коммент";
+
+        mockMvc.perform(post("/api/user/question/1000/answer/1000/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/user/question/102/answer/1000/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/user/question/1000/answer/102/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/user/question/103/answer/102/comment")
+                        .content(new ObjectMapper().writeValueAsString(text))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }
