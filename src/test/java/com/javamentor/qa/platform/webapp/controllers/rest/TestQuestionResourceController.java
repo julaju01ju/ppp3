@@ -1620,20 +1620,55 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
     })
     public void addCommentByQuestionId() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
-        String text = "В любой не понятной ситуации пей чай =)";
+        String USER_TOKEN1 = getToken("user@mail.ru", "USER");
+        String text1 = "В любой не понятной ситуации пей чай =)";
 
         mockMvc.perform(post("/api/user/question/100/comment")
-                        .content(new ObjectMapper().writeValueAsString(text))
+                        .content(new ObjectMapper().writeValueAsString(text1))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN1))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.comment").value("\"В любой не понятной ситуации пей чай =)\""))
-                .andExpect(jsonPath("$.userId").value(100))
-                .andExpect(jsonPath("$.fullName").value("USER"))
-                .andExpect(jsonPath("$.reputation").value(5));
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].comment").value("\"В любой не понятной ситуации пей чай =)\""))
+                .andExpect(jsonPath("$[0].userId").value(100))
+                .andExpect(jsonPath("$[0].fullName").value("USER"))
+                .andExpect(jsonPath("$[0].reputation").value(5))
+                .andExpect(jsonPath("$.size()").value(1));
+
+        String USER_TOKEN2 = getToken("user1@mail.ru", "USER");
+        String text2 = "У лукоморья дуб зеленый, златая цепь на дубе том.";
+
+        mockMvc.perform(post("/api/user/question/100/comment")
+                        .content(new ObjectMapper().writeValueAsString(text2))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN2))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[1].id").value(1))
+                .andExpect(jsonPath("$[1].comment").value("\"В любой не понятной ситуации пей чай =)\""))
+                .andExpect(jsonPath("$[1].userId").value(100))
+                .andExpect(jsonPath("$[1].fullName").value("USER"))
+                .andExpect(jsonPath("$[1].reputation").value(5))
+
+                .andExpect(jsonPath("$[0].id").value(2))
+                .andExpect(jsonPath("$[0].comment").value("\"У лукоморья дуб зеленый, златая цепь на дубе том.\""))
+                .andExpect(jsonPath("$[0].userId").value(101))
+                .andExpect(jsonPath("$[0].fullName").value("USER1"))
+                .andExpect(jsonPath("$[0].reputation").value(10))
+                .andExpect(jsonPath("$.size()").value(2));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
+            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+    })
+    public void addCommentByQuestionIdNotFound() throws Exception {
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String text = "В любой не понятной ситуации пей чай =)";
 
         mockMvc.perform(post("/api/user/question/103/comment")
                         .content(new ObjectMapper().writeValueAsString(text))
