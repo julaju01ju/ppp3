@@ -415,21 +415,25 @@ public class QuestionResourceController {
             "данный комментарий как CommentDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос."),
-            @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден.")
+            @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден."),
+            @ApiResponse(code = 404, message = "Пустой комментарий.")
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("questionId") Long questionId,
-                                                    @Valid @RequestBody String text) {
+                                                    @Valid @RequestBody Optional<String> text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Question question;
-        try {
-            question = questionService.getById(questionId).get();
-        } catch (NoSuchElementException e) {
+        Optional<Question> question = questionService.getById(questionId);
+
+        if (question.isEmpty()) {
             return new ResponseEntity<>("Вопрос с данным ID = " + questionId + ", не найден.", HttpStatus.NOT_FOUND);
         }
 
+        if (text.isEmpty()) {
+            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
+        }
+
         CommentQuestion commentQuestion = new CommentQuestion();
-        commentQuestion.setQuestion(question);
-        commentQuestion.setText(text);
+        commentQuestion.setQuestion(question.get());
+        commentQuestion.setText(text.get());
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
 
