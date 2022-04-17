@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CommentDtoDao {
     List<CommentDto> getCommentDtosByQuestionId(Long id);
+    CommentDto getCommentDtoByCommentId(Long id);
 }

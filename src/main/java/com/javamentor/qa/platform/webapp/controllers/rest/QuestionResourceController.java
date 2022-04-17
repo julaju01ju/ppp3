@@ -46,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.NoSuchElementException;
 
 /**
  * @author Ali Veliev 10.12.2021
@@ -436,7 +435,8 @@ public class QuestionResourceController {
         commentQuestion.setText(text.get());
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
+        Long answerId = commentQuestion.getComment().getId();
 
-        return new ResponseEntity<>(commentDtoService.getCommentDtoByQuestionId(questionId) , HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(answerId) , HttpStatus.OK);
     }
 }
