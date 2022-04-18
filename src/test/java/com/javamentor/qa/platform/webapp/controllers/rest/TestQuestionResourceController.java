@@ -1621,10 +1621,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     })
     public void addCommentByQuestionId() throws Exception {
         String USER_TOKEN1 = getToken("user@mail.ru", "USER");
-        String text1 = "В любой не понятной ситуации пей чай =)";
 
         mockMvc.perform(post("/api/user/question/100/comment")
-                        .content(text1)
+                        .content("В любой не понятной ситуации пей чай =)")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, USER_TOKEN1))
                 .andDo(print())
@@ -1636,10 +1635,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.reputation").value(5));
 
         String USER_TOKEN2 = getToken("user1@mail.ru", "USER");
-        String text2 = "У лукоморья дуб зеленый, златая цепь на дубе том.";
 
         mockMvc.perform(post("/api/user/question/100/comment")
-                        .content(text2)
+                        .content("У лукоморья дуб зеленый, златая цепь на дубе том.")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, USER_TOKEN2))
                 .andDo(print())
@@ -1661,10 +1659,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     })
     public void addCommentByQuestionIdNotFound() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
-        String text = "В любой не понятной ситуации пей чай =)";
 
         mockMvc.perform(post("/api/user/question/103/comment")
-                        .content(text)
+                        .content("В любой не понятной ситуации пей чай =)")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -1679,10 +1676,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     })
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
-        String text = "";
 
         mockMvc.perform(post("/api/user/question/102/comment")
-                        .content(text)
+                        .content("")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
