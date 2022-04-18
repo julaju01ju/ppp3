@@ -343,7 +343,7 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/reputations.yml",
     }, disableConstraints = true, cleanBefore = true)
-    public void addCommentToAnswerByQuestionIdAndAnswerIdBadRequest() throws Exception {
+    public void addCommentEmptyToAnswerByQuestionIdAndAnswerIdBadRequest() throws Exception {
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
 
         mockMvc.perform(post("/api/user/question/103/answer/102/comment")

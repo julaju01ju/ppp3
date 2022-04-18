@@ -191,22 +191,18 @@ public class AnswerResourceController {
                                                                        @PathVariable("answerId") Long answerId,
                                                                        @Valid @RequestBody Optional<String> text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-
         Optional<Answer> answer = answerService.getById(answerId);
         Optional<Question> question = questionService.getById(questionId);
 
         if (question.isEmpty()) {
             return new ResponseEntity<>("Не найден вопрос с ID = " + questionId + ".", HttpStatus.NOT_FOUND);
         }
-
         if (answer.isEmpty()) {
             return new ResponseEntity<>("Не найден ответ с ID = " + answerId + ".", HttpStatus.NOT_FOUND);
         }
-
         if (answer.get().getQuestion().getId() != questionId) {
             return new ResponseEntity<>("Ответ с answerId=* не связан с вопросом под questionId=*.", HttpStatus.BAD_REQUEST);
         }
-
         if (text.isEmpty()) {
             return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
         }
