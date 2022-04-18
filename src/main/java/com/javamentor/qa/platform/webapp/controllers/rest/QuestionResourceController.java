@@ -415,7 +415,7 @@ public class QuestionResourceController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос."),
             @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден."),
-            @ApiResponse(code = 404, message = "Пустой комментарий.")
+            @ApiResponse(code = 400, message = "Пустой комментарий.")
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("questionId") Long questionId,
                                                     @Valid @RequestBody Optional<String> text) {
