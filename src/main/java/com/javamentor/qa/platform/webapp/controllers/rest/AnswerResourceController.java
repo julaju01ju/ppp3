@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.javamentor.qa.platform.models.entity.question.answer.VoteType.DOWN_VOTE;
@@ -183,31 +182,42 @@ public class AnswerResourceController {
     @ApiOperation(value = "Добавление комментария к ответу(answerId=*) на вопрос(questionId=*)")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен"),
-            @ApiResponse(code = 404, message = "У вопроса с questionId=* не найден ответ с answerId=*, либо ответ с answerId=* не существует.")
+            @ApiResponse(code = 404, message = "Не найден вопрос с questionId=*, " +
+                                                "либо не найден ответ с answerId=* " +
+                                                "или же ответ с answerId=* не связан с вопросом под questionId=*."),
+            @ApiResponse(code = 400, message = "Комментарий не может быть пустым.")
     })
     public ResponseEntity<?> addCommentToAnswerByQuestionIdAndAnswerId(@PathVariable("questionId") Long questionId,
                                                                        @PathVariable("answerId") Long answerId,
-                                                                       @Valid @RequestBody String text) {
+                                                                       @Valid @RequestBody Optional<String> text) {
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Answer answer;
-        try {
-            answer = answerService.getById(answerId).get();
-            if (answer.getQuestion().getId() != questionId) {
-                return new ResponseEntity<>("У вопроса с ID = " + questionId + ", не найдено ответа с ID = " + answerId +
-                        ". Либо вопрос с ID = " + questionId + ", не существует.", HttpStatus.NOT_FOUND);
-            }
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>("Ответ с ID = " + answerId + ", не существует.", HttpStatus.NOT_FOUND);
+
+        Optional<Answer> answer = answerService.getById(answerId);
+        Optional<Question> question = questionService.getById(questionId);
+
+        if (question.isEmpty()) {
+            return new ResponseEntity<>("Не найден вопрос с ID = " + questionId + ".", HttpStatus.NOT_FOUND);
+        }
+
+        if (answer.isEmpty()) {
+            return new ResponseEntity<>("Не найден ответ с ID = " + answerId + ".", HttpStatus.NOT_FOUND);
+        }
+
+        if (text.isEmpty()) {
+            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
+        }
+
+        if (answer.get().getQuestion().getId() != questionId) {
+            return new ResponseEntity<>("Ответ с answerId=* не связан с вопросом под questionId=*.", HttpStatus.BAD_REQUEST);
         }
 
         CommentAnswer commentAnswer = new CommentAnswer();
-        commentAnswer.setText(text);
+        commentAnswer.setText(text.get());
         commentAnswer.setUser(sender);
-        commentAnswer.setAnswer(answer);
+        commentAnswer.setAnswer(answer.get());
         commentAnswerService.persist(commentAnswer);
         Long commentId = commentAnswer.getComment().getId();
 
         return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(commentId) ,HttpStatus.OK);
     }
-
 }
