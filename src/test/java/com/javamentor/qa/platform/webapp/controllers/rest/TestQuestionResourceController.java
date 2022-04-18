@@ -1679,8 +1679,10 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     })
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String text = "";
 
         mockMvc.perform(post("/api/user/question/102/comment")
+                        .content(text)
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())

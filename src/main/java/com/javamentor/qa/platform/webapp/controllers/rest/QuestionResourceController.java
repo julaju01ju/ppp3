@@ -435,8 +435,8 @@ public class QuestionResourceController {
         commentQuestion.setText(text.get());
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
-        Long answerId = commentQuestion.getComment().getId();
+        Long commentId = commentQuestion.getComment().getId();
 
-        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(answerId) , HttpStatus.OK);
+        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(commentId) , HttpStatus.OK);
     }
 }
