@@ -203,12 +203,12 @@ public class AnswerResourceController {
             return new ResponseEntity<>("Не найден ответ с ID = " + answerId + ".", HttpStatus.NOT_FOUND);
         }
 
-        if (text.isEmpty()) {
-            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
-        }
-
         if (answer.get().getQuestion().getId() != questionId) {
             return new ResponseEntity<>("Ответ с answerId=* не связан с вопросом под questionId=*.", HttpStatus.BAD_REQUEST);
+        }
+
+        if (text.isEmpty()) {
+            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
         }
 
         CommentAnswer commentAnswer = new CommentAnswer();
