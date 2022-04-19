@@ -44,8 +44,7 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
                                 "comment.user.fullName, " +
                                 "(SELECT (sum(r.count)) FROM Reputation r WHERE r.author.id = comment.user.id), " +
                                 "comment.persistDateTime)" +
-                                "FROM Comment comment WHERE comment.id = :id ",
-                        CommentDto.class)
+                                "FROM Comment comment WHERE comment.id = :id ", CommentDto.class)
                 .setParameter("id", id)
                 .getResultStream()
                 .findAny();
