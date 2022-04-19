@@ -185,6 +185,7 @@ public class AnswerResourceController {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен"),
             @ApiResponse(code = 404, message = "Не найден вопрос с questionId=*, " +
                                                 "либо не найден ответ с answerId=* " +
+                                                "либо не найден комментарий с сommentId=* " +
                                                 "или же ответ с answerId=* не связан с вопросом под questionId=*."),
             @ApiResponse(code = 400, message = "Комментарий не может быть пустым.")
     })
