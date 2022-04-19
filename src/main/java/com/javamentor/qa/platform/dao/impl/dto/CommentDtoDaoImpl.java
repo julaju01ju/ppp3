@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CommentDtoDaoImpl implements CommentDtoDao {
@@ -31,5 +32,21 @@ public class CommentDtoDaoImpl implements CommentDtoDao {
                         , CommentDto.class)
                 .setParameter("id", id)
                 .getResultList();
+    }
+
+    @Override
+    public Optional<CommentDto> getCommentDtoByCommentId(Long id) {
+        return entityManager.createQuery(
+                        "SELECT new com.javamentor.qa.platform.models.dto.CommentDto" +
+                                "(comment.id," +
+                                "comment.text, " +
+                                "comment.user.id, " +
+                                "comment.user.fullName, " +
+                                "(SELECT (sum(r.count)) FROM Reputation r WHERE r.author.id = comment.user.id), " +
+                                "comment.persistDateTime)" +
+                                "FROM Comment comment WHERE comment.id = :id ", CommentDto.class)
+                .setParameter("id", id)
+                .getResultStream()
+                .findAny();
     }
 }
