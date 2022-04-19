@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.CommentAnswer;
@@ -213,7 +214,10 @@ public class AnswerResourceController {
         commentAnswer.setAnswer(answer.get());
         commentAnswerService.persist(commentAnswer);
         Long commentId = commentAnswer.getComment().getId();
+        Optional<CommentDto> optComDto = commentDtoService.getCommentDtoByCommentId(commentId);
 
-        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(commentId) ,HttpStatus.OK);
+        return optComDto.isEmpty() ?
+                new ResponseEntity<> ("Комментарий с ID = " + commentId + ", не найден.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(optComDto, HttpStatus.OK);
     }
 }

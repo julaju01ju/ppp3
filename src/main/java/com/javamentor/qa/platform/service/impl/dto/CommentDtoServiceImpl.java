@@ -6,6 +6,9 @@ import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.util.Optional;
+
 @Service
 public class CommentDtoServiceImpl implements CommentDtoService {
 
@@ -16,8 +19,9 @@ public class CommentDtoServiceImpl implements CommentDtoService {
         this.commentDtoDao = commentDtoDao;
     }
 
+    @Transactional
     @Override
-    public CommentDto getCommentDtoByCommentId(Long id) {
+    public Optional<CommentDto> getCommentDtoByCommentId(Long id) {
         return commentDtoDao.getCommentDtoByCommentId(id);
     }
 }
