@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -408,7 +409,8 @@ public class QuestionResourceController {
             "данный комментарий как CommentDto")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос."),
-            @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден."),
+            @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден." +
+                                                "Либо комментарий с commentId=* не найден."),
             @ApiResponse(code = 400, message = "Пустой комментарий.")
     })
     public ResponseEntity<?> addCommentByQuestionId(@PathVariable("questionId") Long questionId,
@@ -430,7 +432,10 @@ public class QuestionResourceController {
         commentQuestion.setUser(sender);
         commentQuestionService.persist(commentQuestion);
         Long commentId = commentQuestion.getComment().getId();
+        Optional<CommentDto> optComDto = commentDtoService.getCommentDtoByCommentId(commentId);
 
-        return new ResponseEntity<>(commentDtoService.getCommentDtoByCommentId(commentId) , HttpStatus.OK);
+        return optComDto.isEmpty() ?
+                new ResponseEntity<>("Комментарий с ID = " + commentId + ", не найден.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(optComDto, HttpStatus.OK);
     }
 }
