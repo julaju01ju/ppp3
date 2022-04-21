@@ -33,4 +33,14 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer,Long> implements Answ
                 .setParameter("userId", userId);
         return SingleResultUtil.getSingleResultOrNull(typedQuery).isEmpty();
     }
+
+    @Override
+    public Boolean isAnswerExistInQuestion(Long answerId, Long questionId) {
+        TypedQuery<Answer> typedQuery = entityManager.createQuery(
+                "select a from Answer a where a.id = :answerId and a.question.id = :questionId",
+                Answer.class)
+                .setParameter("answerId", answerId)
+                .setParameter("questionId", questionId);
+        return SingleResultUtil.getSingleResultOrNull(typedQuery).isEmpty();
+    }
 }

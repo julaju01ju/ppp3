@@ -29,4 +29,8 @@ public class AnswerServiceImpl extends ReadWriteServiceImpl<Answer, Long> implem
         return answerDao.getIfNotExists(questionId, userId);
     }
 
+    @Override
+    public Boolean isAnswerExistInQuestion(Long answerId, Long questionId) {
+        return answerDao.isAnswerExistInQuestion(answerId, questionId);
+    }
 }
