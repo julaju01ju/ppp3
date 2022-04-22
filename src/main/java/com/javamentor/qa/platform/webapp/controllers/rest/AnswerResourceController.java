@@ -2,16 +2,20 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.entity.question.answer.CommentAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.CommentDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
 import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
 import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.CommentAnswerService;
 import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,8 @@ public class AnswerResourceController {
     private final VoteOnAnswerService voteOnAnswerService;
     private final ReputationService reputationService;
     private final AnswerConverter answerConverter;
+    private final CommentAnswerService commentAnswerService;
+    private final CommentDtoService commentDtoService;
 
     @Autowired
     public AnswerResourceController(
@@ -50,7 +56,9 @@ public class AnswerResourceController {
             QuestionService questionService,
             VoteOnAnswerService voteOnAnswerService,
             ReputationService reputationService,
-            AnswerConverter answerConverter ) {
+            AnswerConverter answerConverter,
+            CommentAnswerService commentAnswerService,
+            CommentDtoService commentDtoService) {
         this.answerDtoService = answerDtoService;
         this.answerService = answerService;
         this.userDtoService = userDtoService;
@@ -58,6 +66,8 @@ public class AnswerResourceController {
         this.voteOnAnswerService = voteOnAnswerService;
         this.reputationService = reputationService;
         this.answerConverter = answerConverter;
+        this.commentAnswerService = commentAnswerService;
+        this.commentDtoService = commentDtoService;
     }
 
     @GetMapping("/{questionId}/answer")
@@ -169,4 +179,46 @@ public class AnswerResourceController {
         return new ResponseEntity<>("Вопрос c questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND);
     }
 
+    @PostMapping("/{questionId}/answer/{answerId}/comment")
+    @ApiOperation(value = "Добавление комментария к ответу(answerId=*) на вопрос(questionId=*)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Комментарий успешно добавлен"),
+            @ApiResponse(code = 404, message = "Не найден вопрос с questionId=*, " +
+                                                "либо не найден ответ с answerId=* " +
+                                                "либо не найден комментарий с сommentId=* " +
+                                                "или же ответ с answerId=* не связан с вопросом под questionId=*."),
+            @ApiResponse(code = 400, message = "Комментарий не может быть пустым.")
+    })
+    public ResponseEntity<?> addCommentToAnswerByQuestionIdAndAnswerId(@PathVariable("questionId") Long questionId,
+                                                                       @PathVariable("answerId") Long answerId,
+                                                                       @Valid @RequestBody Optional<String> text) {
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<Answer> answer = answerService.getById(answerId);
+        Optional<Question> question = questionService.getById(questionId);
+
+        if (question.isEmpty()) {
+            return new ResponseEntity<>("Не найден вопрос с ID = " + questionId + ".", HttpStatus.NOT_FOUND);
+        }
+        if (answer.isEmpty()) {
+            return new ResponseEntity<>("Не найден ответ с ID = " + answerId + ".", HttpStatus.NOT_FOUND);
+        }
+        if (answerService.isAnswerExistInQuestion(answerId, questionId)) {
+            return new ResponseEntity<>("Ответ с answerId=* не связан с вопросом под questionId=*.", HttpStatus.BAD_REQUEST);
+        }
+        if (text.isEmpty()) {
+            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
+        }
+
+        CommentAnswer commentAnswer = new CommentAnswer();
+        commentAnswer.setText(text.get());
+        commentAnswer.setUser(sender);
+        commentAnswer.setAnswer(answer.get());
+        commentAnswerService.persist(commentAnswer);
+        Long commentId = commentAnswer.getComment().getId();
+        Optional<CommentDto> optComDto = commentDtoService.getCommentDtoByCommentId(commentId);
+
+        return optComDto.isEmpty() ?
+                new ResponseEntity<> ("Комментарий с ID = " + commentId + ", не найден.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(optComDto, HttpStatus.OK);
+    }
 }

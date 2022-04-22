@@ -256,4 +256,108 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].userId").value(101));
 
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addCommentToAnswerByQuestionIdAndAnswerId() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(post("/api/user/question/102/answer/102/comment")
+                        .content("Не знаешь че делать пей чай xD")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.comment").value("Не знаешь че делать пей чай xD"))
+                .andExpect(jsonPath("$.userId").value(101))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.reputation").value(102));
+
+        mockMvc.perform(post("/api/user/question/102/answer/103/comment")
+                        .content("типо коммент")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2))
+                .andExpect(jsonPath("$.comment").value("типо коммент"))
+                .andExpect(jsonPath("$.userId").value(101))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.reputation").value(102));
+
+        mockMvc.perform(post("/api/user/question/102/answer/104/comment")
+                        .content("java java java")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(3))
+                .andExpect(jsonPath("$.comment").value("java java java"))
+                .andExpect(jsonPath("$.userId").value(101))
+                .andExpect(jsonPath("$.fullName").value("USER"))
+                .andExpect(jsonPath("$.reputation").value(102));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addCommentToAnswerByQuestionIdAndAnswerIdNotFoundId() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru","USER");
+
+        mockMvc.perform(post("/api/user/question/1000/answer/102/comment")
+                        .content("коммент")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/user/question/102/answer/1000/comment")
+                        .content("коммент")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(post("/api/user/question/1000/answer/1000/comment")
+                        .content("коммент")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/AnswerResourceController/users.yml",
+            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addCommentEmptyToAnswerByQuestionIdAndAnswerIdBadRequest() throws Exception {
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(post("/api/user/question/103/answer/102/comment")
+                .content("Коммент")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/user/question/102/answer/102/comment")
+                        .content("")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
 }
