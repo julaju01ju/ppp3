@@ -43,7 +43,8 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "coalesce((select sum(case v.vote  when 'UP_VOTE' then 1 else -1 end) from VoteQuestion v where v.question.id=q.id), 0), " +
                                 "(select count(qv.id) from QuestionViewed qv where qv.question.id = q.id), " +
                                 "(select count(a.id) from Answer a where a.question.id = q.id), " +
-                                "(select quv.vote from VoteQuestion quv where quv.question.id = q.id and quv.user.id =:userId) " +
+                                "(select quv.vote from VoteQuestion quv where quv.question.id = q.id and quv.user.id =:userId), " +
+                                "(select count(b) from BookMarks b where b.question.id = :id and b.user.id = :userId) " +
                                 "from Question q " +
                                 "LEFT join q.user u " +
                                 "where q.id =:id")
@@ -69,6 +70,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setViewCount(((Long) tuple[10]).intValue());
                                               questionDto.setCountAnswer(((Long) tuple[11]).intValue());
                                               questionDto.setIsUserVote((Enum<VoteType>) tuple[12]);
+                                              questionDto.setIsUserBookmark(tuple[13].equals(1L));
 
                                               return questionDto;
                                           }

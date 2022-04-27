@@ -212,7 +212,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml"
+            "dataset/QuestionResourceController/comment_question.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionById() throws Exception {
@@ -254,7 +255,66 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
                 .andExpect(jsonPath("$.listCommentDto[2].id").value(103))
                 .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
-                .andExpect(jsonPath("$.listCommentDto[2].userId").value(103));
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(103))
+                .andExpect(jsonPath("$.isUserBookmark").value(true));
+
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/comment.yml",
+            "dataset/QuestionResourceController/comment_question.yml",
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionByIdNotIsUserBookMarks() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(
+                        get("/api/user/question/101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(101))
+                .andExpect(jsonPath("$.title").value("title"))
+                .andExpect(jsonPath("$.description").value("description to 101"))
+                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.persistDateTime").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$.authorId").value(101))
+                .andExpect(jsonPath("$.authorName").value("Constantin"))
+                .andExpect(jsonPath("$.authorImage").value("link"))
+                .andExpect(jsonPath("$.authorReputation").value(50))
+                .andExpect(jsonPath("$.viewCount").value(0))
+                .andExpect(jsonPath("$.countValuable").value(2))
+                .andExpect(jsonPath("$.countAnswer").value(1))
+                .andExpect(jsonPath("$.isUserVote").value("UP_VOTE"))
+
+                .andExpect(jsonPath("$.listTagDto.[0].id").value(101))
+                .andExpect(jsonPath("$.listTagDto.[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.listTagDto.[1].id").value(108))
+                .andExpect(jsonPath("$.listTagDto.[1].name").value("TAG108"))
+                .andExpect(jsonPath("$.listTagDto.[2].id").value(109))
+                .andExpect(jsonPath("$.listTagDto.[2].name").value("TAG109"))
+
+                .andExpect(jsonPath("$.listCommentDto[0].id").value(105))
+                .andExpect(jsonPath("$.listCommentDto[0].comment").value("Some text of comment 105"))
+                .andExpect(jsonPath("$.listCommentDto[0].userId").value(103))
+                .andExpect(jsonPath("$.listCommentDto[1].id").value(104))
+                .andExpect(jsonPath("$.listCommentDto[1].comment").value("Some text of comment 104"))
+                .andExpect(jsonPath("$.listCommentDto[1].userId").value(102))
+                .andExpect(jsonPath("$.listCommentDto[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$.listCommentDto[2].id").value(103))
+                .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
+                .andExpect(jsonPath("$.listCommentDto[2].userId").value(103))
+                .andExpect(jsonPath("$.isUserBookmark").value(false));
 
     }
 
