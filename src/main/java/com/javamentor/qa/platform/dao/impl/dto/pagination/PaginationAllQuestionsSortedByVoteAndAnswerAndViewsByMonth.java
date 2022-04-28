@@ -3,6 +3,8 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
+import com.javamentor.qa.platform.models.entity.user.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -50,6 +52,9 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
                                 "(SELECT coalesce(count(qv.id), 0) FROM question_viewed qv " +
                                 "   WHERE qv.question_id = q.id) AS views, " +
 
+                                "(SELECT CASE WHEN b.question_id = q.id AND b.user_id = :userId " +
+                                "   THEN 1 ELSE 0 END AS is_user_bookmark FROM bookmarks b LIMIT 1 OFFSET q.id-1), " +
+
                                 "(SELECT coalesce(count(up.vote), 0) FROM votes_on_questions up " +
                                 "   WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
                                 "- " +
@@ -83,6 +88,7 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
                                 "ORDER BY questionByMonth desc ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
+                .setParameter("userId", ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
