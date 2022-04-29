@@ -161,7 +161,7 @@ public class QuestionResourceController {
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
-        Optional<QuestionDto> questionDto = questionDtoService.getQuestionById(questionId, userId);
+        Optional<QuestionDto> questionDto = questionDtoService.getQuestionByQuestionIdAndUserId(questionId, userId);
         return questionDto.isEmpty()
                 ? new ResponseEntity<>("Вопрос с questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(questionDto, HttpStatus.OK);

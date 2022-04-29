@@ -28,7 +28,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<QuestionDto> getQuestionById(Long id, Long userId) {
+    public Optional<QuestionDto> getQuestionByQuestionIdAndUserId(Long questionId, Long userId) {
 
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select q.id, " +
@@ -44,11 +44,11 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "(select count(qv.id) from QuestionViewed qv where qv.question.id = q.id), " +
                                 "(select count(a.id) from Answer a where a.question.id = q.id), " +
                                 "(select quv.vote from VoteQuestion quv where quv.question.id = q.id and quv.user.id =:userId), " +
-                                "(select count(b) from BookMarks b where b.question.id = :id and b.user.id = :userId) " +
+                                "(select count(b) from BookMarks b where b.question.id = :questionId and b.user.id = :userId) " +
                                 "from Question q " +
                                 "LEFT join q.user u " +
-                                "where q.id =:id")
-                .setParameter("id", id)
+                                "where q.id =:questionId")
+                .setParameter("questionId", questionId)
                 .setParameter("userId", userId)
                 .unwrap(Query.class)
                 .setResultTransformer(new ResultTransformer() {
