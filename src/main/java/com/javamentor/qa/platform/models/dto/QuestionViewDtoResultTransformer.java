@@ -37,7 +37,7 @@ public class QuestionViewDtoResultTransformer implements ResultTransformer {
                     questionViewDtoTemp.setCountAnswer(((BigInteger) tuple[10]).intValue());
                     questionViewDtoTemp.setViewCount(((BigInteger) tuple[11]).intValue());
                     questionViewDtoTemp.setListTagDto(new ArrayList<>());
-                    questionViewDtoTemp.setIsUserBookMarks(tuple[12].equals(1));
+                    questionViewDtoTemp.setIsUserBookMarks(tuple[12].equals(new BigInteger("1")));
 
                     return questionViewDtoTemp;
                 }

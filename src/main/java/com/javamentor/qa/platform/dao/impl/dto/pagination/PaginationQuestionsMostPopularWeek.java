@@ -50,8 +50,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         "(SELECT coalesce(count(qv.id), 0) FROM question_viewed qv " +
                         "   WHERE qv.question_id = q.id) AS views, " +
 
-                        "(SELECT CASE WHEN b.question_id = q.id AND b.user_id = :userId " +
-                        "   THEN 1 ELSE 0 END AS is_user_bookmark FROM bookmarks b LIMIT 1 OFFSET q.id-1), " +
+                        "(SELECT coalesce(count(b.id), 0) FROM bookmarks b WHERE b.question_id = q.id AND b.user_id = :userId), " +
 
                         "(SELECT " +
                         "(SELECT coalesce(sum(r.count),0) FROM reputation r " +

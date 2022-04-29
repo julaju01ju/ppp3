@@ -52,8 +52,7 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
                                 "(SELECT coalesce(count(qv.id), 0) FROM question_viewed qv " +
                                 "   WHERE qv.question_id = q.id) AS views, " +
 
-                                "(SELECT CASE WHEN b.question_id = q.id AND b.user_id = :userId " +
-                                "   THEN 1 ELSE 0 END AS is_user_bookmark FROM bookmarks b LIMIT 1 OFFSET q.id-1), " +
+                                "(SELECT coalesce(count(b.id), 0) FROM bookmarks b WHERE b.question_id = q.id AND b.user_id = :userId), " +
 
                                 "(SELECT coalesce(count(up.vote), 0) FROM votes_on_questions up " +
                                 "   WHERE up.vote = 'UP_VOTE' AND up.question_id = q.id) " +
