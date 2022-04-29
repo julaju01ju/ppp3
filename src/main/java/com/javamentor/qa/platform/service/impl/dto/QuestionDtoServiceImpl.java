@@ -35,8 +35,8 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> 
     }
 
     @Override
-    public Optional<QuestionDto> getQuestionById(Long id) {
-        Optional<QuestionDto> questionDto = questionDtoDao.getQuestionById(id);
+    public Optional<QuestionDto> getQuestionById(Long id, Long userId) {
+        Optional<QuestionDto> questionDto = questionDtoDao.getQuestionById(id, userId);
         questionDto.ifPresent(dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(id)));
         questionDto.ifPresent(dto -> dto.setListTagDto(tagDtoDao.getTagsByQuestionId(id)));
         return questionDto;

@@ -50,7 +50,7 @@ public class PaginationQuestionsNoAnswer implements PageDtoDao<QuestionViewDto> 
                                 "(SELECT coalesce(count(qv.id), 0) FROM question_viewed qv " +
                                 "   WHERE qv.question_id = q.id) AS views, " +
 
-                                "(SELECT coalesce(count(b.id), 0) FROM bookmarks b WHERE b.question_id = q.id AND b.user_id = :userId), " +
+                                "(SELECT coalesce(count(b.id), 0) FROM bookmarks b WHERE b.question_id = q.id AND b.user_id = :userId) " +
 
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
@@ -75,7 +75,7 @@ public class PaginationQuestionsNoAnswer implements PageDtoDao<QuestionViewDto> 
                                 "ORDER BY q.id")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
-                .setParameter("userId", ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
+                .setParameter("userId", params.get("userId"))
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)

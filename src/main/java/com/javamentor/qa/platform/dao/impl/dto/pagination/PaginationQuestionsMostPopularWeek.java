@@ -83,7 +83,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         "ORDER BY qWeight DESC ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
-                .setParameter("userId", ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
+                .setParameter("userId", params.get("userId"))
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)

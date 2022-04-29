@@ -108,11 +108,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
@@ -154,9 +157,11 @@ public class QuestionResourceController {
             @ApiResponse(code = 400, message = "Формат введенного questionId является не верным"),
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден")
     })
-    public ResponseEntity<?> getQuestionById(@PathVariable("questionId") Long questionId) {
+    public ResponseEntity<?> getQuestionByQuestionIdAndUserId(@PathVariable("questionId") Long questionId) {
 
-        Optional<QuestionDto> questionDto = questionDtoService.getQuestionById(questionId);
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Optional<QuestionDto> questionDto = questionDtoService.getQuestionById(questionId, userId);
         return questionDto.isEmpty()
                 ? new ResponseEntity<>("Вопрос с questionId=" + questionId + " не найден", HttpStatus.NOT_FOUND)
                 : new ResponseEntity<>(questionDto, HttpStatus.OK);
@@ -250,12 +255,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
-
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
@@ -280,11 +287,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsMostPopularWeek", params), HttpStatus.OK);
@@ -309,11 +319,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsNoAnswer", params), HttpStatus.OK);
@@ -338,11 +351,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsWithTagsSortedByPersistDate", params), HttpStatus.OK);
@@ -368,11 +384,14 @@ public class QuestionResourceController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
         }
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);

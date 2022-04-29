@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface QuestionDtoService extends PageDtoService<QuestionViewDto> {
 
-    Optional<QuestionDto> getQuestionById(Long id);
+    Optional<QuestionDto> getQuestionById(Long id, Long userId);
 
     PageDto<QuestionViewDto> getPageQuestionsWithTags(String pageDtoDaoName, Map<String, Object> params);
 }

@@ -28,7 +28,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Optional<QuestionDto> getQuestionById(Long id) {
+    public Optional<QuestionDto> getQuestionById(Long id, Long userId) {
 
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select q.id, " +
@@ -49,7 +49,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "LEFT join q.user u " +
                                 "where q.id =:id")
                 .setParameter("id", id)
-                .setParameter("userId", ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())
+                .setParameter("userId", userId)
                 .unwrap(Query.class)
                 .setResultTransformer(new ResultTransformer() {
 

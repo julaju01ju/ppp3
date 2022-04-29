@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
+import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.search.SearchQuestionParam;
 import com.javamentor.qa.platform.service.abstracts.dto.QuestionDtoService;
 import io.swagger.annotations.Api;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,9 +43,13 @@ public class SearchQuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(required = false, name = "items", defaultValue = "10") Integer itemsOnPage) {
 
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         Map<String, Object> params = searchQuestionParam.getAllParam(request);
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", itemsOnPage);
+        params.put("userId", userId);
+
         PageDto<QuestionViewDto> pageDto = questionDtoService.getPageQuestionsWithTags("paginationSearchQuestionsSortedById", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
