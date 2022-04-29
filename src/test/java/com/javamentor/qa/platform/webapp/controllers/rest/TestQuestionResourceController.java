@@ -266,14 +266,13 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
             "dataset/QuestionResourceController/answers.yml",
-            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/isUserBookMark/question.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/comment.yml",
             "dataset/QuestionResourceController/comment_question.yml",
-    },
-            disableConstraints = true, cleanBefore = true)
+    }, cleanBefore = true)
     public void getQuestionByIdNotIsUserBookMarks() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
