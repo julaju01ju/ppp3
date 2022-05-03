@@ -587,4 +587,67 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetBookMarksUsers/role.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/users.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/questions.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/tag.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/questions_has_tags.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/answers.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/views.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/votes_on_questions.yml",
+    },
+            disableConstraints = true, cleanBefore = true)
+
+    public void getBookMarksEmpty() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/GetBookMarksUsers/role.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/users.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/questions.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/tag.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/questions_has_tags.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/answers.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/views.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/votes_on_questions.yml",
+            "dataset/UserResourceController/GetBookMarksUsers/bookmark.yml",
+
+    }, disableConstraints = true, cleanBefore = true)
+
+    public void getBookMarksUsers() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+
+                .andExpect(jsonPath("$[0].questionId").value(101))
+                .andExpect(jsonPath("$[0].title").value("title 101"))
+
+                .andExpect(jsonPath("$[0].tag.[0].id").value(102))
+                .andExpect(jsonPath("$[0].tag.[0].name").value("TAG102"))
+                .andExpect(jsonPath("$[0].tag.[0].description").value("This is tag 102"))
+
+                .andExpect(jsonPath("$[0].countAnswer").value(2))
+                .andExpect(jsonPath("$[0].countVote").value(0))
+                .andExpect(jsonPath("$[0].countView").value(1))
+
+                .andExpect(jsonPath("$[0].persistQuestionDate").value("2021-12-06T05:00:00"))
+
+                .andExpect(jsonPath("$.size()").value(1));
+    }
 }

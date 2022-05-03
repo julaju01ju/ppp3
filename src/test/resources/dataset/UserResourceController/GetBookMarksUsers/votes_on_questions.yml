@@ -1,0 +1,16 @@
+votes_on_questions:
+  - id: 111
+    persist_date: 2022-02-06 00:00:00
+    vote: "UP_VOTE"
+    question_id: 100
+    user_id: 102
+  - id: 112
+    persist_date: 2022-02-06 00:00:00
+    vote: "UP_VOTE"
+    question_id: 101
+    user_id: 102
+  - id: 113
+    persist_date: 2022-02-06 00:00:00
+    vote: "UP_VOTE"
+    question_id: 100
+    user_id: 100
