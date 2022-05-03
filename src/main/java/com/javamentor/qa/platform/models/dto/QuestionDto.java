@@ -32,6 +32,7 @@ public class QuestionDto {
     private Enum<VoteType> isUserVote;
     private List<TagDto> listTagDto;
     private List<CommentDto> listCommentDto;
+    private Boolean isUserBookmark;
 
 }
 

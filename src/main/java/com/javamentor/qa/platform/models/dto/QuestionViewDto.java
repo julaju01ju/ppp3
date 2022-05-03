@@ -28,4 +28,5 @@ public class QuestionViewDto {
     private LocalDateTime persistDateTime;
     private LocalDateTime lastUpdateDateTime;
     private List<TagDto> listTagDto;
+    private Boolean isUserBookMarks;
 }
