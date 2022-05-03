@@ -1,9 +1,11 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.BookMarksDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.BookMarksDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import io.swagger.annotations.Api;
@@ -38,12 +40,16 @@ public class UserResourceController {
 
     private final UserDtoService userDtoService;
     private final UserService userService;
+    private BookMarksDtoService bookMarksDtoService;
+
 
     @Autowired
     public UserResourceController(UserDtoService userDtoService,
-                                  UserService userService) {
+                                  UserService userService,
+                                  BookMarksDtoService bookMarksDtoService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
+        this.bookMarksDtoService = bookMarksDtoService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -173,6 +179,16 @@ public class UserResourceController {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         List<UserProfileQuestionDto> listAllUserQuestions = userDtoService.getAllQuestionsByUserId(userId);
         return new ResponseEntity<>(listAllUserQuestions, HttpStatus.OK);
+    }
+
+    @GetMapping("/api/user/profile/bookmarks")
+    @ApiOperation(value = "Возвращает все закладки")
+    @ApiResponse(code = 200, message = "Получены все закладки")
+    public ResponseEntity<List<BookMarksDto>> getAllBookMarks() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        List<BookMarksDto> bookMarksDtoList = bookMarksDtoService.getAllBookMarksUsersById(userId);
+        return new ResponseEntity<>(bookMarksDtoList, HttpStatus.OK);
     }
 }
 
