@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl;
 
+import com.javamentor.qa.platform.dao.abstracts.model.RelatedTagDao;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.*;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
@@ -43,6 +44,8 @@ public class TestDataInitService {
 
     private BookMarksService bookMarksService;
 
+    private RelatedTagService relatedTagService;
+
     public TestDataInitService() {
     }
 
@@ -58,7 +61,8 @@ public class TestDataInitService {
             @Lazy IgnoredTagService ignoredTagService,
             @Lazy VoteOnAnswerService voteOnAnswerService,
             @Lazy VoteOnQuestionService voteOnQuestionService,
-            @Lazy BookMarksService bookMarksService) {
+            @Lazy BookMarksService bookMarksService,
+            @Lazy RelatedTagService relatedTagService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -70,6 +74,7 @@ public class TestDataInitService {
         this.voteOnAnswerService = voteOnAnswerService;
         this.voteOnQuestionService = voteOnQuestionService;
         this.bookMarksService = bookMarksService;
+        this.relatedTagService = relatedTagService;
     }
 
     public void createRole() {
@@ -276,6 +281,24 @@ public class TestDataInitService {
         }
     }
 
+    public void createRelatedTags() {
+        List<Tag> count = tagService.getAll();
+        for (long i = 1; i <= count.size(); i++) {
+            if (tagService.getById(i).isPresent()) {
+                for (int k = 0; k < 2; k++) {
+                    RelatedTag relatedTag = new RelatedTag();
+                    relatedTag.setMainTag(tagService.getById(i).get());
+                    Tag childTag = new Tag();
+                    childTag.setDescription("Child tag Description " + i + k );
+                    childTag.setName("Child tag " + i + k);
+                    childTag.setPersistDateTime(LocalDateTime.of(2222, 10, 10, 10, 10));
+                    tagService.persist(childTag);
+                    relatedTag.setChildTag(childTag);
+                    relatedTagService.persist(relatedTag);
+                }
+            }
+        }
+    }
 
     public void init() {
         createRole();
@@ -287,5 +310,6 @@ public class TestDataInitService {
         createTrackedTag();
         createIgnoredTag();
         createBookmark(50);
+        createRelatedTags();
     }
 }

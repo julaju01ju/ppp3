@@ -1,2 +1,6 @@
-package com.javamentor.qa.platform.service.abstracts.model;public interface RelatedTagService {
+package com.javamentor.qa.platform.service.abstracts.model;
+
+import com.javamentor.qa.platform.models.entity.question.RelatedTag;
+
+public interface RelatedTagService extends ReadWriteService<RelatedTag, Long>{
 }
