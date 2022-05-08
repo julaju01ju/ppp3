@@ -1677,7 +1677,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
-    })
+    }, disableConstraints = true, cleanBefore = true)
     public void addCommentByQuestionId() throws Exception {
         String USER_TOKEN1 = getToken("user@mail.ru", "USER");
 
@@ -1735,6 +1735,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     })
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = getToken("user@mail.ru", "USER");
+
 
         mockMvc.perform(post("/api/user/question/102/comment")
                         .content("")
