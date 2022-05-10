@@ -291,7 +291,7 @@ public class TestDataInitService {
                     Tag childTag = new Tag();
                     childTag.setDescription("Child tag Description " + i + k );
                     childTag.setName("Child tag " + i + k);
-                    childTag.setPersistDateTime(LocalDateTime.of(2222, 10, 10, 10, 10));
+                    childTag.setPersistDateTime(LocalDateTime.of(2022, 05, 10, 10, 10));
                     tagService.persist(childTag);
                     relatedTag.setChildTag(childTag);
                     relatedTagService.persist(relatedTag);
