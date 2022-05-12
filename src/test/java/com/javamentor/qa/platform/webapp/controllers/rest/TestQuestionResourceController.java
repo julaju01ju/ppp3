@@ -841,7 +841,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
-                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath());
+                .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
     }
 
     @Test
