@@ -998,7 +998,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(0));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
