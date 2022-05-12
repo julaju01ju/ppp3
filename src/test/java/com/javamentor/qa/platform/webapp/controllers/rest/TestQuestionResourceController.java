@@ -829,6 +829,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/roles.yml"
     },
             disableConstraints = true, cleanBefore = true)
+
     public void getQuestionsWithIgnoredTagsInParams() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
@@ -959,6 +960,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(0));
+
 
     }
 
