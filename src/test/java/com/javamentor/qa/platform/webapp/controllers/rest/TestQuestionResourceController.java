@@ -826,7 +826,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
 
@@ -842,7 +843,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
-                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
     }
 
     @Test
@@ -973,7 +974,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParamsNoAnswer() throws Exception {
@@ -1000,7 +1002,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(0))
-                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true));
     }
 
     @Test
