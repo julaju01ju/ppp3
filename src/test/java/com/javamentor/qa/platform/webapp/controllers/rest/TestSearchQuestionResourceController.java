@@ -27,7 +27,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
             "dataset/SearchQuestionResourceController/reputations.yml",
             "dataset/SearchQuestionResourceController/roles.yml",
             "dataset/SearchQuestionResourceController/comment.yml",
-            "dataset/SearchQuestionResourceController/comment_question.yml"
+            "dataset/SearchQuestionResourceController/comment_question.yml",
+            "dataset/SearchQuestionResourceController/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getSearchQuestionSimplyRequestSortedById() throws Exception {
@@ -63,7 +64,9 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(2))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true));
+
     }
 
     @Test
@@ -114,7 +117,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(0))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
@@ -165,7 +169,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(0))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
@@ -215,11 +220,14 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(2))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
     @DataSet(value = {
+            "dataset/SearchQuestionResourceController/bookmark.yml"
+,
             "dataset/SearchQuestionResourceController/users.yml",
             "dataset/SearchQuestionResourceController/tag.yml",
             "dataset/SearchQuestionResourceController/votes_on_questions.yml",
@@ -266,7 +274,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(0))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
@@ -313,7 +322,9 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(25))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(-1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
+
     }
 
     @Test
@@ -360,7 +371,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(25))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(-1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
@@ -411,7 +423,8 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(0))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(1))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false));
     }
 
     @Test
@@ -425,7 +438,10 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
             "dataset/SearchQuestionResourceController/reputations.yml",
             "dataset/SearchQuestionResourceController/roles.yml",
             "dataset/SearchQuestionResourceController/comment.yml",
-            "dataset/SearchQuestionResourceController/comment_question.yml"
+            "dataset/SearchQuestionResourceController/comment_question.yml",
+            "dataset/SearchQuestionResourceController/bookmark.yml"
+
+
     },
             disableConstraints = true, cleanBefore = true)
     public void getSearchQuestionKeyWordUserNameTitleBodyAndSimplyRequestSortedById() throws Exception {
@@ -456,7 +472,9 @@ public class TestSearchQuestionResourceController extends AbstractControllerTest
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(0));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true));
+
     }
 
 }
