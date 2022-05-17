@@ -1688,9 +1688,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
-    })
+    }, disableConstraints = true, cleanBefore = true)
     public void addCommentByQuestionId() throws Exception {
-        String USER_TOKEN1 = getToken("user@mail.ru", "USER");
+        String USER_TOKEN1 = getToken("privet@mail.ru", "USER");
 
         mockMvc.perform(post("/api/user/question/100/comment")
                         .content("В любой не понятной ситуации пей чай =)")
@@ -1728,7 +1728,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
     })
     public void addCommentByQuestionIdNotFound() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("privet@mail.ru", "USER");
 
         mockMvc.perform(post("/api/user/question/103/comment")
                         .content("В любой не понятной ситуации пей чай =)")
@@ -1745,7 +1745,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
     })
     public void addCommentEmptyByQuestionId() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("privet@mail.ru", "USER");
+
 
         mockMvc.perform(post("/api/user/question/102/comment")
                         .content("")
