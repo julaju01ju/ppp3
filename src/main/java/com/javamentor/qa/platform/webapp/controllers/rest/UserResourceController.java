@@ -190,5 +190,17 @@ public class UserResourceController {
         List<BookMarksDto> bookMarksDtoList = bookMarksDtoService.getAllBookMarksUsersById(userId);
         return new ResponseEntity<>(bookMarksDtoList, HttpStatus.OK);
     }
+
+    @GetMapping("/api/user/profile/delete/questions")
+    @ApiOperation("Возвращает все удаленные вопросы, которые задавал авторизованный пользователь")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все удаленные вопросы, которые задавал авторизованный пользователь"),
+            @ApiResponse(code = 500, message = "Страницы пока что не существует")
+    })
+    public ResponseEntity<List<UserProfileQuestionDto>> getAllUserDeletedQuestions() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        List<UserProfileQuestionDto> listAllUserDeletedQuestions = userDtoService.getAllDeletedQuestionsByUserId(userId);
+        return new ResponseEntity<>(listAllUserDeletedQuestions, HttpStatus.OK);
+    }
 }
 
