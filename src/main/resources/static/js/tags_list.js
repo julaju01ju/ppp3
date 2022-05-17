@@ -3,7 +3,7 @@ header.append('Content-Type', 'application/json');
 header.append('Authorization', 'Bearer ' + getCookie('token'));
 let listOfTags = document.querySelector('#tagList');
 
-let getTagList = (element) => {
+let fillCard = (element) => {
     let output = '';
     element.forEach(tag => {
         output += `<div class="col-sm-3">
@@ -25,24 +25,6 @@ function getTagByItem(page, itemNumber) {
     })
 }
 
-async function pagination(page, itemsOnPage, funcForURL) {
-    $('#paginationButtons').empty();
-
-    await funcForURL(page, itemsOnPage).then(response => {
-        response.json().then(element => {
-            for (let i = 1; i < element.totalPageCount + 1; i++) {
-                if (element.currentPageNumber === i) {
-                    let newPage = `<button type="button" class="btn btn-outline-primary active" onclick="pagination(${i}, ${itemsOnPage}, ${funcForURL})">${i}</button>`;
-                    $('#paginationButtons').append(newPage);
-                } else {
-                    let newPage = `<button type="button" class="btn btn-outline-primary" onclick="pagination(${i}, ${itemsOnPage}, ${funcForURL})">${i}</button>`;
-                    $('#paginationButtons').append(newPage);
-                }
-            }
-            getTagList(element.items);
-        });
-    });
-}
 
 
 
