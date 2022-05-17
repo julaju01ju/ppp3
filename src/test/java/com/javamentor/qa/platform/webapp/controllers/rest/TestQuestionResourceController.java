@@ -772,7 +772,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml",
+
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParams() throws Exception {
@@ -786,9 +788,12 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
-                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(104));
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(104))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(true));
     }
 
     @Test
