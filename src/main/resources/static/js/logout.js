@@ -24,5 +24,7 @@ function setCookie(name, value, options = {}) {
         })
     }
 
-    document.querySelector("#logout").addEventListener("click", logout);
+    window.onloadeddata = function () {
+        document.querySelector("#logout").addEventListener("click", logout);
+    }
 
