@@ -26,15 +26,15 @@ public class AnswerDtoDaoImpl
         final String query =
                 "select a.id, a.user.id," +
                         "(select sum(rep.count) from Reputation as rep where rep.author.id = a.user.id)," +
-                            "a.question.id,"+
-                            "a.htmlBody,"+
-                            "a.persistDateTime, "+
-                            "a.isHelpful,"+
-                            "a.isDeleted,"+
-                            "a.dateAcceptTime,"+
-                        "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id),"+
-                        "(select u.imageLink from User as u where u.id = a.user.id),"+
-                            "(select u.nickname from User as u where u.id = a.user.id)"+
+                        "a.question.id," +
+                        "a.htmlBody," +
+                        "a.persistDateTime, " +
+                        "a.isHelpful," +
+                        "a.isDeleted," +
+                        "a.dateAcceptTime," +
+                        "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id)," +
+                        "(select u.imageLink from User as u where u.id = a.user.id)," +
+                        "(select u.nickname from User as u where u.id = a.user.id)" +
                         "from Answer as a where a.question.id = :id and a.isDeleted = false";
 
 
@@ -68,5 +68,26 @@ public class AnswerDtoDaoImpl
                 ).getResultList();
     }
 
+    @Override
+    public List<AnswerDto> getDeletedAnswersByUserId(Long id) {
+        String query =
+                "SELECT new com.javamentor.qa.platform.models.dto.AnswerDto(" +
+                        "a.id, " +
+                        "a.user.id, " +
+                        "(SELECT SUM(r.count) FROM Reputation AS r WHERE r.author.id = a.user.id), " +
+                        " a.question.id," +
+                        "a.htmlBody, " +
+                        "a.persistDateTime, " +
+                        "a.isHelpful, " +
+                        "a.isDeleted, " +
+                        "a.dateAcceptTime, " +
+                        "(SELECT SUM(case v.vote WHEN 'UP_VOTE' THEN 1 ELSE -1 END) FROM VoteAnswer AS v WHERE v.answer.id = :id)," +
+                        "(SELECT u.imageLink FROM User AS u WHERE u.id = a.user.id)," +
+                        "(SELECT u.nickname FROM User AS u WHERE u.id = a.user.id)) " +
+                        "FROM Answer AS a WHERE a.user.id = :id AND a.isDeleted = true";
+        return entityManager.createQuery(query)
+                .setParameter("id", id)
+                .getResultList();
 
+    }
 }
