@@ -319,10 +319,10 @@ public class TestDataInitService {
             chat.setTitle("Some single chat " + i);
             singleChat.setChat(chat);
             singleChat.setUserOne(userService.getById(i).get());
-            singleChat.setUseTwo(userService.getById(i + 1).get());
+            singleChat.setUseTwo(userService.getById(i + i).get());
             singleChatService.persist(singleChat);
             Message messageUserOne =new Message("Some message in single chat " + i, userService.getById(i).get(), chat);
-            Message messageUserTwo =new Message("Some message in single chat " + (i+1), userService.getById(i+1).get(), chat);
+            Message messageUserTwo =new Message("Some message in single chat " + (i+i), userService.getById(i+1).get(), chat);
             List<Message> saveMessages = new ArrayList<>();
             saveMessages.add(messageUserOne);
             saveMessages.add(messageUserTwo);
