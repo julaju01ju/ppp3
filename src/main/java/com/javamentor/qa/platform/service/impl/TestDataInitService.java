@@ -318,11 +318,13 @@ public class TestDataInitService {
             Chat chat = new Chat(ChatType.SINGLE);
             chat.setTitle("Some single chat " + i);
             singleChat.setChat(chat);
-            singleChat.setUserOne(userService.getById(i).get());
-            singleChat.setUseTwo(userService.getById(i + i).get());
+            User userOne = userService.getById(i).get();
+            User userTwo = userService.getById(i+i).get();
+            singleChat.setUserOne(userOne);
+            singleChat.setUseTwo(userTwo);
             singleChatService.persist(singleChat);
-            Message messageUserOne =new Message("Some message in single chat " + i, userService.getById(i).get(), chat);
-            Message messageUserTwo =new Message("Some message in single chat " + (i+i), userService.getById(i+1).get(), chat);
+            Message messageUserOne =new Message("Some message in single chat " + i, userOne, chat);
+            Message messageUserTwo =new Message("Some message in single chat " + (i+i),userTwo, chat);
             List<Message> saveMessages = new ArrayList<>();
             saveMessages.add(messageUserOne);
             saveMessages.add(messageUserTwo);
@@ -338,8 +340,9 @@ public class TestDataInitService {
             Set<User> groupChatUsers = new HashSet<>();
             List<Message> messages = new ArrayList<>();
             for (long k = 1; k < 5; k++) {
-                groupChatUsers.add(userService.getById(k + i).get());
-                messages.add(new Message("Some message in group chat " + k, userService.getById(k + i).get(), chat));
+                User user = userService.getById(k+i).get();
+                groupChatUsers.add(user);
+                messages.add(new Message("Some message in group chat " + k, user, chat));
             }
             groupChat.setChat(chat);
             groupChat.setUsers(groupChatUsers);
