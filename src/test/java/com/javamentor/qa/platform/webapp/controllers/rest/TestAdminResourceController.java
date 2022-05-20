@@ -133,4 +133,18 @@ public class TestAdminResourceController extends AbstractControllerTest {
                     .andExpect(jsonPath("$.[1].body").value("Some answer with id 101"))
                     .andExpect(jsonPath("$.[1].isDeleted").value(true));
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/roles.yml",
+            "dataset/adminResourceController/users.yml",
+    })
+    public void getListOfDeletedAnswersByUserNotExists() throws Exception{
+        String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
+        mockMvc.perform(get("/api/admin/answer/delete?userId=1000")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.[0].userId").doesNotExist());
+    }
 }

@@ -56,9 +56,9 @@ public class AdminResourceController {
     })
     public ResponseEntity<?> getAllDeletedAnswerByUser(@RequestParam("userId") Long userId){
         List<AnswerDto> answerDtoList = answerDtoService.getDeletedAnswersByUserId(userId);
-        if (answerDtoList == null){
-            return new ResponseEntity<>("Deleted answers by user.id " + userId + " not found ", HttpStatus.NOT_FOUND);
+        if (userService.getById(userId).isPresent()){
+            return new ResponseEntity<>(answerDtoList, HttpStatus.OK);
         }
-        return new ResponseEntity<>(answerDtoService.getDeletedAnswersByUserId(userId), HttpStatus.OK);
+        return new ResponseEntity<>("Deleted answers by userId =  " + userId + " not found ", HttpStatus.NOT_FOUND);
     }
 }
