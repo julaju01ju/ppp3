@@ -3,28 +3,28 @@ question:
     description: "description to 101"
     is_deleted: false
     last_redaction_date: 2021-12-06 00:00:00
-    persist_date: 2021-12-06 00:00:00
+    persist_date: 2021-05-13 00:00:00
     title: "title"
     user_id: 101
   - id: 102
     description: "description to 102"
     is_deleted: false
     last_redaction_date: 2021-12-06 00:00:00
-    persist_date: 2022-02-06 00:00:00
+    persist_date: 2022-05-13 00:00:00
     title: "title"
     user_id: 102
   - id: 103
     description: "description to 103"
     is_deleted: false
     last_redaction_date: 2021-12-06 00:00:00
-    persist_date: 2022-02-06 00:00:00
+    persist_date: 2022-05-13 00:00:00
     title: "title"
     user_id: 103
   - id: 104
     description: "description to 104"
     is_deleted: false
     last_redaction_date: 2021-12-06 00:00:00
-    persist_date: 2022-02-06 00:00:00
+    persist_date: 2022-05-13 00:00:00
     title: "title"
     user_id: 101
   - id: 105
