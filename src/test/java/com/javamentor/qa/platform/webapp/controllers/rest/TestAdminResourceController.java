@@ -110,4 +110,77 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andExpect(status().isForbidden());
     }
 
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdNotFound() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("ADMIN");
+        authenticationRequest.setUsername("admin1@mail.ru");
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/101/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdIsOk() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("ADMIN");
+        authenticationRequest.setUsername("admin1@mail.ru");
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/102/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdIsForbidden() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/102/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
 }
