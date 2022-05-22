@@ -303,7 +303,7 @@ public class TestDataInitService {
     public void init() {
         createRole();
         createUser(50);
-        createTag(4);
+        createTag(10);
         createQuestion(50);
         createAnswer();
         createReputation();

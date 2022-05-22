@@ -11,7 +11,7 @@
           crossorigin="anonymous">
     <title>KataAcademy</title>
 </head>
-<body>
+<body onload="showTags()">
 <div class="container-fluid" >
     <div id="app-header"></div>
     <div class="row" style="height: 80vh" id="main-content">
@@ -287,7 +287,6 @@
         <div class="col-3 d-flex flex-column p-3" style="color: #7b8185"><h6 style="color: #333; font-weight: normal;">
             Недавние метки
         </h6>
-
             <div class="tag-list">
                 <ul style="list-style: none; padding-left: .5rem">
                     <li class="list-item mb-2">
@@ -310,7 +309,49 @@
                     </li>
                 </ul>
             </div>
+            <br>
+            <div>
+                <!--                        Tracked tags ~JS~-->
+                <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <div class="col-12 group1 d-flex justify-content-between">
+                            <h6 class="h6">Отслеживаемые метки</h6>
+                            <a href="#" style="color:black" class="text-decoration-none" id="edit" onclick="showAdd('editTracked')">Править</a>
+                        </div>
+                    </div>
+                    <div class="card-body row row-cols row-cols-auto g-2" id="trackedTags">
+                    </div>
+                    <div class="col-10 row-gx-5" >
+                    <div class="input-group mb-2 p-2 bg-light" id="editTracked" style="display: none" >
+                        <input class="form-control col-6"  type="text" placeholder="Add tag by id" id="trackedTagId" >
+                        <button type="button" class="btn btn-primary" onclick="addTrackedTag()">+</button>
+                    </div>
+                    </div>
+                </div>
+                <br>
+                <!--                        Ignored tags ~JS~-->
+                <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <div class="col-12 group1 d-flex justify-content-between">
+                            <h6 class="h6">Игнорируемые метки</h6>
+                            <a href="#" style="color:black" class="text-decoration-none text-color: dark" onclick="showAdd('editIgnored')">Править</a>
+                        </div>
+                    </div>
+                    <div class="card-body row row-cols row-cols-auto g-2" id="ignoredTags">
+                    </div>
+                    <div class="col-10 row-gx-5" >
+                        <div class="input-group mb-2 p-2 bg-light" id="editIgnored" style="display: none" >
+                            <input class="form-control col-6"  type="text" placeholder="Add tag by id" id="ignoredTagId" >
+                            <button type="button" class="btn btn-primary" onclick="addIgnoredTag()">+</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
         </div>
+
     </div>
     <div id="app-footer"></div>
 </div>
@@ -323,6 +364,7 @@
 <script src="../js/layout/Footer.js"></script>
 <script src="../js/scripts.js"></script>
 <script src="../js/logout.js"></script>
+<script src="../js/ignoredAndTrackedTags/IgnoredAndTrackedTags.js"></script>
 
 
 </body>
