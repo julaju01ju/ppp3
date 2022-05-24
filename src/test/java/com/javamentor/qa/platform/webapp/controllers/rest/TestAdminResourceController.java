@@ -109,5 +109,42 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/roles.yml",
+            "dataset/adminResourceController/users.yml",
+            "dataset/adminResourceController/questions.yml",
+            "dataset/adminResourceController/answers.yml",
+    })
+    public void getListOfDeletedAnswersByUser() throws Exception{
+        String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
+            mockMvc.perform(get("/api/admin/answer/delete?userId=101")
+                    .header(AUTHORIZATION, USER_TOKEN))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.[0].id").value(100))
+                    .andExpect(jsonPath("$.[0].userId").value(101))
+                    .andExpect(jsonPath("$.[0].questionId").value(100))
+                    .andExpect(jsonPath("$.[0].body").value("Some answer with id 100"))
+                    .andExpect(jsonPath("$.[0].isDeleted").value(true))
+                    .andExpect(jsonPath("$.[1].id").value(101))
+                    .andExpect(jsonPath("$.[1].userId").value(101))
+                    .andExpect(jsonPath("$.[1].questionId").value(100))
+                    .andExpect(jsonPath("$.[1].body").value("Some answer with id 101"))
+                    .andExpect(jsonPath("$.[1].isDeleted").value(true));
+    }
 
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/roles.yml",
+            "dataset/adminResourceController/users.yml",
+    })
+    public void getListOfDeletedAnswersByUserNotExists() throws Exception{
+        String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
+        mockMvc.perform(get("/api/admin/answer/delete?userId=1000")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.[0].userId").doesNotExist());
+    }
 }

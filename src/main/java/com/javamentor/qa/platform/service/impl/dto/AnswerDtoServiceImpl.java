@@ -28,5 +28,8 @@ public class AnswerDtoServiceImpl implements AnswerDtoService {
         return answerDto.getAllByQuestionId(id);
     }
 
-
+    @Override
+    public List<AnswerDto> getDeletedAnswersByUserId(Long id) {
+        return answerDto.getDeletedAnswersByUserId(id);
+    }
 }
