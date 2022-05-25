@@ -21,7 +21,7 @@ let resultsWrapper = document.querySelector('.resultSearch')
 let selectIdTag = 0;
 
 /////////////////////////////////////////////////////////////
-// Методы для получения и выбора данных их выпадающего поиска
+// Методы для получения и выбора данных из выпадающего поиска
 
 function startInput(tableInput) {
     tableInput.addEventListener('keyup', (e) => {
@@ -39,7 +39,7 @@ function startInput(tableInput) {
 }
 
 function select(element) {
-    let selectData = element.textContent;
+    let selectData = element.textContent.toLowerCase();
     if (inputSearchTrackedTag.value !== "") {
         inputSearchTrackedTag.value = selectData
         selectIdTag = element.value
