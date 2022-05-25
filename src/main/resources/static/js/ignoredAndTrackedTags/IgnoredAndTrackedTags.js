@@ -1,13 +1,85 @@
 const header = new Headers();
 header.append('Content-Type', 'application/json');
 header.append('Authorization', 'Bearer ' + getCookie('token'));
+
+// Переменные для GET запросов
 const trackedTags = document.querySelector('#trackedTags');
 const ignoredTags = document.querySelector('#ignoredTags');
-const searchTagTracked = document.querySelector('#searchTrackedTag')
+
 const searchTagIgnored = document.querySelector('#searchIgnoreTag')
 
 const trackUrl = '/api/user/tag/tracked';
 const ignoreUrl = '/api/user/tag/ignored';
+
+const inputSearchTrackedTag = document.getElementById('inputSearchTrackedTag');
+const inputSearchIgnoredTag = document.getElementById('inputSearchIgnoredTag');
+
+let resultSearchTrackedTag = document.getElementById('resultSearchTrackedTag')
+let resultsWrapper = document.querySelector('.resultSearch')
+
+
+function startInput(tableInput){
+    tableInput.addEventListener('keyup', (e) => {
+    let input = tableInput.value
+    console.log(input)
+    if (input.length > 0){
+        resultsWrapper.style.display = "block"
+        resultsWrapper.style.opacity = 1
+        document.getElementById('inputSearchTrackedTag').oninput = debounce(getLatterTracked, 500);
+        document.getElementById('inputSearchIgnoredTag').oninput = debounce(getLatterIgnored, 500);
+    } else {
+        resultsWrapper.style.display = "none"
+        resultsWrapper.innerHTML =""
+    }
+})
+}
+
+let selectIdTag = 0;
+function select(element){
+    let selectData = element.textContent
+    if (inputSearchTrackedTag.value !== ""){
+        inputSearchTrackedTag.value = selectData
+        selectIdTag = element.value
+        resultsWrapper.style.display = "none"
+        resultsWrapper.innerHTML =""
+    } else {
+        inputSearchIgnoredTag.value = selectData
+        selectIdTag = element.value
+        resultsWrapper.style.display = "none"
+        resultsWrapper.innerHTML =""
+    }
+
+
+}
+
+function getLatterTracked() {
+    let param = document.getElementById('inputSearchTrackedTag').value
+    fetch(`/api/user/tag/latter?searchString=${param}`, {
+        method: 'GET',
+        headers: header
+    }).then(res => res.json()).then(data => {
+        renderSearch(data, resultsWrapper)
+    })
+}
+
+function getLatterIgnored() {
+    let param = document.getElementById('inputSearchIgnoredTag').value
+    fetch(`/api/user/tag/latter?searchString=${param}`, {
+        method: 'GET',
+        headers: header
+    }).then(res => res.json()).then(data => {
+        renderSearch(data, resultsWrapper);
+    })
+}
+
+function renderSearch(element, inner) {
+    let output = '';
+    element.forEach(tag => {
+        output += `
+                     <li onclick="select(this)" value="${tag.id}" class="${tag.name}" style="padding: 3px">${tag.name}</li>`;
+    });
+    inner.innerHTML = output;
+}
 
 ////////////////////////////
 // Методы для вывода данных
@@ -23,20 +95,9 @@ function renderTags(element, inner) {
     inner.innerHTML = output;
 }
 
-function renderSearch(element, inner) {
-    let output = '';
-        element.forEach(tag => {
-            output += `
-                     <option value="${tag.id}" >${tag.name}</option>`;
-        });
-        inner.innerHTML = output;
-}
-
 //////////////////////
 // Для задержки вывода
 
-document.getElementById('trackedTagId').oninput = debounce(getLatterTracked, 500);
-document.getElementById('ignoredTagId').oninput = debounce(getLatterIgnored, 500);
 
 function debounce(call, timeout) {
     return function perform(...args) {
@@ -49,25 +110,7 @@ function debounce(call, timeout) {
     }
 }
 
-function getLatterTracked() {
-    let param = document.getElementById('trackedTagId').value
-    fetch(`/api/user/tag/latter?searchString=${param}`, {
-        method: 'GET',
-        headers: header
-    }).then(res => res.json()).then(data => {
-        renderSearch(data, searchTagTracked);
-    })
-}
 
-function getLatterIgnored() {
-    let param = document.getElementById('ignoredTagId').value
-    fetch(`/api/user/tag/latter?searchString=${param}`, {
-        method: 'GET',
-        headers: header
-    }).then(res => res.json()).then(data => {
-        renderSearch(data, searchTagIgnored);
-    })
-}
 
 //////////////////////////////////
 // Запросы на получения всех тэгов
@@ -100,54 +143,36 @@ function showAdd(id) {
     } else
         div.style.display = '';
 }
-
-let checkIdTrackedTagsIfExists = "";
-let checkIdIgnoredTagsIfExists = "";
-
 /////////////////////
 // Очистка поля ввода
 
 function clearInput() {
-    let clearInputTr = document.getElementById('trackedTagId').value = "";
-    let clearInputIgn = document.getElementById('ignoredTagId').value = "";
+    let clearInputTr = document.getElementById('inputSearchTrackedTag').value = "";
+    let clearInputIgn = document.getElementById('inputSearchIgnoredTag').value = "";
 }
 
 //////////////////////////////
 // Запросы на добавление тэгов
 
 function addIgnoredTag() {
-    let id = document.getElementById('ignoredTagId').value
-    if (checkIdIgnoredTagsIfExists === id) {
-        console.log('Поле add tag не заполнено или метка уже добавлена')
-        return clearInput();
-    } else {
-        checkIdIgnoredTagsIfExists = id;
-        fetch(`/api/user/tag/${id}/ignored`, {
+        fetch(`/api/user/tag/${selectIdTag}/ignored`, {
             method: 'POST',
             headers: header
         })
             .then(res => res.json())
             .then(data => getIgnoredTags(data));
         clearInput()
-    }
 }
 
 function addTrackedTag() {
-    let id = document.getElementById('trackedTagId').value
-    console.log(id)
-    if (checkIdTrackedTagsIfExists === id) {
-        console.log('Поле add tag не заполнено или метка уже добавлена')
-        return clearInput();
-    } else {
-        checkIdTrackedTagsIfExists = id;
-        fetch(`/api/user/tag/${id}/tracked`, {
+        fetch(`/api/user/tag/${selectIdTag}/tracked`, {
             method: 'POST',
             headers: header
         })
             .then(res => res.json())
             .then(data => getTrackedTags(data));
         clearInput();
-    }
+
 }
 
 function showTags() {
