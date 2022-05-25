@@ -108,7 +108,7 @@ public class TestDataInitService {
         for (int i = 1; i <= count; i++) {
             Tag tag = new Tag();
             tag.setDescription("Tag Description " + i);
-            tag.setName("Tag " + i);
+            tag.setName("tag " + i);
             tag.setPersistDateTime(LocalDateTime.of(2021, 10, 01, 14, 05, 00));
             tagService.persist(tag);
         }
@@ -290,7 +290,7 @@ public class TestDataInitService {
                     relatedTag.setMainTag(tagService.getById(i).get());
                     Tag childTag = new Tag();
                     childTag.setDescription("Child tag Description " + i + k );
-                    childTag.setName("Child tag " + i + k);
+                    childTag.setName("child tag " + i + k);
                     childTag.setPersistDateTime(LocalDateTime.of(2022, 05, 10, 10, 10));
                     tagService.persist(childTag);
                     relatedTag.setChildTag(childTag);

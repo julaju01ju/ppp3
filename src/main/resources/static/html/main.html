@@ -15,9 +15,11 @@
             background: whitesmoke;
             border-radius: 5px;
         }
+
         .input-search {
             display: inline-flex;
         }
+
         .resultSearch {
             display: block;
             background-color: white;
@@ -28,12 +30,11 @@
             min-width: auto;
             width: 150px;
             z-index: 10;
-            opacity: 0;
         }
     </style>
 </head>
 
-<body onload="showTags()">
+<body>
 <div class="container-fluid">
     <div id="app-header"></div>
     <div class="row" style="height: 80vh" id="main-content">
@@ -341,32 +342,26 @@
                                onclick="showAdd('editTracked')">Править</a>
                         </div>
                     </div>
-
-
+                    <!--                    Заполняется из ~JS~-->
                     <div class="card-body row row-cols row-cols-auto g-2" id="trackedTags">
                     </div>
                     <div class="row row-cols row-cols-auto g-2"></div>
                     <br>
                     <div class="col-10 row-gx-5">
                         <div class="input-group mb-2 p-2 bg-light" id="editTracked" style="display: none">
-
-
                             <div class="wrapper">
                                 <div class="input-search">
                                     <input class="form-control" type="text" placeholder="Add tag"
-                                           id="inputSearchTrackedTag" autocomplete="off" onclick="startInput(inputSearchTrackedTag)">
+                                           id="inputSearchTrackedTag" autocomplete="off"
+                                           onclick="startInput(inputSearchTrackedTag)">
                                     <button type="button" class="btn btn-primary" onclick="addTrackedTag()">ADD
                                     </button>
                                 </div>
-
+                                <!--                    Заполняется из ~JS~-->
                                 <div class="resultSearch" id="resultSearchTrackedTag">
-
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
                 </div>
                 <br>
@@ -379,35 +374,22 @@
                                onclick="showAdd('editIgnored')">Править</a>
                         </div>
                     </div>
-
-
+                    <!--                    Заполняется из ~JS~-->
                     <div class="card-body row row-cols row-cols-auto g-2" id="ignoredTags">
                     </div>
                     <div class="col-10 row-gx-5">
                         <div class="input-group mb-2 p-2 bg-light" id="editIgnored" style="display: none">
-
                             <div class="wrapper">
                                 <div class="input-search">
                                     <input class="form-control" type="text" placeholder="Add tag"
-                                           id="inputSearchIgnoredTag" autocomplete="off" onclick="startInput(inputSearchIgnoredTag)">
+                                           id="inputSearchIgnoredTag" autocomplete="off"
+                                           onclick="startInput(inputSearchIgnoredTag)">
                                     <button type="button" class="btn btn-primary" onclick="addIgnoredTag()">ADD</button>
                                 </div>
-
+                                <!--                    Заполняется из ~JS~-->
                                 <div class="resultSearch" id="resultSearchIgnoredTag">
-
                                 </div>
                             </div>
-
-
-
-<!--                            <input class="form-control col-6" list="searchIgnoreTag" type="text" placeholder="Add tag"-->
-<!--                                   id="inputSearchIgnoredTag" autocomplete="off">-->
-<!--                            <button type="button" class="btn btn-primary" onclick="addIgnoredTag()">ADD</button>-->
-<!--                            <datalist style="background-color: white; list-style-type: none; padding: 8px;-->
-<!--                                       " id="searchIgnoreTag"></datalist>-->
-<!--              -->
-
-
                         </div>
                     </div>
                 </div>
