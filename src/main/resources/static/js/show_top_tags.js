@@ -17,8 +17,8 @@ function viewTop(topData, topList){
 }
 
 
-function updateTopData(){
-    fetch(`/api/user/tag/popular?page=1&items=10`,
+function updateTopData(tagsCount){
+    fetch('/api/user/tag/popular?page=1&items='+tagsCount,
         {
             method: 'GET',
             headers: myHeaders
@@ -31,7 +31,8 @@ function updateTopData(){
         });
 }
 
-updateTopData();
+updateTopData(lengthOfTop);
+document.getElementById("top-tags-title").innerText = 'Топ-' + lengthOfTop + ' меток';
 
 
 
