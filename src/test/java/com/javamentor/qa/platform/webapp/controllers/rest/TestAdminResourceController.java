@@ -151,12 +151,28 @@ public class TestAdminResourceController extends AbstractControllerTest {
         authenticationRequest.setUsername("admin1@mail.ru");
 
         String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        mockMvc.perform(
+                        get("/api/user/question/102/answer")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath(("$.length()")).value(1))
+                .andExpect(jsonPath("$[0].id").value(102));
+                //ответ с id 102 существует
 
         mockMvc.perform(
                         delete("/api/admin/answer/102/delete")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk());
+                //ответ с id 102 удален
+        mockMvc.perform(
+                        get("/api/user/question/102/answer")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+                //ответов на вопрос с id 102 больше нет
     }
 
     @Test

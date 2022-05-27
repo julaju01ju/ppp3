@@ -9,25 +9,3 @@ answer:
     update_date: 2021-12-06 00:00:00
     question_id: 102
     user_id: 101
-
-  - id: 103
-    date_accept_time: 2021-12-06 00:00:00
-    html_body: "Some Body"
-    is_deleted: false
-    is_deleted_by_moderator: false
-    is_helpful: false
-    persist_date: 2021-12-06 00:00:00
-    update_date: 2021-12-06 00:00:00
-    question_id: 102
-    user_id: 101
-
-  - id: 104
-    date_accept_time: 2021-12-06 00:00:00
-    html_body: "Some Body"
-    is_deleted: false
-    is_deleted_by_moderator: false
-    is_helpful: false
-    persist_date: 2021-12-06 00:00:00
-    update_date: 2021-12-06 00:00:00
-    question_id: 102
-    user_id: 101
