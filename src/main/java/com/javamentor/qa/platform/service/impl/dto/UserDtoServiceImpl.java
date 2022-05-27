@@ -42,6 +42,20 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
     @Override
     public List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id) {
         List<UserProfileQuestionDto> listUserProfileQuestionDto = userDtoDao.getAllQuestionsByUserId(id);
+        setListTagDtoIntoUserProfileQuestionDto(listUserProfileQuestionDto);
+
+        return listUserProfileQuestionDto;
+    }
+
+    @Override
+    public List<UserProfileQuestionDto> getAllDeletedQuestionsByUserId(Long id) {
+        List<UserProfileQuestionDto> listUserProfileDeletedQuestionDto = userDtoDao.getAllDeletedQuestionsByUserId(id);
+        setListTagDtoIntoUserProfileQuestionDto(listUserProfileDeletedQuestionDto);
+
+        return listUserProfileDeletedQuestionDto;
+    }
+
+    private void setListTagDtoIntoUserProfileQuestionDto(List<UserProfileQuestionDto> listUserProfileQuestionDto){
         List<Long> listIdQuestion = listUserProfileQuestionDto
                 .stream()
                 .map(UserProfileQuestionDto::getQuestionId)
@@ -52,7 +66,6 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
             e.setListTagDto(tags.get(e.getQuestionId()));
         }
 
-        return listUserProfileQuestionDto;
     }
 
 }

@@ -1,0 +1,22 @@
+question:
+  - id: 100
+    description: "description to 100"
+    is_deleted: false
+    last_redaction_date: 2021-12-06 00:00:00
+    persist_date: 2021-12-06 00:00:00
+    title: "title 100"
+    user_id: 100
+  - id: 200
+    description: "description to 200"
+    is_deleted: true
+    last_redaction_date: 2021-12-07 00:00:00
+    persist_date: 2021-12-07 00:00:00
+    title: "title 200"
+    user_id: 100
+  - id: 101
+    description: "description to 101"
+    is_deleted: false
+    last_redaction_date: 2021-12-06 00:00:00
+    persist_date: 2021-12-06 00:00:00
+    title: "title 101"
+    user_id: 101
