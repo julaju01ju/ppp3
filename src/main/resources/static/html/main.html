@@ -10,12 +10,35 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous">
     <title>KataAcademy</title>
+    <style type="text/css">
+        li:hover {
+            background: whitesmoke;
+            border-radius: 5px;
+        }
+
+        .input-search {
+            display: inline-flex;
+        }
+
+        .resultSearch {
+            display: block;
+            background-color: white;
+            list-style-type: none;
+            border-radius: 5px;
+            overflow-y: auto;
+            position: absolute;
+            min-width: auto;
+            width: 150px;
+            z-index: 10;
+        }
+    </style>
 </head>
+
 <body>
-<div class="container-fluid" >
+<div class="container-fluid">
     <div id="app-header"></div>
     <div class="row" style="height: 80vh" id="main-content">
-        <div class="col-2"  id="app-side-bar"  style="border-right: 1px solid lightgrey"></div>
+        <div class="col-2" id="app-side-bar" style="border-right: 1px solid lightgrey"></div>
         <div class="col-7" style="height: 80vh; overflow: scroll">
             <div class="heading p-3 d-flex justify-content-between" style="width: 100%">
                 <h3 class="h3">Исследуйте вопросы на сайте</h3>
@@ -24,27 +47,27 @@
             <div class="question-nav p-3 d-flex justify-content-between" style="border-bottom: 1px solid lightgrey;
             margin-bottom: 2rem">
                 <div>
-                    <a href="#"  style=" font-size: .7rem; background-color:
+                    <a href="#" style=" font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                         Java</a>
 
-                    <a href="#"  style="font-size: .7rem; background-color:
+                    <a href="#" style="font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                         Hibernate</a>
 
-                    <a href="#"  style=" font-size: .7rem; background-color:
+                    <a href="#" style=" font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                         Spring</a>
                 </div>
-                <div class="btn-group btn-group-sm" >
+                <div class="btn-group btn-group-sm">
                     <a href="#" class="btn btn-outline-secondary active" aria-current="page"
                        style="font-size: .7rem;  padding: .5rem .7rem">Новые</a>
                     <a href="#" class="btn btn-outline-secondary">Текущие
                     </a>
-                    <a href="#" class="btn btn-outline-secondary" >Конкурсные
+                    <a href="#" class="btn btn-outline-secondary">Конкурсные
                         <span class="bg-primary p-1" style="color: white; border-radius: .3em">5</span>
                     </a>
-                    <a href="#" class="btn btn-outline-secondary" >Неотвеченные</a>
+                    <a href="#" class="btn btn-outline-secondary">Неотвеченные</a>
                 </div>
                 <div>
                     <button class="btn btn-info">Фильтры</button>
@@ -78,17 +101,17 @@
                     <div class="tag-list " style="height: 2rem">
                         <ul class="d-flex" style="list-style: none">
                             <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Java</a>
                             </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="list-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Hibernate</a>
                             </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="light-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Spring</a>
                             </li>
@@ -124,17 +147,17 @@
                     <div class="tag-list " style="height: 2rem">
                         <ul class="d-flex" style="list-style: none">
                             <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Java</a>
                             </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="list-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Hibernate</a>
                             </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="light-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Spring</a>
                             </li>
@@ -170,17 +193,17 @@
                     <div class="tag-list " style="height: 2rem">
                         <ul class="d-flex" style="list-style: none">
                             <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Java</a>
                             </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="list-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Hibernate</a>
                             </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="light-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Spring</a>
                             </li>
@@ -216,17 +239,17 @@
                     <div class="tag-list " style="height: 2rem">
                         <ul class="d-flex" style="list-style: none">
                             <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Java</a>
                             </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="list-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Hibernate</a>
                             </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="light-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Spring</a>
                             </li>
@@ -262,17 +285,17 @@
                     <div class="tag-list " style="height: 2rem">
                         <ul class="d-flex" style="list-style: none">
                             <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Java</a>
                             </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="list-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Hibernate</a>
                             </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
+                            <li class="light-item">
+                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                                     Spring</a>
                             </li>
@@ -280,18 +303,96 @@
                     </div>
                 </div>
             </div>
-
 
 
         </div>
-        <div class="col-3 d-flex flex-column p-3" style="color: #7b8185"><h6 style="color: #333; font-weight: normal;" id="top-tags-title">
-            Топ-10 меток
+        <div class="col-3 d-flex flex-column p-3" style="color: #7b8185"><h6 style="color: #333; font-weight: normal;">
+            Недавние метки
         </h6>
-
             <div class="tag-list">
-                <ul style="list-style: none; padding-left: .5rem" id = "top-tags-list">
-
+                <ul style="list-style: none; padding-left: .5rem">
+                    <li class="list-item mb-2">
+                        <a href="#" style=" font-size: .7rem; background-color:
+                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
+                            Java</a>
+                        <span class="tag-side-count" style="font-size: .8rem"> x 7</span>
+                    </li>
+                    <li class="list-item mb-2">
+                        <a href="#" style="font-size: .7rem; background-color:
+                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
+                            Hibernate</a>
+                        <span class="tag-side-count" style="font-size: .8rem"> x 5</span>
+                    </li>
+                    <li class="light-item mb-2">
+                        <a href="#" style=" font-size: .7rem; background-color:
+                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
+                            Spring</a>
+                        <span class="tag-side-count" style="font-size: .8rem"> x 10</span>
+                    </li>
                 </ul>
+            </div>
+            <br>
+            <div class="tags-window">
+                <!--                        Tracked tags ~JS~-->
+                <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <div class="col-12 group1 d-flex justify-content-between">
+                            <h6 class="h6">Отслеживаемые метки</h6>
+                            <a href="#" style="color:black" class="text-decoration-none" id="edit"
+                               onclick="showAdd('editTracked')">Править</a>
+                        </div>
+                    </div>
+                    <!--                    Заполняется из ~JS~-->
+                    <div class="card-body row row-cols row-cols-auto g-2" id="trackedTags">
+                    </div>
+                    <div class="row row-cols row-cols-auto g-2"></div>
+                    <br>
+                    <div class="col-10 row-gx-5">
+                        <div class="input-group mb-2 p-2 bg-light" id="editTracked" style="display: none">
+                            <div class="wrapper">
+                                <div class="input-search">
+                                    <input class="form-control" type="text" placeholder="Add tag"
+                                           id="inputSearchTrackedTag" autocomplete="off"
+                                           onclick="startInput(inputSearchTrackedTag)">
+                                    <button type="button" class="btn btn-primary" onclick="addTrackedTag()">ADD
+                                    </button>
+                                </div>
+                                <!--                    Заполняется из ~JS~-->
+                                <div class="resultSearch" id="resultSearchTrackedTag">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!--                        Ignored tags ~JS~-->
+                <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">
+                        <div class="col-12 group1 d-flex justify-content-between">
+                            <h6 class="h6">Игнорируемые метки</h6>
+                            <a href="#" style="color:black" class="text-decoration-none text-color: dark"
+                               onclick="showAdd('editIgnored')">Править</a>
+                        </div>
+                    </div>
+                    <!--                    Заполняется из ~JS~-->
+                    <div class="card-body row row-cols row-cols-auto g-2" id="ignoredTags">
+                    </div>
+                    <div class="col-10 row-gx-5">
+                        <div class="input-group mb-2 p-2 bg-light" id="editIgnored" style="display: none">
+                            <div class="wrapper">
+                                <div class="input-search">
+                                    <input class="form-control" type="text" placeholder="Add tag"
+                                           id="inputSearchIgnoredTag" autocomplete="off"
+                                           onclick="startInput(inputSearchIgnoredTag)">
+                                    <button type="button" class="btn btn-primary" onclick="addIgnoredTag()">ADD</button>
+                                </div>
+                                <!--                    Заполняется из ~JS~-->
+                                <div class="resultSearch" id="resultSearchIgnoredTag">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -306,7 +407,7 @@
 <script src="../js/layout/Footer.js"></script>
 <script src="../js/scripts.js"></script>
 <script src="../js/logout.js"></script>
-<script src="../js/show_top_tags.js"></script>
+<script src="../js/ignoredAndTrackedTags/IgnoredAndTrackedTags.js"></script>
 
 
 </body>
