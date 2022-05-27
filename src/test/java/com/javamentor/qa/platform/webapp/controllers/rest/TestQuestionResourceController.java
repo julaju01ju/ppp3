@@ -47,6 +47,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/votes_on_questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/views.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/tags.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/question_has_tag.yml"
     },
             disableConstraints = true, cleanBefore = true
@@ -64,14 +65,17 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].countValuable").value(1))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(1))
                 .andExpect(jsonPath("$.items[0].viewCount").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[1].id").value(122))
                 .andExpect(jsonPath("$.items[1].countValuable").value(1))
                 .andExpect(jsonPath("$.items[1].countAnswer").value(1))
                 .andExpect(jsonPath("$.items[1].viewCount").value(0))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[2].id").value(123))
                 .andExpect(jsonPath("$.items[2].countValuable").value(1))
                 .andExpect(jsonPath("$.items[2].countAnswer").value(0))
                 .andExpect(jsonPath("$.items[2].viewCount").value(0))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[3].id").doesNotHaveJsonPath());
 
         mockMvc.perform(
@@ -107,18 +111,22 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].countValuable").value(2))
                 .andExpect(jsonPath("$.items[0].countAnswer").value(1))
                 .andExpect(jsonPath("$.items[0].viewCount").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[1].id").value(121))
                 .andExpect(jsonPath("$.items[1].countValuable").value(1))
                 .andExpect(jsonPath("$.items[1].countAnswer").value(1))
                 .andExpect(jsonPath("$.items[1].viewCount").value(1))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[2].id").value(124))
                 .andExpect(jsonPath("$.items[2].countValuable").value(1))
                 .andExpect(jsonPath("$.items[2].countAnswer").value(0))
                 .andExpect(jsonPath("$.items[2].viewCount").value(1))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[3].id").value(123))
                 .andExpect(jsonPath("$.items[3].countValuable").value(1))
                 .andExpect(jsonPath("$.items[3].countAnswer").value(0))
-                .andExpect(jsonPath("$.items[3].viewCount").value(0));
+                .andExpect(jsonPath("$.items[3].viewCount").value(0))
+                .andExpect(jsonPath("$.items[3].isUserBookMarks").value("false"));
     }
 
     @Test
@@ -730,7 +738,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml",
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithoutTagsInParams() throws Exception {
@@ -759,8 +768,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(2))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(1));
-
+                .andExpect(jsonPath("$.items[0].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true));
     }
 
     @Test
@@ -805,7 +814,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml",
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedTagsInParams() throws Exception {
@@ -819,7 +829,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(102))
-                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102));
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value("false"))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value("false"));;
     }
 
     @Test
@@ -938,7 +950,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml",
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithoutTagsInParamsNoAnswer() throws Exception {
@@ -966,7 +979,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].authorReputation").value(50))
                 .andExpect(jsonPath("$.items[0].viewCount").value(0))
                 .andExpect(jsonPath("$.items[0].countValuable").value(0))
-                .andExpect(jsonPath("$.items[0].countAnswer").value(0));
+                .andExpect(jsonPath("$.items[0].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true));
 
 
     }
@@ -1114,7 +1128,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
@@ -1128,9 +1143,12 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
                 .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
-                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(101));
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(true));
     }
 
     @Test
@@ -1142,7 +1160,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedTagsInParamsSortedByPersistDateDESC() throws Exception {
@@ -1156,7 +1175,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].id").value(103))
-                .andExpect(jsonPath("$.items[1].id").value(102));
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[1].id").value(102))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
     }
 
 
@@ -1170,7 +1191,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/questions.yml",
             "dataset/QuestionResourceController/GetQuestionsSortedByWeightLastWeek/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedTagsInParamsSortedByWeightLastWeek() throws Exception {
@@ -1183,9 +1205,12 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(1))
-                .andExpect(jsonPath("$.items[0].id").value(104))
-                .andExpect(jsonPath("$.items[1].id").value(103))
-                .andExpect(jsonPath("$.items[2].id").value(102))
+                .andExpect(jsonPath("$.items[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[1].id").value(104))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[2].id").value(103))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(false))
                 .andExpect(jsonPath("$.itemsOnPage").value(5));
     }
 
@@ -1198,7 +1223,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/GetQuestionsSortedByPersistDate/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml"
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithIgnoredTagsInParamsSortedByPersistDateDESC() throws Exception {
@@ -1213,7 +1239,9 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].id").value(104))
-                .andExpect(jsonPath("$.items[1].id").value(101));
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].id").value(101))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
     }
 
     @Test
@@ -1226,7 +1254,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/votes_on_questions.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/answers.yml",
-            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml"
+            "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndViewsByMonth/question_has_tag.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
 
@@ -1243,8 +1272,11 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.itemsOnPage").value(4))
                 .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(jsonPath("$.items[0].id").value(103))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false))
                 .andExpect(jsonPath("$.items[1].id").value(102))
-                .andExpect(jsonPath("$.items[2].id").value(104));
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[2].id").value(104))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(true));
     }
 
     @Test

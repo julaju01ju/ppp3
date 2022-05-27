@@ -1,11 +1,14 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
+import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.model.AnswerServiceImpl;
 import com.javamentor.qa.platform.service.impl.model.UserServiceImpl;
+import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -23,10 +27,12 @@ public class AdminResourceController {
 
     private final UserService userService;
     public final AnswerService answerService;
+    private final AnswerDtoService answerDtoService;
 
-    public AdminResourceController(UserServiceImpl userService, AnswerServiceImpl answerService) {
+    public AdminResourceController(UserServiceImpl userService, AnswerDtoService answerDtoService, AnswerServiceImpl answerService) {
         this.userService = userService;
         this.answerService = answerService;
+        this.answerDtoService = answerDtoService;
     }
 
     @DeleteMapping("delete/{userId}")
@@ -61,5 +67,20 @@ public class AdminResourceController {
             return ResponseEntity.ok().body("Ответ удален");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Вопрос с Id=" + answerId + " не найден");
+    }
+
+    @GetMapping("answer/delete")
+    @ApiOperation( "Возвращает удаленные пользователем ответы по id пользователя, как список AnswerDto. ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены удаленные ответы пользователя."),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: id пользователя."),
+            @ApiResponse(code = 404, message = "Удаленные пользователем вопросы не найдены, либо пользователь не удалял вопросы")
+    })
+    public ResponseEntity<?> getAllDeletedAnswerByUser(@RequestParam("userId") Long userId){
+        List<AnswerDto> answerDtoList = answerDtoService.getDeletedAnswersByUserId(userId);
+        if (userService.existsById(userId)){
+            return new ResponseEntity<>(answerDtoList, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Deleted answers by userId =  " + userId + " not found ", HttpStatus.NOT_FOUND);
     }
 }
