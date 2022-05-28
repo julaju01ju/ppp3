@@ -2,7 +2,13 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -11,6 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TestAdminResourceController extends AbstractControllerTest {
+
+    @Autowired
+    AnswerService answerService;
 
     @Test
     @DataSet(value = {
@@ -187,7 +196,11 @@ public class TestAdminResourceController extends AbstractControllerTest {
         authenticationRequest.setPassword("ADMIN");
         authenticationRequest.setUsername("admin1@mail.ru");
 
+
         String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        Optional<Answer> answer = answerService.getById(102L);
+        Assertions.assertTrue(answer.isPresent());
+        Assertions.assertFalse(answer.get().getIsDeleted());
         mockMvc.perform(
                         get("/api/user/question/102/answer")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -210,6 +223,9 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
                 //ответов на вопрос с id 102 больше нет
+        answer = answerService.getById(102L);
+        Assertions.assertTrue(answer.isPresent());
+        Assertions.assertTrue(answer.get().getIsDeleted());
     }
 
     @Test
