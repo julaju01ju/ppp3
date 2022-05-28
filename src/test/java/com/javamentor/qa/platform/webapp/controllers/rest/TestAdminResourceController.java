@@ -199,8 +199,12 @@ public class TestAdminResourceController extends AbstractControllerTest {
 
         String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
         Optional<Answer> answer = answerService.getById(102L);
+
+        //есть в базе, isDeleted - false
         Assertions.assertTrue(answer.isPresent());
         Assertions.assertFalse(answer.get().getIsDeleted());
+
+        //проверка работы api
         mockMvc.perform(
                         get("/api/user/question/102/answer")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -224,6 +228,8 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.length()").value(0));
                 //ответов на вопрос с id 102 больше нет
         answer = answerService.getById(102L);
+
+        //остается в базе, поле isDeleted - true
         Assertions.assertTrue(answer.isPresent());
         Assertions.assertTrue(answer.get().getIsDeleted());
     }
