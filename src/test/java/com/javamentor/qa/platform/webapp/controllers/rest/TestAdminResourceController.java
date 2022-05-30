@@ -204,15 +204,6 @@ public class TestAdminResourceController extends AbstractControllerTest {
         Assertions.assertTrue(answer.isPresent());
         Assertions.assertFalse(answer.get().getIsDeleted());
 
-        //проверка работы api
-        mockMvc.perform(
-                        get("/api/user/question/102/answer")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath(("$.length()")).value(1))
-                .andExpect(jsonPath("$[0].id").value(102));
-                //ответ с id 102 существует
 
         mockMvc.perform(
                         delete("/api/admin/answer/102/delete")
@@ -220,16 +211,9 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
                 //ответ с id 102 удален
-        mockMvc.perform(
-                        get("/api/user/question/102/answer")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
-                //ответов на вопрос с id 102 больше нет
-        answer = answerService.getById(102L);
 
         //остается в базе, поле isDeleted - true
+        answer = answerService.getById(102L);
         Assertions.assertTrue(answer.isPresent());
         Assertions.assertTrue(answer.get().getIsDeleted());
     }
