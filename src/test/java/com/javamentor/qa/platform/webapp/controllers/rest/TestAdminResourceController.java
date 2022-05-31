@@ -3,12 +3,10 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
-import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
+import javax.persistence.TypedQuery;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -18,8 +16,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TestAdminResourceController extends AbstractControllerTest {
 
-    @Autowired
-    AnswerService answerService;
 
     @Test
     @DataSet(value = {
@@ -195,15 +191,14 @@ public class TestAdminResourceController extends AbstractControllerTest {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword("ADMIN");
         authenticationRequest.setUsername("admin1@mail.ru");
+        Long answerId = 102L;
 
 
         String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-        Optional<Answer> answer = answerService.getById(102L);
-
-        //есть в базе, isDeleted - false
-        Assertions.assertTrue(answer.isPresent());
-        Assertions.assertFalse(answer.get().getIsDeleted());
-
+        String query = "select a from Answer a where a.id = :answerId";
+        TypedQuery<Answer> typedQuery = entityManager.createQuery(query, Answer.class)
+                .setParameter("answerId", answerId);
+        Assertions.assertFalse(typedQuery.getSingleResult().getIsDeleted());
 
         mockMvc.perform(
                         delete("/api/admin/answer/102/delete")
@@ -213,9 +208,9 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 //ответ с id 102 удален
 
         //остается в базе, поле isDeleted - true
-        answer = answerService.getById(102L);
-        Assertions.assertTrue(answer.isPresent());
-        Assertions.assertTrue(answer.get().getIsDeleted());
+        typedQuery = entityManager.createQuery(query, Answer.class)
+                .setParameter("answerId", answerId);
+        Assertions.assertTrue(typedQuery.getSingleResult().getIsDeleted());
     }
 
     @Test
