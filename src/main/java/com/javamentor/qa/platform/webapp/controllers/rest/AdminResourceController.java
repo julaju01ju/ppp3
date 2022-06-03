@@ -29,7 +29,7 @@ public class AdminResourceController {
     public final AnswerService answerService;
     private final AnswerDtoService answerDtoService;
 
-    public AdminResourceController(UserServiceImpl userService, AnswerDtoService answerDtoService, AnswerServiceImpl answerService) {
+    public AdminResourceController(UserServiceImpl userService, AnswerDtoService answerDtoService, AnswerService answerService) {
         this.userService = userService;
         this.answerService = answerService;
         this.answerDtoService = answerDtoService;
