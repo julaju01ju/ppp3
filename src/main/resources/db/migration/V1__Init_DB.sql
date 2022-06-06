@@ -28,6 +28,7 @@ create table answer (
     update_date timestamp not null,
     question_id int8 not null,
     user_id int8 not null,
+    edit_moderator_id int8,
     primary key (id)
 );
 
@@ -239,6 +240,11 @@ alter table answer
 alter table answer
     add constraint answer_user_fk
     foreign key (user_id)
+    references user_entity;
+
+alter table answer
+    add constraint answer_editModerator_fk
+    foreign key (edit_moderator_id)
     references user_entity;
 
 alter table bookmarks

@@ -194,6 +194,11 @@ public class TestDataInitService {
                 answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
                 answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
                 answer.setQuestion(questionList.get(i));
+                long rand = (long) (Math.random() * 3);
+                if (rand == 1)
+                {
+                    answer.setEditModerator(userService.getById((long) random).get());
+                }
                 answerService.persist(answer);
             }
         }
