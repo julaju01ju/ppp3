@@ -44,13 +44,11 @@ public class ChatResourceController {
             @RequestParam("items") Integer items,
             Principal principal){
 
-        System.out.println(items);
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("username", principal.getName());
 
-        System.out.println(principal.getName());
         return new ResponseEntity<>(singleChatDtoService.getPageDto(params), HttpStatus.OK);
     }
 
