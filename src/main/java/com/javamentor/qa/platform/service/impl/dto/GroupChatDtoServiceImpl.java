@@ -3,12 +3,14 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-//@Service
+//@Component
 public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageDto> {
 
     public PageDto<MessageDto> getPageDtoMessage(String pageDtoDaoName, Map<String, Object> params) {

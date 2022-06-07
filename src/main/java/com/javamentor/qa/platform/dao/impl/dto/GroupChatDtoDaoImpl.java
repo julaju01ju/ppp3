@@ -30,8 +30,8 @@ public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
                                 "u.id, " +
                                 "u.fullName, " +
                                 "u.imageLink " +
-                                "from Message m " +
-                                "left join m.userSender u " +
+                                "from Message m, " +
+                                "User u " +
                                 "where m.id = :messageId " +
                                 "and u.id = :userId")
                 .setParameter("messageId", messageId)
