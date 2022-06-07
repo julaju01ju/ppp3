@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -646,9 +649,19 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].countVote").value(0))
                 .andExpect(jsonPath("$[0].countView").value(1))
 
-                .andExpect(jsonPath("$[0].persistQuestionDate").value("2021-12-06T05:00:00"))
+                .andExpect(jsonPath("$[0].persistQuestionDate")
+                        .value(getDateAtLocalTimeZone("2021-12-06 00:00:00"))) //Set persist_date as in the yml_file
 
                 .andExpect(jsonPath("$.size()").value(1));
+    }
+
+    private String getDateAtLocalTimeZone(String globalDate) {
+        if (globalDate.charAt(10) != 'T') {
+            globalDate = globalDate.replace(' ', 'T');
+        }
+        LocalDateTime ldt = LocalDateTime.parse(globalDate).plusSeconds(TimeZone.getDefault().getRawOffset()/1000);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return ldt.format(dtf).replace(' ', 'T');
     }
 
     @Test
