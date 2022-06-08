@@ -1,36 +1,35 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
+import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
-import com.javamentor.qa.platform.models.dto.MessageDto;
+import com.javamentor.qa.platform.models.dto.MessageViewDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
-import org.springframework.stereotype.Component;
+import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
-//@Component
-public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageDto> {
+@Service
+public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageViewDto> implements GroupChatDtoService {
 
-    public PageDto<MessageDto> getPageDtoMessage(String pageDtoDaoName, Map<String, Object> params) {
-        PageDto<MessageDto> pageDto = super.getPageDto(pageDtoDaoName, params);
+    private final GroupChatDtoDao groupChatDtoDao;
+
+    @Autowired
+    public GroupChatDtoServiceImpl(GroupChatDtoDao groupChatDtoDao) {
+        this.groupChatDtoDao = groupChatDtoDao;
+    }
+
+    @Override
+    public PageDto<MessageViewDto> getPageDtoMessage(String pageDtoDaoName, Map<String, Object> params) {
+        PageDto<MessageViewDto> pageDto = super.getPageDto(pageDtoDaoName, params);
         return pageDto;
     }
 
-    public GroupChatDto getPageDtoGroupChat() {
-        GroupChatDto result = new GroupChatDto();
-        result.setId(1);
-        result.setChatName("1group");
-        result.setImage("dick.pick");
-        result.setPage(getPageDtoMessage(null, null));
-        result.setPersistDateTime(LocalDateTime.now());
-        return result;
+    @Override
+    public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
+        Optional<GroupChatDto> groupChatDto = groupChatDtoDao.getOptionalGroupChatDto(pageDtoDaoName, params);
+        return groupChatDto;
     }
-
-    public Optional<GroupChatDto> getGroupChatByGroupChatIdAndUserId(Long groupChatId, Long userId) {
-       // Optional<GroupChatDto> groupChatDto = groupChatDtoDao.get....
-        return null;
-    }
-
 }
