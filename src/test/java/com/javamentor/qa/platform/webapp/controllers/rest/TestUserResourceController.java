@@ -17,8 +17,7 @@ import java.util.List;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author Ali Veliev 02.12.2021
@@ -586,6 +585,22 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getAmountAllAnswerWeek/roles.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/users.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/questions.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/answers.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getAmountAllAnswerWeekByUserId() throws Exception{
+        String USER_TOKEN = getToken("admin1@mail.ru","ADMIN");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/answer/week")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print()) //Для отображения логов
+                .andExpect(status().isOk()) //Ожидаем, что вернется статус 200
+                .andExpect(jsonPath("$").value(3));
     }
 
     @Test
