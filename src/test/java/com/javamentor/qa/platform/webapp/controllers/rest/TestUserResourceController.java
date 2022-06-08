@@ -71,14 +71,14 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3Tags() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.email").value("user@mail.ru"))
+                .andExpect(jsonPath("$.email").value("user_01@mail.ru"))
                 .andExpect(jsonPath("$.fullName").value("USER"))
                 .andExpect(jsonPath("$.linkImage").value("image"))
                 .andExpect(jsonPath("$.city").value("city"))
@@ -103,7 +103,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsUserWithoutReputations() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/2")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -655,6 +655,11 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
+    /* Время создания данных в таблицах PotsgreSQL приведено к локальному времении сервера.
+    Время создания данных в DataSet-ах является типом LocalDateTime и глобальное (UTC)
+    Метод позволяет провести глобальное время UTS к локальному времени, формируя переменную типа String
+    с необходимым форматированием для непосредственного сравнения данных и производить тесты вне зависимости
+    от TimeZone оператора */
     private String getDateAtLocalTimeZone(String globalDate) {
         if (globalDate.charAt(10) != 'T') {
             globalDate = globalDate.replace(' ', 'T');
