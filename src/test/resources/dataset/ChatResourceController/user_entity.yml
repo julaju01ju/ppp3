@@ -1,0 +1,33 @@
+user_entity:
+  - id: 101
+    full_name: "USER1"
+    password: "$2a$10$U3HoMKhVyo5yt/9KMMEzv.Nt2FnGl6ul/JcF.nHeLcDe0KuPFDmEu"
+    persist_date: "2022-01-06"
+    last_redaction_date: "2022-08-06"
+    email: "user1@mail.ru"
+    about: "about"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR1"
+    role_id: 101
+  - id: 102
+    full_name: "USER2"
+    password: "$2a$10$U3HoMKhVyo5yt/9KMMEzv.Nt2FnGl6ul/JcF.nHeLcDe0KuPFDmEu"
+    persist_date: "2022-01-06"
+    last_redaction_date: "2022-08-06"
+    email: "user2@mail.ru"
+    about: "about"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR2"
+    role_id: 101
