@@ -4,6 +4,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.PageDtoMessageService;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,14 @@ import java.util.Optional;
 @Repository
 public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
 
-    private final GroupChatDtoService groupChatDtoService;
+    private final PageDtoMessageService pageDtoMessageService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public GroupChatDtoDaoImpl(GroupChatDtoService groupChatDtoService) {
-        this.groupChatDtoService = groupChatDtoService;
+    public GroupChatDtoDaoImpl(PageDtoMessageService pageDtoMessageService) {
+        this.pageDtoMessageService = pageDtoMessageService;
     }
 
     @SuppressWarnings("unchecked")
@@ -45,7 +46,7 @@ public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
                         groupChatDto.setId((Long) tuple[0]);
                         groupChatDto.setChatName((String) tuple[1]);
                         groupChatDto.setPage(
-                                groupChatDtoService
+                                pageDtoMessageService
                                         .getPageDtoMessage(pageDtoDaoName, params));
 
                         return groupChatDto;
