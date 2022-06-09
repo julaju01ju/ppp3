@@ -553,7 +553,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/user/profile/questions")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -631,7 +631,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
     public void getBookMarksUsers() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -679,7 +679,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileDeletedQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileDeletedQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/user/profile/delete/questions")
                         .header(AUTHORIZATION, USER_TOKEN))
