@@ -49,7 +49,8 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("username", principal.getName());
 
-        return new ResponseEntity<>(singleChatDtoService.getPageDto(params), HttpStatus.OK);
+        return new ResponseEntity<>(singleChatDtoService.getPageDto("paginationAllSingleChatsOfUser",
+                params), HttpStatus.OK);
     }
 
 }
