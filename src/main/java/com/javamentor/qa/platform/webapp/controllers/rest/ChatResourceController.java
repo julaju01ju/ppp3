@@ -38,8 +38,8 @@ public class ChatResourceController {
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
     public ResponseEntity<?> getGroupChatOutPutWithAllMessage(
-            @RequestParam("currentPage") Integer currentPage,
-            @RequestParam(value = "items") Integer items)
+            @RequestParam("page") Integer currentPage,
+            @RequestParam(value = "items", defaultValue = "10") Integer items)
     {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 

@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
-import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoMessageService;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
@@ -33,11 +32,12 @@ public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
     @Override
     public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
-                "select g.id, " +
-                        "c.title " +
-                        "from GroupChat g, " +
-                        "Chat c")
+                        "select g.id, " +
+                                "c.title " +
+                                "from GroupChat g, " +
+                                "Chat c where g.id = c.id")
                 .unwrap(Query.class)
+                .setMaxResults(1)
                 .setResultTransformer(new ResultTransformer() {
                     @Override
                     public Object transformTuple(Object[] tuple, String[] aliases) {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
+
 @Service
 public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageViewDto> implements GroupChatDtoService {
 
@@ -21,8 +22,8 @@ public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageViewDto> 
     }
 
     @Override
-    public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
-        Optional<GroupChatDto> groupChatDto = groupChatDtoDao.getOptionalGroupChatDto(pageDtoDaoName, params);
+    public GroupChatDto getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
+        GroupChatDto groupChatDto = groupChatDtoDao.getOptionalGroupChatDto(pageDtoDaoName, params).get();
         return groupChatDto;
     }
 }
