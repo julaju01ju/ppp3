@@ -29,7 +29,7 @@ public abstract class AbstractControllerTest {
     public MockMvc mockMvc;
 
     @PersistenceContext
-    private EntityManager entityManager;
+    protected EntityManager entityManager;
 
     private AuthenticationRequest setUserAuth(String userName, String password){
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();

@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.model;
 
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
+import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -51,6 +53,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
 
     }
 
+    @Override
+    @Cacheable(value = "getAllByRole", key = "#role")
+    public List<User> getAllByRole(Role role) {
+         return entityManager.createQuery("select u from User u join fetch u.role where u.role = :role").setParameter("role", role).getResultList();
+    }
 
 }
 

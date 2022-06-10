@@ -1,15 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+
+import javax.persistence.TypedQuery;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -17,13 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-@TestPropertySource(properties = "test/resources/application.properties")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestAdminResourceController extends AbstractControllerTest {
+
 
     @Test
     @DataSet(value = {
@@ -151,7 +143,7 @@ public class TestAdminResourceController extends AbstractControllerTest {
     @DataSet(value = {
             "dataset/adminResourceController/roles.yml",
             "dataset/adminResourceController/users.yml",
-    }, disableConstraints = true, cleanBefore = true)
+    })
     public void getListOfDeletedAnswersByUserNotExists() throws Exception{
         String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
         mockMvc.perform(get("/api/admin/answer/delete?userId=1000")
@@ -160,4 +152,89 @@ public class TestAdminResourceController extends AbstractControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.[0].userId").doesNotExist());
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdNotFound() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("ADMIN");
+        authenticationRequest.setUsername("admin1@mail.ru");
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/101/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdIsOk() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("ADMIN");
+        authenticationRequest.setUsername("admin1@mail.ru");
+        Long answerId = 102L;
+
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        String query = "select a from Answer a where a.id = :answerId";
+        TypedQuery<Answer> typedQuery = entityManager.createQuery(query, Answer.class)
+                .setParameter("answerId", answerId);
+        Assertions.assertFalse(typedQuery.getSingleResult().getIsDeleted());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/102/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+                //ответ с id 102 удален
+
+        //остается в базе, поле isDeleted - true
+        typedQuery = entityManager.createQuery(query, Answer.class)
+                .setParameter("answerId", answerId);
+        Assertions.assertTrue(typedQuery.getSingleResult().getIsDeleted());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/adminResourceController/testDeleteAnswerById/roles.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/users.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/questions.yml",
+            "dataset/adminResourceController/testDeleteAnswerById/answers.yml",
+
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
+    public void deleteAnswerByIdIsForbidden() throws Exception {
+        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
+        authenticationRequest.setPassword("USER");
+        authenticationRequest.setUsername("user@mail.ru");
+
+        String USER_TOKEN = getToken(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+
+        mockMvc.perform(
+                        delete("/api/admin/answer/102/delete")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
 }
