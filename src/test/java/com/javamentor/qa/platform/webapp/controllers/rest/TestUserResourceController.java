@@ -1,13 +1,20 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -27,6 +34,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Ali Veliev 02.12.2021
  */
 
+@DBRider
+@SpringBootTest(classes = JmApplication.class)
+@AutoConfigureMockMvc
+@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
+@TestPropertySource(properties = "test/resources/application.properties")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestUserResourceController extends AbstractControllerTest {
 
     @Autowired
@@ -132,7 +145,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsUserWithDownVotesMustNotBeReputation() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -161,7 +174,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsNotExistsId() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/999")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -606,7 +619,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
     public void getBookMarksEmpty() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
                         .header(AUTHORIZATION, USER_TOKEN))
