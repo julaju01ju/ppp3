@@ -35,7 +35,9 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
 
                                 "FROM message m " +
                                 "JOIN user_entity u ON m.user_sender_id = u.id " +
+                                "WHERE m.chat_id = :chatId " +
                                 "ORDER BY m.persist_date DESC")
+                .setParameter("chatId", params.get("chatId"))
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -66,7 +68,8 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         Query queryTotal = entityManager.createQuery
-                ("Select CAST(count(message.id) as int) AS countMessages from Message message");
+                ("Select CAST(count(message.id) as int) AS countMessages from Message message WHERE message.chat.id = :chatId")
+                .setParameter("chatId", params.get("chatId"));
         return (int) queryTotal.getSingleResult();
     }
 }

@@ -56,6 +56,7 @@ public class ChatResourseController {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
+        params.put("chatId", chatId);
 
         return new ResponseEntity<>(messageDtoService.getPageMessages(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
