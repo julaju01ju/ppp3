@@ -24,7 +24,6 @@ public class PaginationAllSingleChatsOfUser implements PageDtoDao<SingleChatDto>
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
-
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.SingleChatDto(" +
                         "singleChat.chat.id, " +
                         "case " +
