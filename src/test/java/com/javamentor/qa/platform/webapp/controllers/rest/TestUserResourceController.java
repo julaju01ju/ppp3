@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,9 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 /**
  * @author Ali Veliev 02.12.2021
@@ -601,6 +601,23 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print()) //Для отображения логов
                 .andExpect(status().isOk()) //Ожидаем, что вернется статус 200
                 .andExpect(jsonPath("$").value(3));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getAmountAllAnswerWeek/roles.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/users.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/questions.yml",
+            "dataset/UserResourceController/getAmountAllAnswerWeek/answers.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getAmountAllAnswerNullForWeekByUserId() throws Exception{
+        String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/answer/week")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print()) //Для отображения логов
+                .andExpect(status().isOk()) //Ожидаем, что вернется статус 200
+                .andExpect(jsonPath("$").value(0));
     }
 
     @Test
