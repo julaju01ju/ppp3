@@ -23,16 +23,15 @@ public class PaginationGroupChatMessages implements PageDtoDao<MessageViewDto> {
         int itemsOnPage = (int) params.get("itemsOnPage");
 
         return entityManager.createNativeQuery(
-                "select user_entity.id as user_entity_id, " +
+                "select user_entity.id as user_entity_ud, " +
                         "user_entity.full_name, " +
                         "user_entity.image_link, " +
                         "message.id, " +
                         "message.message, " +
                         "message.persist_date " +
-                        "from " +
-                        "message inner join chat on message.chat_id = chat.id " +
-                        "inner join groupchat_has_users on chat.id = groupchat_has_users.chat_id " +
-                        "inner join user_entity on groupchat_has_users.user_id = user_entity.id " +
+                        "from message join user_entity on message.user_sender_id = user_entity.id " +
+                        "join chat on message.chat_id = chat.id " +
+                        "where chat.chat_type = 1 " +
                         "order by message.persist_date desc")
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
@@ -44,11 +43,11 @@ public class PaginationGroupChatMessages implements PageDtoDao<MessageViewDto> {
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         return ((BigInteger) entityManager.createNativeQuery(
-                "select count (message.id) from group_chat " +
-                        "inner join chat on group_chat.chat_id = chat.id " +
-                        "inner join message on group_chat.chat_id = message.chat_id " +
-                        "inner join groupchat_has_users on chat.id = groupchat_has_users.chat_id " +
-                        "inner join user_entity on groupchat_has_users.user_id = user_entity.id")
+                "select count (message.id) " +
+                        "from message " +
+                        "inner join user_entity on message.user_sender_id = user_entity.id " +
+                        "inner join chat on message.chat_id = chat.id " +
+                        "where chat.chat_type = 1")
                 .getSingleResult()).intValue();
     }
 }
