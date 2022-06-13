@@ -22,8 +22,8 @@ public class GroupChatDtoServiceImpl extends PageDtoServiceImpl<MessageViewDto> 
     }
 
     @Override
-    public GroupChatDto getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
-        GroupChatDto groupChatDto = groupChatDtoDao.getOptionalGroupChatDto(pageDtoDaoName, params).get();
+    public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
+        Optional<GroupChatDto> groupChatDto = groupChatDtoDao.getOptionalGroupChatDto(pageDtoDaoName, params);
         return groupChatDto;
     }
 }

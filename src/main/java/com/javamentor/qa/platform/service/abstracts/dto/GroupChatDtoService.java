@@ -6,5 +6,5 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface GroupChatDtoService {
-    GroupChatDto getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params);
+    Optional <GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params);
 }
