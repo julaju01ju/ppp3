@@ -1,257 +1,113 @@
 user_entity:
-  - id: 100
+  - id: 101
     about: "Something"
     city: "Moscow"
-    email: "SomeEmail@mail.com"
+    email: "user@mail.ru"
     full_name: "Constantin"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 101
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmail@mail.mail"
-    full_name: "Nicolay"
-    image_link: "link"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 102
     about: "Something"
     city: "Moscow"
-    email: "SomeEmaiaal@mail.mail"
-    full_name: "Petya"
+    email: "user@mail.ru"
+    full_name: "Nicolay"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 103
     about: "Something"
     city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Ivan"
+    email: "user@mail.ru"
+    full_name: "Petya"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 104
     about: "Something"
     city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Nastya"
+    email: "user@mail.ru"
+    full_name: "Ivan"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 105
     about: "Something"
     city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Jora"
+    email: "user@mail.ru"
+    full_name: "Nastya"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 106
     about: "Something"
     city: "Moscow"
-    email: "SomeEmail@mail.com"
-    full_name: "Constantin"
+    email: "user@mail.ru"
+    full_name: "Jora"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101
   - id: 107
     about: "Something"
     city: "Moscow"
-    email: "SomeEmail@mail.mail"
-    full_name: "Nicolay"
-    image_link: "link2"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 108
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmaiaal@mail.mail"
-    full_name: "Petya"
-    image_link: "link3"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 109
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Ivan"
-    image_link: "link4"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 110
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Nastya"
-    image_link: "link5"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 111
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Jora"
-    image_link: "link6"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 112
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmail@mail.com"
+    email: "user@mail.ru"
     full_name: "Constantin"
     image_link: "link"
     is_deleted: false
     is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
     link_github: "github@link"
     link_site: "site@link"
     link_vk: "vk@link"
     nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 113
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmail@mail.mail"
-    full_name: "Nicolay"
-    image_link: "link2"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 114
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEmaiaal@mail.mail"
-    full_name: "Petya"
-    image_link: "link3"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
-    role_id: 101
-  - id: 115
-    about: "Something"
-    city: "Moscow"
-    email: "SomeEddmail@mail.mail"
-    full_name: "Ivan"
-    image_link: "link4"
-    is_deleted: false
-    is_enabled: true
-    last_redaction_date: 2021-12-06 00:00:00
-    link_github: "github@link"
-    link_site: "site@link"
-    link_vk: "vk@link"
-    nickname: "NickName"
-    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
-    persist_date: 2021-12-06 00:00:00
+    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    persist_date: 2022-06-14 00:00:00
     role_id: 101

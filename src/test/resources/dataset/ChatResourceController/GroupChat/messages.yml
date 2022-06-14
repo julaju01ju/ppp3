@@ -1,97 +1,49 @@
 message:
-  - id: 100
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 1"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 100
-    user_sender_id: 100
   - id: 101
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 2"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 100
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 1"
+    persist_date: 2022-06-14 00:00:00
+    chat_id: 101
     user_sender_id: 101
   - id: 102
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 2"
-    perstist_date: 2022-06-13 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 2"
+    persist_date: 2022-06-14 00:00:00
     chat_id: 101
     user_sender_id: 102
   - id: 103
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 4"
-    perstist_date: 2022-06-13 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 3"
+    persist_date: 2022-06-14 00:00:00
     chat_id: 101
     user_sender_id: 103
   - id: 104
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 3"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 102
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 4"
+    persist_date: 2022-06-14 00:00:00
+    chat_id: 101
     user_sender_id: 104
   - id: 105
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 6"
-    perstist_date: 2022-06-13 00:00:00
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 1"
+    persist_date: 2022-06-14 00:00:00
     chat_id: 102
     user_sender_id: 105
   - id: 106
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 4"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 103
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 2"
+    persist_date: 2022-06-14 00:00:00
+    chat_id: 102
     user_sender_id: 106
   - id: 107
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in single chat 8"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 103
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 3"
+    persist_date: 2022-06-14 00:00:00
+    chat_id: 102
     user_sender_id: 107
   - id: 108
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 1"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 104
+    last_redaction_date: 2022-06-14 00:00:00
+    message: "Some message in group chat 4"
+    persist_date: 2022-06-14 00:00:00
+    chat_id: 102
     user_sender_id: 108
-  - id: 109
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 2"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 104
-    user_sender_id: 109
-  - id: 110
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 3"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 104
-    user_sender_id: 110
-  - id: 111
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 4"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 104
-    user_sender_id: 111
-  - id: 112
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 1"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 105
-    user_sender_id: 112
-  - id: 113
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 2"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 105
-    user_sender_id: 113
-  - id: 114
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 3"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 105
-    user_sender_id: 114
-  - id: 115
-    last_redaction_date: 2022-06-13 00:00:00
-    message: "Some message in group chat 4"
-    perstist_date: 2022-06-13 00:00:00
-    chat_id: 105
-    user_sender_id: 115
