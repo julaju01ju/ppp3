@@ -90,8 +90,10 @@ public class TestDataInitService {
     }
 
     public void createRole() {
-        Role role = new Role("ROLE_USER");
-        roleService.persist(role);
+        Role roleAdmin = new Role("ROLE_ADMIN");
+        Role roleUser = new Role("ROLE_USER");
+        roleService.persist(roleAdmin);
+        roleService.persist(roleUser);
     }
 
     public void createUser(int count) {
@@ -111,8 +113,30 @@ public class TestDataInitService {
             user.setImageLink(("imageLink" + i));
             user.setLastUpdateDateTime(LocalDateTime.of(2021, 12, 4, 0, 0));
             user.setNickname(("nickName" + i));
-            user.setRole(roleService.getAll().get(0));
+            user.setRole(roleService.getAll().get(1));
             userService.persist(user);
+        }
+    }
+
+    public void createAdmin(int count) {
+        for (int i = 0; i <= count; i++) {
+            User admin = new User();
+            admin.setEmail("admin" + i + "@mail.com");
+            admin.setPassword("admin" + i);
+            admin.setFullName("fullName" + i);
+            admin.setPersistDateTime(LocalDateTime.of(2021, 12, 3, 0, 0));
+            admin.setIsEnabled(true);
+            admin.setIsDeleted(false);
+            admin.setCity("City" + i);
+            admin.setLinkSite("linkSite" + i);
+            admin.setLinkGitHub("linkGitHub" + i);
+            admin.setLinkVk("linkVk" + i);
+            admin.setAbout("About" + i);
+            admin.setImageLink("imageLink" + i);
+            admin.setLastUpdateDateTime(LocalDateTime.of(2021, 12, 4, 0, 0));
+            admin.setNickname("nickName" + i);
+            admin.setRole(roleService.getAll().get(0));
+            userService.persist(admin);
         }
     }
 
@@ -194,6 +218,11 @@ public class TestDataInitService {
                 answer.setUpdateDateTime(LocalDateTime.of(2021, 12, 01, 14, 05, 00));
                 answer.setUser(userService.getAll().get((int) (Math.random() * 50)));
                 answer.setQuestion(questionList.get(i));
+                long rand = (long) (Math.random() * 3);
+                if (rand == 1) {
+                    answer.setEditModerator(userService.getAllByRole(roleService.getAll().get(0))
+                            .get(0));
+                }
                 answerService.persist(answer);
             }
         }
@@ -353,6 +382,7 @@ public class TestDataInitService {
 
     public void init() {
         createRole();
+        createAdmin(0);
         createUser(50);
         createTag(4);
         createQuestion(50);
