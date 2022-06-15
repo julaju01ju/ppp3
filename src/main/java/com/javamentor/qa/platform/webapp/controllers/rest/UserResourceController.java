@@ -1,10 +1,12 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+
 import com.javamentor.qa.platform.models.dto.BookMarksDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.BookMarksDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -41,15 +44,18 @@ public class UserResourceController {
     private final UserDtoService userDtoService;
     private final UserService userService;
     private BookMarksDtoService bookMarksDtoService;
+    private AnswerDtoService answerDtoService;
 
 
     @Autowired
     public UserResourceController(UserDtoService userDtoService,
                                   UserService userService,
-                                  BookMarksDtoService bookMarksDtoService) {
+                                  BookMarksDtoService bookMarksDtoService,
+                                  AnswerDtoService answerDtoService) {
         this.userDtoService = userDtoService;
         this.userService = userService;
         this.bookMarksDtoService = bookMarksDtoService;
+        this.answerDtoService = answerDtoService;
     }
 
     @GetMapping("/api/user/{userId}")
@@ -180,6 +186,19 @@ public class UserResourceController {
         List<UserProfileQuestionDto> listAllUserQuestions = userDtoService.getAllQuestionsByUserId(userId);
         return new ResponseEntity<>(listAllUserQuestions, HttpStatus.OK);
     }
+
+    @GetMapping("/api/user/profile/answer/week")
+    @ApiOperation("Возвращает количество ответов, которые оставлял авторизованный пользователь за неделю")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получено количество ответов, которые оставлял авторизованный пользователь за неделю"),
+            @ApiResponse(code = 500, message = "Страницы пока что не существует")
+    })
+    public Long getAmountAllAnswerWeekByUserId() {
+
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        return answerDtoService.getAmountAllAnswersByUserId(userId);
+    }
+
 
     @GetMapping("/api/user/profile/bookmarks")
     @ApiOperation(value = "Возвращает все закладки")

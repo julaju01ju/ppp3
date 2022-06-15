@@ -1,0 +1,53 @@
+
+
+answer:
+  - id: 100
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some answer with id 100"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: "[DAY,NOW]"
+    update_date: "[DAY,NOW]"
+    question_id: 100
+    user_id: 101
+  - id: 101
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some answer with id 101"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: "[DAY,NOW]"
+    update_date: "[DAY,NOW]"
+    question_id: 100
+    user_id: 101
+  - id: 102
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some answer with id 102"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2022-05-28 00:00:00
+    update_date: 2022-05-28 00:00:00
+    question_id: 100
+    user_id: 101
+  - id: 103
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some answer with id 103"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: "[DAY,NOW]"
+    update_date: "[DAY,NOW]"
+    question_id: 100
+    user_id: 101
+  - id: 104
+    date_accept_time: 2021-12-06 00:00:00
+    html_body: "Some answer with id 104"
+    is_deleted: false
+    is_deleted_by_moderator: false
+    is_helpful: true
+    persist_date: 2022-05-29 00:00:00
+    update_date: 2022-05-29 00:00:00
+    question_id: 100
+    user_id: 101

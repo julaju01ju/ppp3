@@ -1,7 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.model.UserServiceImpl;
@@ -23,10 +25,12 @@ import java.util.Optional;
 public class AdminResourceController {
 
     private final UserService userService;
+    public final AnswerService answerService;
     private final AnswerDtoService answerDtoService;
 
-    public AdminResourceController(UserServiceImpl userService, AnswerDtoService answerDtoService) {
+    public AdminResourceController(UserServiceImpl userService, AnswerDtoService answerDtoService, AnswerService answerService) {
         this.userService = userService;
+        this.answerService = answerService;
         this.answerDtoService = answerDtoService;
     }
 
@@ -45,6 +49,23 @@ public class AdminResourceController {
             return ResponseEntity.ok().body("Пользователь удален");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Пользователь с userId=" + userId + " не найден");
+    }
+
+    @DeleteMapping("answer/{answerId}/delete")
+    @ApiOperation( value = "Удаление ответа по userId, через изменение значения свойства isDeleted с false, на true")
+    @ApiResponses( value = {
+            @ApiResponse(code = 200, message = "Ответ удален"),
+            @ApiResponse(code = 404, message = "Ответ с указанным id не найден"),
+            @ApiResponse(code = 400, message = "Неверный формат введенного Id")
+    })
+    public ResponseEntity<?> deleteAnswerById(@PathVariable("answerId") Long answerId) {
+        Optional<Answer> optionalAnswer = answerService.getById(answerId);
+
+        if (optionalAnswer.isPresent()) {
+            answerService.deleteById(optionalAnswer.get().getId());
+            return ResponseEntity.ok().body("Ответ удален");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Вопрос с Id=" + answerId + " не найден");
     }
 
     @GetMapping("answer/delete")
