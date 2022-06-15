@@ -24,3 +24,13 @@ form.addEventListener("submit", async e => {
 
     }
 });
+
+
+async function requestToquestionId_view(){
+    await fetch("/api/user" + window.location.pathname + "/view", {
+            method: "POST",
+            headers: {
+                'Authorization': 'Bearer ' + token}
+        }
+    ).then(responce => responce.text()).then(datas => console.log(datas));
+}
