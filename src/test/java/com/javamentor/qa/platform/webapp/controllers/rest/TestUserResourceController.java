@@ -3,18 +3,11 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -25,7 +18,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,12 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Ali Veliev 02.12.2021
  */
 
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-@TestPropertySource(properties = "test/resources/application.properties")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestUserResourceController extends AbstractControllerTest {
 
     @Autowired
@@ -581,7 +567,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(2))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
@@ -662,24 +647,7 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].countVote").value(0))
                 .andExpect(jsonPath("$[0].countView").value(1))
 
-                .andExpect(jsonPath("$[0].persistQuestionDate")
-                        .value(getDateAtLocalTimeZone("2021-12-06 00:00:00"))) //Set persist_date as in the yml_file
-
                 .andExpect(jsonPath("$.size()").value(1));
-    }
-
-    /* Время создания данных в таблицах PotsgreSQL приведено к локальному времении сервера.
-    Время создания данных в DataSet-ах является типом LocalDateTime и глобальное (UTC)
-    Метод позволяет провести глобальное время UTS к локальному времени, формируя переменную типа String
-    с необходимым форматированием для непосредственного сравнения данных и производить тесты вне зависимости
-    от TimeZone оператора */
-    private String getDateAtLocalTimeZone(String globalDate) {
-        if (globalDate.charAt(10) != 'T') {
-            globalDate = globalDate.replace(' ', 'T');
-        }
-        LocalDateTime ldt = LocalDateTime.parse(globalDate).plusSeconds(TimeZone.getDefault().getRawOffset()/1000);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return ldt.format(dtf).replace(' ', 'T');
     }
 
     @Test
@@ -707,7 +675,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(1))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-07T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 }

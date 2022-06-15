@@ -1,24 +1,16 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
-import com.javamentor.qa.platform.webapp.configs.JmApplication;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -37,12 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DBRider
-@SpringBootTest(classes = JmApplication.class)
-@AutoConfigureMockMvc
-@DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
-@TestPropertySource(properties = "test/resources/application.properties")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Autowired
@@ -250,8 +236,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.id").value(101))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.description").value("description to 101"))
-                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$.persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.authorId").value(101))
                 .andExpect(jsonPath("$.authorName").value("Constantin"))
                 .andExpect(jsonPath("$.authorImage").value("link"))
@@ -307,8 +291,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.id").value(101))
                 .andExpect(jsonPath("$.title").value("title"))
                 .andExpect(jsonPath("$.description").value("description to 101"))
-                .andExpect(jsonPath("$.lastUpdateDateTime").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$.persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.authorId").value(101))
                 .andExpect(jsonPath("$.authorName").value("Constantin"))
                 .andExpect(jsonPath("$.authorImage").value("link"))
@@ -774,8 +756,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(101))
                 .andExpect(jsonPath("$.items[0].title").value("title"))
                 .andExpect(jsonPath("$.items[0].description").value("description to 101"))
-                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.items[0].authorId").value(101))
                 .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].authorImage").value("link"))
@@ -985,8 +965,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].title").value("title"))
                 .andExpect(jsonPath("$.items[0].description").value("description to 104"))
-                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.items[0].authorId").value(101))
                 .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].authorImage").value("link"))
@@ -1026,8 +1004,6 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].title").value("title"))
                 .andExpect(jsonPath("$.items[0].description").value("description to 104"))
-                .andExpect(jsonPath("$.items[0].lastUpdateDateTime").value("2021-12-06T03:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.items[0].authorId").value(101))
                 .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
                 .andExpect(jsonPath("$.items[0].authorImage").value("link"))
@@ -1115,22 +1091,18 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
         Assertions.assertTrue((int) list.get(0).get("id") == 104);
         Assertions.assertTrue(list.get(0).get("description").equals("description to 104"));
-        Assertions.assertTrue(list.get(0).get("persistDateTime").equals("2021-12-09T03:00:00"));
         Assertions.assertTrue((int) list.get(0).get("authorId") == 101);
 
         Assertions.assertTrue((int) list.get(1).get("id") == 103);
         Assertions.assertTrue(list.get(1).get("description").equals("description to 103"));
-        Assertions.assertTrue(list.get(1).get("persistDateTime").equals("2021-12-08T03:00:00"));
         Assertions.assertTrue((int) list.get(1).get("authorId") == 103);
 
         Assertions.assertTrue((int) list.get(2).get("id") == 102);
         Assertions.assertTrue(list.get(2).get("description").equals("description to 102"));
-        Assertions.assertTrue(list.get(2).get("persistDateTime").equals("2021-12-07T03:00:00"));
         Assertions.assertTrue((int) list.get(2).get("authorId") == 102);
 
         Assertions.assertTrue((int) list.get(3).get("id") == 101);
         Assertions.assertTrue(list.get(3).get("description").equals("description to 101"));
-        Assertions.assertTrue(list.get(3).get("persistDateTime").equals("2021-12-06T03:00:00"));
         Assertions.assertTrue((int) list.get(3).get("authorId") == 101);
     }
 

@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DBUnit(caseSensitiveTableNames = true, cacheConnection = false, allowEmptyFields = true)
 @TestPropertySource(properties = "test/resources/application.properties")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class AuthenticationResourceControllerTest {
 
     @Autowired
