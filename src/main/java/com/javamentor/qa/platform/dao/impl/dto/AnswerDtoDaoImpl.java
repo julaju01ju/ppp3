@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -89,5 +91,21 @@ public class AnswerDtoDaoImpl
                 .setParameter("id", id)
                 .getResultList();
 
+    }
+
+
+    @Override
+    public Long getAmountAllAnswersByUserId(Long id) {
+
+        String query = "SELECT count(*) FROM Answer AS a WHERE a.user.id = :id AND a.isDeleted = false AND a.persistDateTime >= :data";
+        Long countRecords = (Long) entityManager.createQuery(query)
+                .setParameter("id", id)
+                .setParameter("data", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusWeeks(1))
+                .getSingleResult();
+
+
+
+
+        return countRecords;
     }
 }

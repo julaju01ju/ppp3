@@ -14,4 +14,4 @@ user_entity:
     is_deleted: false
     image_link: "image"
     nickname: "USR"
-    role_id: 101
+    role_id: 1
