@@ -1,7 +1,7 @@
 $(document).ready(async function () {
 
     await getAllQuestionsCount();
-    await pagination(1, 50, getMostPopularQuestion);
+    await pagination(1, 20, getMostPopularQuestion);
 })
 
 

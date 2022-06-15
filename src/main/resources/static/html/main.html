@@ -75,238 +75,16 @@
                 </div>
             </div>
 
-            <div class="question-card d-flex" style="height: 5rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex ">
-                    <div class="d-flex flex-column" style="margin-right: .7rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column" style="margin-right: .7rem; border: 1px solid green;
-                    border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
+            <!--            Заполняется из JS-->
+            <div id="questions_browser">
+                <div class="container-fluid" id="questions_list">
                 </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 3rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <nav>
+                    <ul class="pagination justify-content-end" id="paginationButtons"></ul>
+                </nav>
             </div>
-
-            <div class="question-card d-flex" style="height: 5rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex ">
-                    <div class="d-flex flex-column" style="margin-right: .7rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column" style="margin-right: .7rem; border: 1px solid green;
-                    border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 3rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-card d-flex" style="height: 5rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex ">
-                    <div class="d-flex flex-column" style="margin-right: .7rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column" style="margin-right: .7rem; border: 1px solid green;
-                    border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 3rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-card d-flex" style="height: 5rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex ">
-                    <div class="d-flex flex-column" style="margin-right: .7rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column" style="margin-right: .7rem; border: 1px solid green;
-                    border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 3rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-card d-flex" style="height: 5rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex ">
-                    <div class="d-flex flex-column" style="margin-right: .7rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column" style="margin-right: .7rem; border: 1px solid green;
-                    border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 3rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item">
-                                <a href="#" style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
+
         <div class="col-3 d-flex flex-column p-3" style="color: #7b8185"><h6 style="color: #333; font-weight: normal;">
             Недавние метки
         </h6>
@@ -410,7 +188,8 @@
 <script src="../js/scripts.js"></script>
 <script src="../js/logout.js"></script>
 <script src="../js/ignoredAndTrackedTags/IgnoredAndTrackedTags.js"></script>
-
+<script src="../js/pagination.js"></script>
+<script src="../js/main.js"></script>
 
 
 </body>
