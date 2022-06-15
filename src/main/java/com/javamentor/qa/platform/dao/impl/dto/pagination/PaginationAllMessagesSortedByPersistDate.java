@@ -1,15 +1,12 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.*;
-import org.hibernate.transform.ResultTransformer;
+import com.javamentor.qa.platform.models.dto.MessageDto;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -23,46 +20,25 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
     public List<MessageDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
+        Long chatId = (Long) params.get("chatId");
 
-        return entityManager.createNativeQuery(
-                        "SELECT " +
-                                "m.id AS m_id, " +
+        return entityManager.createQuery(
+                        "SELECT new com.javamentor.qa.platform.models.dto.MessageDto" +
+                                "(m.id," +
                                 "m.message, " +
-                                "m.persist_date, " +
-                                "u.id, " +
-                                "u.nickname, " +
-                                "u.image_link " +
-
-                                "FROM message m " +
-                                "JOIN user_entity u ON m.user_sender_id = u.id " +
-                                "WHERE m.chat_id = :chatId " +
-                                "ORDER BY m.persist_date DESC")
-                .setParameter("chatId", params.get("chatId"))
+                                "m.userSender.nickname, " +
+                                "m.userSender.id, " +
+                                "m.userSender.imageLink, " +
+                                "m.persistDate)" +
+                                "FROM Message m " +
+                                "JOIN User u ON (m.userSender.id = u.id) " +
+                                "WHERE m.chat.id = :chatId " +
+                                "ORDER BY m.persistDate desc"
+                        , MessageDto.class)
+                .setParameter("chatId", chatId)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
-                .unwrap(org.hibernate.query.Query.class)
-                .setResultTransformer(new ResultTransformer() {
-
-                                          @Override
-                                          public Object transformTuple(Object[] tuple, String[] aliases) {
-
-                                              MessageDto messageDto = new MessageDto();
-                                              messageDto.setId(((BigInteger) tuple[0]).longValue());
-                                              messageDto.setMessage((String) tuple[1]);
-                                              messageDto.setPersistDateTime(((Timestamp) tuple[2]).toLocalDateTime());
-                                              messageDto.setUserId(((BigInteger) tuple[3]).longValue());
-                                              messageDto.setNickName((String) tuple[4]);
-                                              messageDto.setImage((String) tuple[5]);
-
-                                              return messageDto;
-                                          }
-
-                                          @Override
-                                          public List transformList(List list) {
-                                              return list;
-                                          }
-                                      }
-                ).getResultList();
+                .getResultList();
     }
 
     @Override
