@@ -2,7 +2,7 @@ user_entity:
   - id: 101
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user1@mail.ru"
     full_name: "Constantin"
     image_link: "link"
     is_deleted: false
@@ -18,7 +18,7 @@ user_entity:
   - id: 102
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user2@mail.ru"
     full_name: "Nicolay"
     image_link: "link"
     is_deleted: false
@@ -34,7 +34,7 @@ user_entity:
   - id: 103
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user3@mail.ru"
     full_name: "Petya"
     image_link: "link"
     is_deleted: false
@@ -50,7 +50,7 @@ user_entity:
   - id: 104
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user4@mail.ru"
     full_name: "Ivan"
     image_link: "link"
     is_deleted: false
@@ -66,7 +66,7 @@ user_entity:
   - id: 105
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user5@mail.ru"
     full_name: "Nastya"
     image_link: "link"
     is_deleted: false
@@ -82,7 +82,7 @@ user_entity:
   - id: 106
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user6@mail.ru"
     full_name: "Jora"
     image_link: "link"
     is_deleted: false
@@ -98,7 +98,7 @@ user_entity:
   - id: 107
     about: "Something"
     city: "Moscow"
-    email: "user@mail.ru"
+    email: "user7@mail.ru"
     full_name: "Constantin"
     image_link: "link"
     is_deleted: false
