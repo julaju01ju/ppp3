@@ -143,7 +143,9 @@ public class TestAdminResourceController extends AbstractControllerTest {
     @DataSet(value = {
             "dataset/adminResourceController/roles.yml",
             "dataset/adminResourceController/users.yml",
-    })
+    }
+            , disableConstraints = true, cleanBefore = true
+    )
     public void getListOfDeletedAnswersByUserNotExists() throws Exception{
         String USER_TOKEN = getToken("admin@mail.ru","ADMIN");
         mockMvc.perform(get("/api/admin/answer/delete?userId=1000")

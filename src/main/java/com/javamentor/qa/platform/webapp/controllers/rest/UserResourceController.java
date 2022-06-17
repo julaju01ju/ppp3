@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,6 +40,7 @@ import java.util.List;
 
 @RestController
 @Api("User Api")
+@RequestMapping("/api/user")
 public class UserResourceController {
 
     private final UserDtoService userDtoService;
@@ -58,7 +60,7 @@ public class UserResourceController {
         this.answerDtoService = answerDtoService;
     }
 
-    @GetMapping("/api/user/{userId}")
+    @GetMapping("/{userId}")
     @ApiOperation("Получение пользователя по ID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Пользователь с userId=* получен"),
@@ -72,7 +74,7 @@ public class UserResourceController {
                 new ResponseEntity<>(userDtoService.getUserById(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/new")
+    @GetMapping("/new")
     @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
             "по дате регистрации с учетом заданных параметров пагинации")
     @ApiResponses(value = {
@@ -95,7 +97,7 @@ public class UserResourceController {
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/reputation")
+    @GetMapping("/reputation")
     @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
             "по репутации с учетом заданных параметров пагинации")
     @ApiResponses(value = {
@@ -118,7 +120,7 @@ public class UserResourceController {
                 "paginationAllUsersSortedByReputation", params), HttpStatus.OK);
     }
 
-    @GetMapping("api/user/vote")
+    @GetMapping("/vote")
     @ApiOperation("Возращает всех пользователей как объект класса PageDto<UserDto> отсортированных " +
             "по сумме голосов, полученных за ответы и вопросы с учетом заданных параметров пагинации")
     @ApiResponses(value = {
@@ -141,7 +143,7 @@ public class UserResourceController {
                 "paginationAllUsersSortedByVote", params), HttpStatus.OK);
     }
 
-    @PutMapping("/api/{userId}/change/password")
+    @PutMapping("/{userId}/change/password")
     @ApiOperation("Смена пароля с шифрованием")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Пароль успешно изменён"),
@@ -175,7 +177,7 @@ public class UserResourceController {
         return new ResponseEntity<>("Вы можете менять только свой пароль", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/api/user/profile/questions")
+    @GetMapping("/profile/questions")
     @ApiOperation("Возвращает все вопросы, которые задавал авторизованный пользователь")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все вопросы, которые задавал авторизованный пользователь"),
@@ -187,7 +189,7 @@ public class UserResourceController {
         return new ResponseEntity<>(listAllUserQuestions, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/profile/answer/week")
+    @GetMapping("/profile/answer/week")
     @ApiOperation("Возвращает количество ответов, которые оставлял авторизованный пользователь за неделю")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получено количество ответов, которые оставлял авторизованный пользователь за неделю"),
@@ -200,7 +202,7 @@ public class UserResourceController {
     }
 
 
-    @GetMapping("/api/user/profile/bookmarks")
+    @GetMapping("/profile/bookmarks")
     @ApiOperation(value = "Возвращает все закладки")
     @ApiResponse(code = 200, message = "Получены все закладки")
     public ResponseEntity<List<BookMarksDto>> getAllBookMarks() {
@@ -210,7 +212,7 @@ public class UserResourceController {
         return new ResponseEntity<>(bookMarksDtoList, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/profile/delete/questions")
+    @GetMapping("/profile/delete/questions")
     @ApiOperation("Возвращает все удаленные вопросы, которые задавал авторизованный пользователь")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все удаленные вопросы, которые задавал авторизованный пользователь"),
