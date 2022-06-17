@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.SingleChatDto;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
@@ -32,13 +33,13 @@ public class ChatResourceController {
 
     private final SingleChatDtoServiceImpl singleChatDtoService;
     private final SingleChatService singleChatService;
-    private final PageDtoService<MessageDto> pageDtoService;
+    private final MessageDtoService messageDtoService;
 
     @Autowired
-    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, PageDtoService<MessageDto> pageDtoService) {
+    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, MessageDtoService messageDtoService) {
         this.singleChatDtoService = singleChatDtoService;
         this.singleChatService = singleChatService;
-        this.pageDtoService = pageDtoService;
+        this.messageDtoService = messageDtoService;
     }
 
 
@@ -86,7 +87,7 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("chatId", chatId);
 
-        return new ResponseEntity<>(pageDtoService.getPageDto(
+        return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
     }
 }
