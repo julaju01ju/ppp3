@@ -221,5 +221,16 @@ public class UserResourceController {
         List<UserProfileQuestionDto> listAllUserDeletedQuestions = userDtoService.getAllDeletedQuestionsByUserId(userId);
         return new ResponseEntity<>(listAllUserDeletedQuestions, HttpStatus.OK);
     }
+
+    @GetMapping("/api/user/getTop10UserDtoForAnswer")
+    @ApiOperation("Возвращает ТОП 10 пользователей по ответам за последнюю неделю")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены ТОП 10 пользователей по ответам"),
+            @ApiResponse(code = 500, message = "")
+    })
+    public ResponseEntity<List<UserDto>> getTop10UserDtoForAnswer() {
+        return new ResponseEntity<>(userDtoService.getTop10UserDtoForAnswer(), HttpStatus.OK);
+    }
+
 }
 
