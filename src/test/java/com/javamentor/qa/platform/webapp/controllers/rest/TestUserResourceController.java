@@ -511,7 +511,7 @@ public class TestUserResourceController extends AbstractControllerTest {
         userDtoTest.setPassword("USER");
 
         // the same password
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -519,7 +519,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(too short)
         userDtoTest.setPassword("Ty55");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -527,7 +527,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(wrong symbols)
         userDtoTest.setPassword("111111111111111111");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -535,7 +535,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is correct
         userDtoTest.setPassword("TtF@R1");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
