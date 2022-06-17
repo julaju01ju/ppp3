@@ -678,3 +678,4 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.size()").value(1));
     }
 }
+
