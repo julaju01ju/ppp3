@@ -44,12 +44,13 @@ public class PaginationGroupChatMessages implements PageDtoDao<MessageViewDto> {
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
-        return ((BigInteger) entityManager.createNativeQuery(
-                        "select count (message.id) " +
-                                "from message " +
-                                "inner join user_entity on message.user_sender_id = user_entity.id " +
-                                "inner join chat on message.chat_id = chat.id " +
-                                "where chat.chat_type = 1")
-                .getSingleResult()).intValue();
+        return (int) entityManager.createQuery(
+                        "select CAST(count(m.id) as int) " +
+                                "from Message m " +
+                                "join User u on u.id = m.userSender.id " +
+                                "join Chat c on m.chat.id = c.id " +
+                                "where c.chatType = :chatType")
+                .setParameter("chatType", ChatType.GROUP)
+                .getSingleResult();
     }
 }
