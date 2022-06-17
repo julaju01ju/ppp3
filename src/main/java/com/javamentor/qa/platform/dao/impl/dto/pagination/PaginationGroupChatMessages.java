@@ -2,13 +2,11 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.MessageViewDto;
-import com.javamentor.qa.platform.models.dto.MessageViewDtoResultTransformer;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 

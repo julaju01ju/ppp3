@@ -76,8 +76,6 @@ public class ChatResourceController {
         params.put("currentPageNumber", currentPage);
         params.put("itemsOnPage", items);
         params.put("userId", userId);
-        params.put("trackedTag", null);
-        params.put("ignoredTag", null);
 
         return new ResponseEntity<>(groupChatDtoService.getOptionalGroupChatDto(
                 "paginationGroupChatMessages", params), HttpStatus.OK);
