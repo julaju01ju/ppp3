@@ -6,7 +6,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
 import com.javamentor.qa.platform.models.dto.MessageDto;
-import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -41,7 +40,6 @@ public class ChatResourceController {
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
     }
-
 
     @GetMapping("/single")
     @ApiOperation("Возращает SingleChatDtos авторизованного пользователя")
