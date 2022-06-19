@@ -1,13 +1,45 @@
-$(document).ready(async function () {
+const butCur = document.getElementById(`currentQuestions`)
+const butNew = document.getElementById(`newQuestions`)
+const butRep = document.getElementById(`reputation`)
 
-    await getAllQuestionsCount();
-    await pagination(1, 50, getMostPopularQuestion);
+
+
+butNew.addEventListener (`click`, () => {
+    butNew.className = `btn btn-outline-secondary active`
+    butCur.className = `btn btn-outline-secondary`
+    butRep.className = `btn btn-outline-secondary`
+})
+
+butCur.addEventListener (`click`, () => {
+    butCur.className = `btn btn-outline-secondary active`
+    butNew.className = `btn btn-outline-secondary`
+    butRep.className = `btn btn-outline-secondary`
 })
 
 
-function getMostPopularQuestion(page, itemsOnPage) {
 
-    return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
+$(document).ready(async function () {
+
+    await getAllQuestionsCount();
+    await pagination(1, 50, getAllQuestions);
+})
+
+
+function getAllQuestions(page, itemsOnPage) {
+
+    return fetch(`/api/user/question?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getNewQuestions(page, itemsOnPage) {
+
+    return fetch(`/api/user/question/new?page=${page}&items=${itemsOnPage}`,
         {
             method: 'GET',
             headers: {
@@ -37,7 +69,6 @@ function getAllQuestionsCount() {
 }
 
 function fillCard(elementItems) {
-
     $('#questions_list').empty();
 
     elementItems.forEach(function (item) {

@@ -10,6 +10,7 @@
           crossorigin="anonymous">
     <title>KataAcademy</title>
 </head>
+
 <body>
 <div class="container-fluid">
     <div id="app-header"></div>
@@ -28,14 +29,13 @@
                     </p>
                 </div>
                 <div class="btn-group btn-group-sm">
-                    <a href="#" class="btn btn-outline-secondary active" aria-current="page"
-                       style="font-size: .7rem;  padding: .5rem .7rem">Новые</a>
-                    <a href="#" class="btn btn-outline-secondary">Текущие
-                    </a>
-                    <a href="#" class="btn btn-outline-secondary">Конкурсные
-                        <span class="bg-primary p-1" style="color: white; border-radius: .3em">5</span>
-                    </a>
-                    <a href="#" class="btn btn-outline-secondary">Неотвеченные</a>
+                    <a onclick="pagination(1, 50, getAllQuestions);" id="currentQuestions" href="#" class="btn btn-outline-secondary active" aria-current="page"
+                       style="font-size: .7rem;  padding: .5rem .7rem">Текущие</a>
+                    <a onclick="pagination(1, 50, getNewQuestions);" id="newQuestions" href="#" class="btn btn-outline-secondary">Новые</a>
+<!--                    <a href="#" class="btn btn-outline-secondary">Конкурсные-->
+<!--                        <span class="bg-primary p-1" style="color: white; border-radius: .3em">5</span>-->
+<!--                    </a>-->
+                    <a id="reputation" href="#" class="btn btn-outline-secondary">Репутация</a>
                 </div>
                 <div>
                     <button class="btn btn-info">Фильтры</button>
