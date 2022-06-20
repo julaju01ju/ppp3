@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.models.dto;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -22,5 +23,6 @@ public class AnswerDto {
     private Long countValuable;
     private String image;
     private String nickName;
+    private List<CommentDto> listOfComeentsDto;
 
 }

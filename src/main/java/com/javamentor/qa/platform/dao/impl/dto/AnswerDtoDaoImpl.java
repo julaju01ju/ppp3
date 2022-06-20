@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,17 +37,29 @@ public class AnswerDtoDaoImpl
                         "a.dateAcceptTime," +
                         "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id)," +
                         "(select u.imageLink from User as u where u.id = a.user.id)," +
-                        "(select u.nickname from User as u where u.id = a.user.id)" +
-                        "from Answer as a where a.question.id = :id and a.isDeleted = false";
+                        "(select u.nickname from User as u where u.id = a.user.id) " +
+                        "from Answer as a " +
+                        "where a.question.id = :id and a.isDeleted = false";
 
+        final String  queryCommentDto = "select new com.javamentor.qa.platform.models.dto.CommentDto(comment.id, " +
+                        "comment.text, comment.user.id, " +
+                        "comment.user.fullName, " +
+                        "(SELECT SUM (r.count) FROM Reputation r WHERE r.author.id = comment.user.id), " +
+                        "comment.persistDateTime) " +
+                        "from Comment comment " +
+                        "inner join CommentAnswer commentAnswer " +
+                        "on comment.id = commentAnswer.comment.id " +
+                        "where commentAnswer.answer.id = :id order by comment.persistDateTime";
 
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
-                .unwrap(org.hibernate.query.Query.class)
+                .unwrap(Query.class)
                 .setResultTransformer(
                         new ResultTransformer() {
+
                             @Override
                             public Object transformTuple(Object[] tuple, String[] aliases) {
+                                System.out.println(tuple[0]);
                                 return new AnswerDto(
                                         ((Long) tuple[0]).longValue(),
                                         ((Long) tuple[1]).longValue(),
@@ -59,7 +72,9 @@ public class AnswerDtoDaoImpl
                                         ((LocalDateTime) tuple[8]),
                                         Optional.ofNullable(tuple[9]).map(t9 -> ((Long) t9).longValue()).orElse(null),
                                         ((String) tuple[10]),
-                                        ((String) tuple[11]));
+                                        ((String) tuple[11]),
+                                        entityManager.createQuery(queryCommentDto)
+                                                .setParameter("id", tuple[0]).getResultList());
                             }
 
                             @Override
@@ -103,9 +118,7 @@ public class AnswerDtoDaoImpl
                 .setParameter("data", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusWeeks(1))
                 .getSingleResult();
 
-
-
-
         return countRecords;
     }
+
 }

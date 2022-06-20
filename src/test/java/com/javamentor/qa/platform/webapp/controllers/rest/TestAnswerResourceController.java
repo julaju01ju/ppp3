@@ -29,7 +29,9 @@ public class TestAnswerResourceController
             "dataset/AnswerResourceController/answers.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml"
+            "dataset/AnswerResourceController/answervote.yml",
+            "dataset/AnswerResourceController/comment.yml",
+            "dataset/AnswerResourceController/comment_answer.yml",
     },  disableConstraints = true, cleanBefore = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
 
@@ -48,7 +50,12 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].isHelpful").value("true"))
                 .andExpect(jsonPath("$[0].isDeleted").value("false"))
                 .andExpect(jsonPath("$[0].image").value("image"))
-                .andExpect(jsonPath("$[0].nickName").value("USR"));
+                .andExpect(jsonPath("$[0].nickName").value("USR"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto.length()").value(1))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].id").value(101))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].comment").value("FirstComment"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].fullName").value("USER"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102));
     }
 
     //ошибка в контроллере
