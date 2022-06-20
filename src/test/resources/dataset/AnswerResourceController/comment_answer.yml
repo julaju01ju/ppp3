@@ -1,3 +1,9 @@
 comment_answer:
   - comment_id: 101
     answer_id: 102
+
+  - comment_id: 102
+    answer_id: 102
+
+  - comment_id: 103
+    answer_id: 102

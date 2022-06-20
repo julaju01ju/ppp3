@@ -49,7 +49,7 @@ public class AnswerDtoDaoImpl
                         "from Comment comment " +
                         "inner join CommentAnswer commentAnswer " +
                         "on comment.id = commentAnswer.comment.id " +
-                        "where commentAnswer.answer.id = :id order by comment.persistDateTime";
+                        "where commentAnswer.answer.id = :id order by comment.persistDateTime desc";
 
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
@@ -59,7 +59,6 @@ public class AnswerDtoDaoImpl
 
                             @Override
                             public Object transformTuple(Object[] tuple, String[] aliases) {
-                                System.out.println(tuple[0]);
                                 return new AnswerDto(
                                         ((Long) tuple[0]).longValue(),
                                         ((Long) tuple[1]).longValue(),

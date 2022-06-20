@@ -5,3 +5,17 @@ comment:
     persist_date: 2021-12-06 00:00:00
     text: "FirstComment"
     user_id: 101
+
+  - id: 102
+    comment_type: 1
+    last_redaction_date: 2021-12-06 00:00:00
+    persist_date: 2021-12-07 00:00:00
+    text: "FirstComment"
+    user_id: 101
+
+  - id: 103
+    comment_type: 1
+    last_redaction_date: 2021-12-06 00:00:00
+    persist_date: 2021-12-09 00:00:00
+    text: "FirstComment"
+    user_id: 101
