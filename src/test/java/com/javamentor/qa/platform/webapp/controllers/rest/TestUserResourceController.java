@@ -711,4 +711,29 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].persistDate").value("2021-12-07T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getTop10UserDtoForAnswer() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/getTop10UserDtoForAnswer")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[1].id").value(101))
+                .andExpect(jsonPath("$[1].email").value("Constantin@mail.mail"))
+                .andExpect(jsonPath("$[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$[1].linkImage").value("linkTest1"))
+                .andExpect(jsonPath("$[1].city").value("TestCity1"))
+                .andExpect(jsonPath("$[1].reputation").value(10));
+    }
 }
