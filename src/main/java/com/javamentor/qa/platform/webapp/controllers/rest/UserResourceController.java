@@ -224,7 +224,7 @@ public class UserResourceController {
         return new ResponseEntity<>(listAllUserDeletedQuestions, HttpStatus.OK);
     }
 
-    @GetMapping("/api/user/getTop10UserDtoForAnswer")
+    @GetMapping("/getTop10UserDtoForAnswer")
     @ApiOperation("Возвращает ТОП 10 пользователей по ответам за последнюю неделю")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены ТОП 10 пользователей по ответам"),
