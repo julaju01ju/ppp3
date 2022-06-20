@@ -117,7 +117,7 @@
                     </div>
                     <div class="col-3"></div>
                 </div>
-                <div class="row" id="answer-row" style="height: 371px;">
+                <div class="row" id="answer-row"> //style="height: 371px";
                     <div class="col">
                         <div class="row">
                             <div class="col-1 text-center" id="voteplace-1">
@@ -189,39 +189,42 @@
     <script src="../js/layout/SideBar.js"></script>
     <script src="../js/layout/Footer.js"></script>
     <script src="../js/scripts.js"></script>
-    <script src="https://cdn.tiny.cloud/1/jv3ztbs3yx37cs004t590bkcajkm7onuh97ixtoosum7w8fi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="../js/pagination.js"></script>
+    <script src="../js/question.js"></script>
 
-    <script>
-        tinymce.init({
-            selector: '#questionBodyInput',
-            language: "ru",
-            menubar: 'false',
-            toolbar: 'undo redo | styleselect | bold italic | codesample code link | alignleft aligncenter alignright alignjustify | outdent indent',
-            plugins: 'codesample code link',
-            codesample_languages: [
-                { text: 'Java', value: 'java' },
-                { text: 'HTML/XML', value: 'markup' },
-                { text: 'JavaScript', value: 'javascript' },
-                { text: 'CSS', value: 'css' },
-            ],
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $("#form").validate({
-                rules: {
-                    titleInput: {
-                        required: true,
-                    },
-                },
-                messages: {
-                    titleInput: {
-                        required: "Введите заголовок!"
-                    }
-                }
-            });
-        });
-    </script>
+<!--    <script src="https://cdn.tiny.cloud/1/jv3ztbs3yx37cs004t590bkcajkm7onuh97ixtoosum7w8fi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
+
+<!--    <script>-->
+<!--        tinymce.init({-->
+<!--            selector: '#questionBodyInput',-->
+<!--            language: "ru",-->
+<!--            menubar: 'false',-->
+<!--            toolbar: 'undo redo | styleselect | bold italic | codesample code link | alignleft aligncenter alignright alignjustify | outdent indent',-->
+<!--            plugins: 'codesample code link',-->
+<!--            codesample_languages: [-->
+<!--                { text: 'Java', value: 'java' },-->
+<!--                { text: 'HTML/XML', value: 'markup' },-->
+<!--                { text: 'JavaScript', value: 'javascript' },-->
+<!--                { text: 'CSS', value: 'css' },-->
+<!--            ],-->
+<!--        });-->
+<!--    </script>-->
+<!--    <script>-->
+<!--        $(document).ready(function() {-->
+<!--            $("#form").validate({-->
+<!--                rules: {-->
+<!--                    titleInput: {-->
+<!--                        required: true,-->
+<!--                    },-->
+<!--                },-->
+<!--                messages: {-->
+<!--                    titleInput: {-->
+<!--                        required: "Введите заголовок!"-->
+<!--                    }-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
 </body>
 
 </html>
