@@ -1,7 +1,7 @@
 package com.javamentor.qa.platform.dao.impl.dto.pagination;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.models.dto.MessageViewDto;
+import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import org.springframework.stereotype.Repository;
 
@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PaginationGroupChatMessages implements PageDtoDao<MessageViewDto> {
+public class PaginationGroupChatMessages implements PageDtoDao<MessageDto> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public List<MessageViewDto> getItems(Map<String, Object> params) {
+    public List<MessageDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
         return entityManager.createQuery(
-                        "select new com.javamentor.qa.platform.models.dto.MessageViewDto" +
+                        "select new com.javamentor.qa.platform.models.dto.MessageDto" +
                                 "(m.id, " +
                                 "m.message, " +
                                 "u.fullName, " +
@@ -33,7 +33,7 @@ public class PaginationGroupChatMessages implements PageDtoDao<MessageViewDto> {
                                 "join Chat c on m.chat.id = c.id " +
                                 "where c.chatType = :chatType " +
                                 "order by m.persistDate desc"
-                        , MessageViewDto.class)
+                        , MessageDto.class)
                 .setParameter("chatType" , ChatType.GROUP)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)

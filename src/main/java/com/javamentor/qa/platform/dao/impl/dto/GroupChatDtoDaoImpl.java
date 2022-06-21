@@ -4,6 +4,8 @@ import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
 import com.javamentor.qa.platform.models.dto.GroupChatDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class GroupChatDtoResultTransformer extends PageDtoServiceImpl<MessageViewDto> {
+public class GroupChatDtoResultTransformer extends PageDtoServiceImpl<MessageDto> {
 
     public ResultTransformer getGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
-        PageDto<MessageViewDto> pageDto = super.getPageDto(pageDtoDaoName, params);
+        PageDto<MessageDto> pageDto = super.getPageDto(pageDtoDaoName, params);
 
         return new ResultTransformer() {
             @Override

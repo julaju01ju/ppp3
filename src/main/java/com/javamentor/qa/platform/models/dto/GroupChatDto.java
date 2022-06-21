@@ -10,5 +10,10 @@ import lombok.NoArgsConstructor;
 public class GroupChatDto {
     private long id;
     private String chatName;
-    private PageDto<MessageViewDto> page;
+    private PageDto<MessageDto> page;
+
+    public GroupChatDto(long id, String chatName) {
+        this.id = id;
+        this.chatName = chatName;
+    }
 }
