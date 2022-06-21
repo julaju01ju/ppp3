@@ -457,4 +457,37 @@ public class QuestionResourceController {
                 new ResponseEntity<>("Комментарий с ID = " + commentId + ", не найден.", HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(optComDto, HttpStatus.OK);
     }
+
+
+    @GetMapping("/reputation")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с тэгами по ним с учетом заданных параметров пагинации. " +
+            "Вопросы сортируются по наибольшей репутации")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
+                    "параметров пагинации. Вопросы отсортированы по наибольшей репутации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
+    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsByReputation(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+        }
+
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsSortedByReputation", params), HttpStatus.OK);
+    }
 }
