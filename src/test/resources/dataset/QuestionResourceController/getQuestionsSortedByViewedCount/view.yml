@@ -1,0 +1,49 @@
+question_viewed:
+  - id: 101
+    persist_date: 2022-06-20 00:00:00
+    question_id: 101
+    user_id: 101
+  - id: 102
+    persist_date: 2022-06-20 00:00:00
+    question_id: 102
+    user_id: 101
+  - id: 103
+    persist_date: 2022-06-20 00:00:00
+    question_id: 102
+    user_id: 102
+  - id: 104
+    persist_date: 2022-06-20 00:00:00
+    question_id: 103
+    user_id: 101
+  - id: 105
+    persist_date: 2022-06-20 00:00:00
+    question_id: 103
+    user_id: 102
+  - id: 106
+    persist_date: 2022-06-20 00:00:00
+    question_id: 103
+    user_id: 103
+  - id: 107
+    persist_date: 2022-06-20 00:00:00
+    question_id: 104
+    user_id: 101
+  - id: 108
+    persist_date: 2022-06-20 00:00:00
+    question_id: 104
+    user_id: 102
+  - id: 109
+    persist_date: 2022-06-20 00:00:00
+    question_id: 104
+    user_id: 103
+  - id: 110
+    persist_date: 2022-06-20 00:00:00
+    question_id: 104
+    user_id: 104
+  - id: 111
+    persist_date: 2022-06-20 00:00:00
+    question_id: 105
+    user_id: 101
+  - id: 112
+    persist_date: 2022-06-20 00:00:00
+    question_id: 105
+    user_id: 102
