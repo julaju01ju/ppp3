@@ -26,12 +26,13 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer,Long> implements Answ
 
     @Override
     public Boolean getIfNotExists(Long questionId, Long userId) {
-        TypedQuery<Answer> typedQuery = entityManager.createQuery(
-                        "select a from Answer a where a.question.id = :questionId and a.user.id = :userId",
-                        Answer.class
+        TypedQuery<Boolean> typedQuery = entityManager.createQuery(
+                        "select case when count(a) > 0 then FALSE else TRUE end " +
+                                "from Answer a where a.question.id =: questionId and a.user.id = :userId",
+                        Boolean.class
                 ).setParameter("questionId", questionId)
                 .setParameter("userId", userId);
-        return typedQuery.getResultList().isEmpty();
+        return typedQuery.getSingleResult();
     }
 
     @Override
