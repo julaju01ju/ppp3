@@ -4,7 +4,7 @@ user_entity:
     password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
     persist_date: 2021-12-04 00:00:00
     last_redaction_date: 2021-12-04 00:00:00
-    email: "user@mail.ru"
+    email: "user_ed01@mail.ru"
     about: "about"
     city: "city"
     link_site: "site"
