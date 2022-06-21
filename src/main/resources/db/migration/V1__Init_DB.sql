@@ -46,6 +46,7 @@ create table bookmarks (
     primary key (id)
 );
 
+
 create table chat (
     id int8 not null,
     chat_type int2,

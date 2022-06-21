@@ -1,9 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,14 +68,14 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3Tags() throws Exception {
 
-        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.email").value("user_01@mail.ru"))
+                .andExpect(jsonPath("$.email").value("user@mail.ru"))
                 .andExpect(jsonPath("$.fullName").value("USER"))
                 .andExpect(jsonPath("$.linkImage").value("image"))
                 .andExpect(jsonPath("$.city").value("city"))
@@ -102,7 +100,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsUserWithoutReputations() throws Exception {
 
-        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/2")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -131,7 +129,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsUserWithDownVotesMustNotBeReputation() throws Exception {
 
-        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -160,7 +158,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsNotExistsId() throws Exception {
 
-        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/999")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -511,7 +509,7 @@ public class TestUserResourceController extends AbstractControllerTest {
         userDtoTest.setPassword("USER");
 
         // the same password
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -519,7 +517,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(too short)
         userDtoTest.setPassword("Ty55");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -527,7 +525,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(wrong symbols)
         userDtoTest.setPassword("111111111111111111");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -535,7 +533,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is correct
         userDtoTest.setPassword("TtF@R1");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -552,7 +550,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/user/profile/questions")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -567,6 +565,7 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(2))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
@@ -604,7 +603,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
     public void getBookMarksEmpty() throws Exception {
 
-        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -629,7 +628,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
     public void getBookMarksUsers() throws Exception {
 
-        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/bookmarks")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -647,6 +646,8 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].countVote").value(0))
                 .andExpect(jsonPath("$[0].countView").value(1))
 
+                .andExpect(jsonPath("$[0].persistQuestionDate").value("2021-12-06T05:00:00"))
+
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
@@ -660,7 +661,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             "dataset/UserResourceController/getUserProfileDeletedQuestionDto/role.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getUserProfileDeletedQuestionDto() throws Exception {
-        String USER_TOKEN = getToken("user_ed01@mail.ru", "USER");
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/api/user/profile/delete/questions")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -675,7 +676,7 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(1))
+                .andExpect(jsonPath("$[0].persistDate").value("2021-12-07T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 }
-
