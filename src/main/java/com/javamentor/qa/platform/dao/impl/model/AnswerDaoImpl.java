@@ -31,7 +31,7 @@ public class AnswerDaoImpl extends ReadWriteDaoImpl<Answer,Long> implements Answ
                         Answer.class
                 ).setParameter("questionId", questionId)
                 .setParameter("userId", userId);
-        return SingleResultUtil.getSingleResultOrNull(typedQuery).isEmpty();
+        return typedQuery.getResultList().isEmpty();
     }
 
     @Override
