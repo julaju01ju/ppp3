@@ -466,16 +466,17 @@ public class QuestionResourceController {
             @ApiResponse(code = 200, message = "Получены все вопросы с тэгами по ним с учетом заданных " +
                     "параметров пагинации. Вопросы отсортированы по наибольшей репутации"),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 400, message = "В запросе неправильно переданы тэги"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
-    public ResponseEntity<PageDto<QuestionViewDto>> getQuestionsByReputation(
+    public ResponseEntity<?> getQuestionsByReputation(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
             @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
+            return new ResponseEntity<>("Неправильно переданы тэги в списки trackedTag или ignoredTag", HttpStatus.BAD_REQUEST);
         }
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
