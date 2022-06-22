@@ -22,9 +22,10 @@ function questionFilling(){
                     "Ошибка запроса";
                 document.querySelector('#question-body p').textContent =
                     "Измените номер вопроса или обновите страницу через 2 минуты.";
-                exit(0);
             } else {
                 response.json().then(data => {
+                    console.log("question ");
+                    console.log(data);
                     document.querySelector('#question-title').textContent = data.title;
                     document.querySelector('#question-body p').textContent = data.description;
                     document.querySelector('#question-persist-date').textContent =
@@ -33,6 +34,7 @@ function questionFilling(){
                         "Последнее изменение: " + getDateFromDateTime(data.lastUpdateDateTime);
                     document.querySelector('#question-view-count').textContent =
                         "Просмотров: " + data.viewCount;
+                    document.querySelector('#countVote').innerHTML = votesNumber(data.countValuable);
                     let text = "";
                     data.listTagDto.forEach(tag => {
                         text += '<li className = "text-start list-inline-item">' +
@@ -47,9 +49,7 @@ function questionFilling(){
 '                                    <div class="row">\n' +
 '                                        <div class="col">\n' +
 '                                            <div style="display: inline;">\n' +
-'                                                <div><a href="#"><small class="text-secondary">Поделиться</small></a></div>\n' +
 '                                                <div><a href="#"><small class="text-secondary">Править</small></a></div>\n' +
-'                                                <div><a href="#"><small class="text-secondary">Отслеживать</small></a></div>\n' +
 '                                            </div>\n' +
 '                                        </div>\n' +
 '                                        <div class="col">\n' +
@@ -85,7 +85,6 @@ function answersFilling() {
             },
         })
         .then(response => {
-            console.log(response);
             if (response.status !== 200) {
                 document.querySelector('#count-answers').textContent =
                     "Ответы пока отсутствуют"
@@ -98,6 +97,7 @@ function answersFilling() {
                     } else {
                         document.querySelector('#count-answers').textContent =
                             data.length + declOfNum(data.length, [" ответ", " ответа", " ответов"]);
+                        console.log("answers");
                         console.log(data);
                         data.forEach(function (item) {
                             text +=
@@ -106,10 +106,22 @@ function answersFilling() {
                 '                        <div class="row">\n' +
                 '                            <div class="col-1 text-center" id="voteplace-1">\n' +
                 '                                <ul class="list-unstyled">\n' +
-                '                                    <li><a id="voteUp-1" href="#"><i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i></a></li>\n' +
-                '                                    <li id="countVote-1">0</li>\n' +
-                '                                    <li id="voteDown-1"><a href="#"><i class="fa fa-arrow-circle-down" style="color: rgb(121,135,155);"></i></a></li>\n' +
-                '                                    <li><a href="#"><i class="fa fa-rotate-right" style="color: rgb(121,135,155);"></i></a></li>\n' +
+                '                                    <li>' +
+                '                                       <a id="voteUp-1" href="#">' +
+                '                                           <i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i>' +
+                '                                       </a>' +
+                '                                    </li>\n' +
+                '                                    <li id="countVote-1">' + votesNumber(item.countValuable) + '</li>\n' +
+                '                                    <li id="voteDown-1">' +
+                '                                       <a href="#">' +
+                '                                           <i class="fa fa-arrow-circle-down" style="color: rgb(121,135,155);"></i>' +
+                '                                       </a>' +
+                '                                    </li>\n' +
+                '                                    <li>' +
+                '                                       <a href="#">' +
+                '                                           <i class="fa fa-rotate-right" style="color: rgb(121,135,155);"></i>' +
+                '                                       </a>' +
+                '                                    </li>\n' +
                 '                                </ul>\n' +
                 '                            </div>\n' +
                 '                            <div class="col" id="questionplace-1">\n' +
@@ -120,9 +132,7 @@ function answersFilling() {
                 '                                    <div class="row">\n' +
                 '                                        <div class="col">\n' +
                 '                                            <div style="display: inline;">\n' +
-                '                                                <div><a href="#"><small class="text-secondary">Поделиться</small></a></div>\n' +
                 '                                                <div><a href="#"><small class="text-secondary">Править</small></a></div>\n' +
-                '                                                <div><a href="#"><small class="text-secondary">Отслеживать</small></a></div>\n' +
                 '                                            </div>\n' +
                 '                                        </div>\n' +
                 '                                        <div class="col"></div>\n' +
@@ -135,15 +145,11 @@ function answersFilling() {
                 '                                        </div>\n' +
                 '                                    </div>\n' +
                 '                                </div>\n' +
-                '                                <div id="question-comments-1">\n' +
-                '                                    <hr>\n' +
-                '                                    <p style="font-size: 11px;margin: 9px;">Не могу перезагрузить, потому что это окно появляется только один раз — после получения игры (в том числе бесплатной). Где-то же должен быть в Windows (может, в реестре) этот протокол.</p>\n' +
-                '                                    <hr>\n' +
-                '                                </div>\n' +
                 '                                <div><a href="#"><small class="text-secondary">Добавить комментарий</small></a></div>\n' +
                 '                            </div>\n' +
                 '                        </div>\n' +
                 '                    </div>' +
+                '                    <hr>' +
                 '                </div>';
                             });
                         }
@@ -202,4 +208,8 @@ function declOfNum(n, text_forms) {
         return text_forms[0];
     }
     return text_forms[2];
+}
+
+function votesNumber(data) {
+    return !data ? 0 : data;
 }
