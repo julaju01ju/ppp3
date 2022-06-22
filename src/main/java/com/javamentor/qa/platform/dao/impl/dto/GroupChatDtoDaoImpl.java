@@ -29,16 +29,17 @@ public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
     @Override
     public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
 
-        GroupChatDto groupChatDto = SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
+        Optional<GroupChatDto> groupChatDto = SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select new com.javamentor.qa.platform.models.dto.GroupChatDto" +
                                 "(g.id, " +
                                 "c.title) " +
                                 "from GroupChat g, " +
                                 "Chat c where g.id = c.id", GroupChatDto.class)
-                .setMaxResults(1)).get();
-
-        groupChatDto.setPage(messageDtoService.getPageDto(pageDtoDaoName, params));
-        return Optional.of(groupChatDto);
+                .setMaxResults(1));
+        groupChatDto
+                .ifPresent(chatDto -> chatDto.setPage(
+                        messageDtoService.getPageDto(pageDtoDaoName, params)));
+        return groupChatDto;
     }
 }
 
