@@ -15,31 +15,20 @@ import java.util.Optional;
 @Repository
 public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
 
-    private final MessageDtoService messageDtoService;
-
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    public GroupChatDtoDaoImpl(MessageDtoService messageDtoService) {
-        this.messageDtoService = messageDtoService;
-    }
 
     @SuppressWarnings("unchecked")
     @Override
     public Optional<GroupChatDto> getOptionalGroupChatDto(String pageDtoDaoName, Map<String, Object> params) {
 
-        Optional<GroupChatDto> groupChatDto = SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
+        return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select new com.javamentor.qa.platform.models.dto.GroupChatDto" +
                                 "(g.id, " +
                                 "c.title) " +
                                 "from GroupChat g, " +
                                 "Chat c where g.id = c.id", GroupChatDto.class)
                 .setMaxResults(1));
-        groupChatDto
-                .ifPresent(chatDto -> chatDto.setPage(
-                        messageDtoService.getPageDto(pageDtoDaoName, params)));
-        return groupChatDto;
     }
 }
 
