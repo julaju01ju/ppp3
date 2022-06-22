@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.CommentDto;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,16 +43,6 @@ public class AnswerDtoDaoImpl
                         "from Answer as a " +
                         "where a.question.id = :id and a.isDeleted = false";
 
-        final String  queryCommentDto = "select new com.javamentor.qa.platform.models.dto.CommentDto(comment.id, " +
-                        "comment.text, comment.user.id, " +
-                        "comment.user.fullName, " +
-                        "(SELECT SUM (r.count) FROM Reputation r WHERE r.author.id = comment.user.id), " +
-                        "comment.persistDateTime) " +
-                        "from Comment comment " +
-                        "inner join CommentAnswer commentAnswer " +
-                        "on comment.id = commentAnswer.comment.id " +
-                        "where commentAnswer.answer.id = :id order by comment.persistDateTime desc";
-
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
                 .unwrap(Query.class)
@@ -72,8 +64,7 @@ public class AnswerDtoDaoImpl
                                         Optional.ofNullable(tuple[9]).map(t9 -> ((Long) t9).longValue()).orElse(null),
                                         ((String) tuple[10]),
                                         ((String) tuple[11]),
-                                        entityManager.createQuery(queryCommentDto)
-                                                .setParameter("id", tuple[0]).getResultList());
+                                        new ArrayList<>());
                             }
 
                             @Override
