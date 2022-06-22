@@ -38,9 +38,9 @@
 <body>
 <div class="container-fluid">
     <div id="app-header"></div>
-    <div class="row" style="height: 80vh" id="main-content">
+    <div class="row" style="height: 120vh" id="main-content">
         <div class="col-2" id="app-side-bar" style="border-right: 1px solid lightgrey"></div>
-        <div class="col-7" style="height: 80vh; overflow: scroll">
+        <div class="col-7" style="height: 120vh; overflow: scroll">
             <div class="heading p-3 d-flex justify-content-between" style="width: 100%">
                 <h3 class="h3">Исследуйте вопросы на сайте</h3>
                 <a class="btn btn-primary" href="/question/add">Задать вопрос</a>
@@ -111,6 +111,19 @@
                 </ul>
             </div>
             <br>
+
+            <h6 style="color: #333; font-weight: normal;" id="top-tags-title">
+                Топ-10 меток
+            </h6>
+
+            <div class="tag-list">
+                <ul style="list-style: none; padding-left: .5rem" id = "top-tags-list">
+
+                </ul>
+            </div>
+
+            <br/>
+
 
             <div class="tags-window">
                 <!--                        Tracked tags ~JS~-->
@@ -188,6 +201,7 @@
 <script src="../js/scripts.js"></script>
 <script src="../js/logout.js"></script>
 <script src="../js/ignoredAndTrackedTags/IgnoredAndTrackedTags.js"></script>
+<script src="../js/show_top_tags.js"></script>
 <script src="../js/pagination.js"></script>
 <script src="../js/main.js"></script>
 
