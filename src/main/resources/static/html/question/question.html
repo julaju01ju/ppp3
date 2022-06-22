@@ -91,15 +91,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="post-layout--right js-post-comments-component" id="question-all-comments"><!--
-<!--                                    Вывод комментариев, Заполняется из js-->
+                                <div class="post-layout--right js-post-comments-component" id="question-comments">
+                                    <div>
+                                       <small><ul class="comments-list js-comments-list" id="questionComments">
+<!--                                           Заполняется в JS-->
+                                       </ul></small>
+                                    </div>
                                 </div>
-                                <!--Ввод комментария, Заполняется из js-->
-                                <div class="container" id="question-add-comment-pool"></div>
-                                <div class="container" id="question-add-comment-button">
-                                    <a href="#">
-                                        <small class="text-secondary" id="add-comment-to-question">Добавить комментарий</small>
-                                    </a>
+                                <div id="add-comment-to-question" data-rep="50" data-reg="true">
+                                   <button type="button" class="btn btn-link btn-sm" onclick="openCommentArea(`#add-comment-to-question`, true, 0)">Добавить комментарий</button>
                                 </div>
                             </div>
                         </div>
@@ -112,61 +112,14 @@
                             <div class="col">
                                 <h1 class="fw-normal" id="count-answers" style="font-size: 23px;">1 ответ</h1>
                             </div>
-                            <div class="col-4 text-end">
-                                <div class="btn-group btn-group-sm" role="group">
-                                    <button class="btn btn-light" type="button">Activ</button>
-                                    <button class="btn btn-light" type="button">Oldes</button>
-                                    <button class="btn btn-light active" type="button">Votes</button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-3"></div>
                 </div>
                 <div class="row" id="answer-row"> //style="height: 371px";
-                    <div class="col">
-                        <div class="row">
-                            <div class="col-1 text-center" id="voteplace-1">
-                                <ul class="list-unstyled">
-                                    <li><a id="voteUp-1" href="#"><i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i></a></li>
-                                    <li id="countVote-1">0</li>
-                                    <li id="voteDown-1"><a href="#"><i class="fa fa-arrow-circle-down" style="color: rgb(121,135,155);"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-rotate-right" style="color: rgb(121,135,155);"></i></a></li>
-                                </ul>
-                            </div>
-                            <div class="col" id="questionplace-1">
-                                <div id="answer-body">
-                                    <p>У меня нет Epic, но для других работает так: открой devtools в хроме (ctrl + shift + I), перейди на вкладку Network, там выбери в фильтре All, чтобы видеть всю активность, и перезагрузи страницу. Там при загрузке попапа появится и информация о ридеректе (будет выделено красным, скорей всего). Нажми на него, будет и полная ссылка, типа zoommtg://yandex.zoom.us/join?action=join&amp;confno=9717... (эта для Zoom).<br></p>
-                                </div>
-                                <div id="users-info-1">
-                                    <div class="row">
-                                        <div class="col">
-                                            <div style="display: inline;">
-                                                <div><a href="#"><small class="text-secondary">Поделиться</small></a></div>
-                                                <div><a href="#"><small class="text-secondary">Править</small></a></div>
-                                                <div><a href="#"><small class="text-secondary">Отслеживать</small></a></div>
-                                            </div>
-                                        </div>
-                                        <div class="col"></div>
-                                        <div class="col" style="background-color:lightblue; padding: .2rem .5rem; border-radius: .2rem; text-decoration: none">
-                                            <div><small>задан: 8 часов назад</small></div>
-                                            <div></div>
-                                            <ul class="list-unstyled">
-                                                <li><i class="fa fa-star"></i><small>Дмитрий Петров</small></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="question-comments-1">
-                                    <hr>
-                                    <p style="font-size: 11px;margin: 9px;">Не могу перезагрузить, потому что это окно появляется только один раз — после получения игры (в том числе бесплатной). Где-то же должен быть в Windows (может, в реестре) этот протокол.</p>
-                                    <hr>
-                                </div>
-                                <div><a href="#"><small class="text-secondary">Добавить комментарий</small></a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-3"></div>
+<!--                    Ответы заполняются в JS    -->
+                </div>
+                <div class="col-3"></div>
                 </div>
                 <div class="row">
                     <div class="col">
