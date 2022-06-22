@@ -91,7 +91,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div><a href="#"><small class="text-secondary">Добавить комментарий</small></a></div>
+                                <div class="post-layout--right js-post-comments-component" id="question-all-comments"><!--
+<!--                                    Вывод комментариев, Заполняется из js-->
+                                </div>
+                                <!--Ввод комментария, Заполняется из js-->
+                                <div class="container" id="question-add-comment-pool"></div>
+                                <div class="container" id="question-add-comment-button">
+                                    <a href="#">
+                                        <small class="text-secondary" id="add-comment-to-question">Добавить комментарий</small>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -163,7 +172,7 @@
                     <div class="col">
                         <div class="heading d-flex justify-content-between" style="width: 100%;text-align: left;">
                             <div class="col">
-                                <h1 class="fw-normal" style="font-size: 23px;">Ваш ответ:</h1>
+                                <h2 class="fw-normal" style="font-size: 23px;">Ваш ответ:</h2>
                             </div>
                         </div>
                         <label for="questionBodyInput"></label>

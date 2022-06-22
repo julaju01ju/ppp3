@@ -1,4 +1,6 @@
 const questionId = document.location.href.split("/").slice(-1)[0].replace(/\D/g,'');
+const sendAnswer = document.querySelector('#handleQuestion');
+const addCommentToQuestion = document.querySelector('#question-add-comment-button');
 
 $(document).ready(async function () {
 
@@ -8,7 +10,7 @@ $(document).ready(async function () {
 
 function questionFilling(){
 
-    return fetch(`/api/user/question/` + questionId,
+    fetch(`/api/user/question/` + questionId,
         {
             method: 'GET',
             headers: {
@@ -24,8 +26,6 @@ function questionFilling(){
                     "Измените номер вопроса или обновите страницу через 2 минуты.";
             } else {
                 response.json().then(data => {
-                    console.log("question ");
-                    console.log(data);
                     document.querySelector('#question-title').textContent = data.title;
                     document.querySelector('#question-body p').textContent = data.description;
                     document.querySelector('#question-persist-date').textContent =
@@ -35,6 +35,7 @@ function questionFilling(){
                     document.querySelector('#question-view-count').textContent =
                         "Просмотров: " + data.viewCount;
                     document.querySelector('#countVote').innerHTML = votesNumber(data.countValuable);
+
                     let text = "";
                     data.listTagDto.forEach(tag => {
                         text += '<li className = "text-start list-inline-item">' +
@@ -76,7 +77,7 @@ function questionFilling(){
 function answersFilling() {
     document.querySelector('#answer-row').innerHTML = "";
 
-    return fetch(`/api/user/question/` + questionId + `/answer`,
+    fetch(`/api/user/question/` + questionId + `/answer`,
         {
             method: 'GET',
             headers: {
@@ -97,8 +98,6 @@ function answersFilling() {
                     } else {
                         document.querySelector('#count-answers').textContent =
                             data.length + declOfNum(data.length, [" ответ", " ответа", " ответов"]);
-                        console.log("answers");
-                        console.log(data);
                         data.forEach(function (item) {
                             text +=
                 '                <div class="flex-row">\n' +
@@ -159,7 +158,6 @@ function answersFilling() {
     });
 }
 
-
 function getDateFromDateTime(dateTime) {
     return dateTime.substr(0, 10)
 }
@@ -213,3 +211,68 @@ function declOfNum(n, text_forms) {
 function votesNumber(data) {
     return !data ? 0 : data;
 }
+
+sendAnswer.addEventListener("click", function (e) {
+    let bodytext = document.querySelector('#questionBodyInput').value
+
+    fetch('/api/user/question/' + questionId + '/answer/add',
+        {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bodytext)
+        }).then(response => {
+            if (response.status === 200) {
+                window.location.reload();
+            } else if (response.status === 400) {
+                alert("Ошибка добавления ответа: на данный вопрос пользователь уже отвечал.")
+            } else if (response.status === 404) {
+                alert("Ошибка добавления ответа: вопрос не найден.")
+            }
+        })
+})
+
+addCommentToQuestion.addEventListener('click', function (e) {
+    if (document.querySelector('#question-add-comment-pool').innerHTML === "") {
+        document.querySelector('#question-add-comment-pool').innerHTML =
+            '<div>' +
+            '   <br>' +
+            '   <textarea className="editor" id="comment-to-question-body" rows="2" required style="width: 100%"></textarea>' +
+            '</div>';
+        document.querySelector('#question-add-comment-button').innerHTML =
+            '<button type="submit" className="btn btn-secondary my-3" id="handlecomment">Добавить комментарий</button>';
+    } else {
+        let bodytext = document.querySelector('#comment-to-question-body').value
+
+        fetch('/api/user/question/' + questionId + '/comment',
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('token'),
+                    'Accept': 'application/json', 'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bodytext)
+            }).then(response => {
+                if (response.status != 200) {
+                    if (response.status === 400) {
+                        alert("Пустой комментарий")
+                    } else if (response.status === 404) {
+                        alert("Вопрос не найден в системе")
+                    }
+                } else {
+                    response.json().then(data => {
+                        console.log(data);
+                        alert("Комментарий добавлен")
+                        // window.location.reload();
+                    })
+                }
+        })
+        document.querySelector('#question-add-comment-pool').innerHTML ="";
+        document.querySelector('#question-add-comment-button').innerHTML =
+            '<a href="#">'+
+            '   <small class="text-secondary" id="add-comment-to-question">Добавить комментарий</small>'+
+            '</a>    '
+    }
+})
