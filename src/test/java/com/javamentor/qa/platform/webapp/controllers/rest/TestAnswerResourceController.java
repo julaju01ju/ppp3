@@ -52,11 +52,13 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].image").value("image"))
                 .andExpect(jsonPath("$[0].nickName").value("USR"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto.length()").value(3))
+                .andExpect(jsonPath("$[1].listOfComeentsDto.length()").value(2))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].id").value(103))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].dateAdded").value("2021-12-09T09:00:00"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].comment").value("FirstComment"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].fullName").value("USER"))
-                .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102));
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102))
+                .andExpect(jsonPath("$[1].listOfComeentsDto[0].id").value(105));
     }
 
     //ошибка в контроллере
