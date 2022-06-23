@@ -129,7 +129,7 @@ public class TestUserResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getUserByIdWithTop3TagsUserWithDownVotesMustNotBeReputation() throws Exception {
 
-        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        String USER_TOKEN = getToken("user_01@mail.ru", "USER");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/3")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -509,7 +509,7 @@ public class TestUserResourceController extends AbstractControllerTest {
         userDtoTest.setPassword("USER");
 
         // the same password
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -517,7 +517,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(too short)
         userDtoTest.setPassword("Ty55");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -525,7 +525,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is not correct(wrong symbols)
         userDtoTest.setPassword("111111111111111111");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -533,7 +533,7 @@ public class TestUserResourceController extends AbstractControllerTest {
 
         // password is correct
         userDtoTest.setPassword("TtF@R1");
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/{userId}/change/password", 130L)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/user/{userId}/change/password", 130L)
                         .content(new ObjectMapper().writeValueAsString(userDtoTest))
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -565,7 +565,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(2))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-06T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 

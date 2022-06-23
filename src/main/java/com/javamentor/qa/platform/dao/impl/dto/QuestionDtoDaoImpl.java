@@ -45,7 +45,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "(select count(a.id) from Answer a where a.question.id = q.id), " +
                                 "(select quv.vote from VoteQuestion quv where quv.question.id = q.id and quv.user.id =:userId), " +
                                 "(select count(b) from BookMarks b where b.question.id = :questionId and b.user.id = :userId), " +
-                                "(select count(a) from Answer a where a.question.id = :questionId and a.user.id = :userId)," +
+                                "(select (case when (a) > 0 then true else false end) from Answer a where a.question.id = :questionId and a.user.id = :userId)," +
                                 "from Question q " +
                                 "LEFT join q.user u " +
                                 "where q.id =:questionId")
