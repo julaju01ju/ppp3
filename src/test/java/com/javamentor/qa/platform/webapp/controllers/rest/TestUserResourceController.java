@@ -672,7 +672,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].listTagDto.[1].name").value("TAG101"))
                 .andExpect(jsonPath("$[0].listTagDto.[1].description").value("This is tag 101"))
                 .andExpect(jsonPath("$[0].countAnswer").value(1))
-                .andExpect(jsonPath("$[0].persistDate").value("2021-12-07T03:00:00"))
                 .andExpect(jsonPath("$.size()").value(1));
     }
 }
