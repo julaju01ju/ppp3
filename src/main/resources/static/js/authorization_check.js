@@ -15,10 +15,6 @@ butCurMain.addEventListener (`click`, () => {
     butRepMain.className = `btn btn-outline-secondary`
 })
 
-console.log(butCurMain.className)
-console.log(butNewMain.className)
-console.log(butRepMain.className)
-
 
 
 
@@ -78,7 +74,7 @@ function fillCard(elementItems) {
 
 
     elementItems.forEach(function (item) {
-        let newElement =
+        let newElement2 =
             $(`<div class="question-card d-flex">`)
                 .attr("style", "height: 5rem; padding-left: 1.5rem; padding-top: .7rem; border-bottom: 1px solid lightgrey")
                 .append($('<div class="votes-list d-flex ">')
@@ -126,7 +122,7 @@ function fillCard(elementItems) {
                         )
                     )
                 )
-        $('#questions_list').append(newElement);
+        $('#questions_list').append(newElement2);
     });
 }
 
