@@ -50,7 +50,7 @@ public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<Ques
 
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
-                                "JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "FULL OUTER JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +
@@ -81,7 +81,7 @@ public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<Ques
     public int getTotalResultCount(Map<String, Object> params) {
         return ((BigInteger) em.createNativeQuery(
                         "SELECT " +
-                                "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "COUNT(DISTINCT q.id) FROM question q FULL OUTER JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +
                                 "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
                                 "   WHEN -1 IN :ignoredTag THEN qht.tag_id IN :trackedTag " +

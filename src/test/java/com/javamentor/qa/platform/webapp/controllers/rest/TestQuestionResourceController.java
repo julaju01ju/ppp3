@@ -51,18 +51,18 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     },
             disableConstraints = true, cleanBefore = true)
-    public void getQuestionsWithoutTagsInParamsSortedByReputation() throws Exception {
+    public void getQuestionsWithoutTagsAndItemsInParamsSortedByReputation() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/reputation?page=1&items=4")
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/reputation?page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(4))
-                .andExpect(jsonPath("$.items.length()").value(4))
-                .andExpect(jsonPath("$.itemsOnPage").value(4));
+                .andExpect(jsonPath("$.totalResultCount").value(5))
+                .andExpect(jsonPath("$.items.length()").value(5))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
     }
 
     @Test
@@ -123,8 +123,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(2))
-                .andExpect(jsonPath("$.items.length()").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.length()").value(3))
                 .andExpect(jsonPath("$.itemsOnPage").value(10));
     }
 
