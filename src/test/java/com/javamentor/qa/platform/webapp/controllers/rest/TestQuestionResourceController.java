@@ -39,6 +39,97 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml",
+
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsAndItemsInParamsSortedByReputation() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/reputation?page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
+                .andExpect(jsonPath("$.items.length()").value(5))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml",
+
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByReputation() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/reputation?page=1&trackedTag=101,102,104&ignoredTag=103&items=3")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(3))
+                .andExpect(jsonPath("$.items.length()").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(104))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[2].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(false));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml",
+
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsSortedByReputation() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/reputation?page=1&ignoredTag=102&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.length()").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
+
+    @Test
+    @DataSet(value = {
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/role.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/users.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByVotesAndAnswersAndQuestionViewed/questions.yml",
