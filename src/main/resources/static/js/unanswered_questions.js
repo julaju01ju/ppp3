@@ -1,13 +1,10 @@
 $(document).ready(async function () {
 
-    await getAllQuestionsCount();
-    await pagination(1, 20, getMostPopularQuestion);
+    await pagination(1, 10, getUnansweredQuestions);
 })
 
-
-function getMostPopularQuestion(page, itemsOnPage) {
-
-    return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
+function getUnansweredQuestions(page, itemsOnPage) {
+    return fetch(`/api/user/question/noAnswer?page=${page}&items=${itemsOnPage}`,
         {
             method: 'GET',
             headers: {
@@ -17,28 +14,8 @@ function getMostPopularQuestion(page, itemsOnPage) {
         });
 }
 
-function getAllQuestionsCount() {
-    return fetch(`/api/user/question/count`,
-        {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + getCookie('token'),
-                'Accept': 'application/json', 'Content-Type': 'application/json'
-            },
-        }).then(response => {
-        response.json().then(questionsCount => {
-
-            const questionsCountDecl = [" вопрос", " вопроса", " вопросов"];
-            let decl = declOfNum(questionsCount, questionsCountDecl);
-            $(".counter-questions").text(questionsCount + decl);
-
-        })
-    });
-}
-
 function fillCard(elementItems) {
-
-    $('#questions_list').empty();
+    $('#unansweredQuestions_list').empty();
 
     elementItems.forEach(function (item) {
         let newElement =
@@ -121,7 +98,7 @@ function fillCard(elementItems) {
                                                 .attr("title", item.persistDateTime).text(timeDifference(item.persistDateTime))))
                                     ))))))
 
-        $('#questions_list').prepend(newElement);
+        $('#unansweredQuestions_list').prepend(newElement);
 
     });
 }
@@ -155,19 +132,4 @@ function timeDifference(previous) {
     } else {
         return Math.round(elapsed / msPerYear) + ' years ago';
     }
-}
-
-function declOfNum(n, text_forms) {
-    n = Math.abs(n) % 100;
-    let n1 = n % 10;
-    if (n > 10 && n < 20) {
-        return text_forms[2];
-    }
-    if (n1 > 1 && n1 < 5) {
-        return text_forms[1];
-    }
-    if (n1 === 1) {
-        return text_forms[0];
-    }
-    return text_forms[2];
 }
