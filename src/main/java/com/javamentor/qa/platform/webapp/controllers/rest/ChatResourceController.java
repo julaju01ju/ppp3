@@ -3,8 +3,14 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.SingleChatDto;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
+import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
+import com.javamentor.qa.platform.models.dto.GroupChatDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import io.swagger.annotations.Api;
@@ -19,9 +25,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,16 +38,24 @@ import java.util.Map;
 @RequestMapping("api/user/chat")
 public class ChatResourceController {
 
+
     private final SingleChatDtoServiceImpl singleChatDtoService;
     private final SingleChatService singleChatService;
+    private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
 
     @Autowired
-    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, MessageDtoService messageDtoService) {
+    public ChatResourceController(
+            SingleChatDtoServiceImpl singleChatDtoService,
+            GroupChatDtoService groupChatDtoService,
+            SingleChatService singleChatService,
+            MessageDtoService messageDtoService){
         this.singleChatDtoService = singleChatDtoService;
+        this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
     }
+
 
     @GetMapping("/single")
     @ApiOperation("Возращает SingleChatDtos авторизованного пользователя")
@@ -61,6 +77,29 @@ public class ChatResourceController {
         return new ResponseEntity<>(singleChatDtoService.getPageDto("paginationAllSingleChatsOfUser",
                 params), HttpStatus.OK);
     }
+
+    @GetMapping("/group")
+    @ApiOperation("Возращает все сообщения как объект класса GroupChatDto с учетом заданных параметров пагинации.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все сообщения с учетом заданных параметров пагинации."),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы."),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
+    public ResponseEntity<?> getGroupChatOutPutWithAllMessage(
+            @RequestParam("page") Integer currentPage,
+            @RequestParam(value = "items", defaultValue = "10") Integer items)
+    {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", currentPage);
+        params.put("itemsOnPage", items);
+        params.put("userId", userId);
+
+        return new ResponseEntity<>(groupChatDtoService.getOptionalGroupChatDto(
+                "paginationGroupChatMessages", params), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}/single/message")
     @ApiOperation("Возращает все сообщения singleChat как объект класса PageDto<MessageDto> с учетом заданных параметров пагинации, " +
