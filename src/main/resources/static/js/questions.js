@@ -1,29 +1,9 @@
-const butCur = document.getElementById(`currentQuestions`)
-const butNew = document.getElementById(`newQuestions`)
-const butRep = document.getElementById(`reputation`)
-
-
-
-butNew.addEventListener (`click`, () => {
-    butNew.className = `btn btn-outline-secondary active`
-    butCur.className = `btn btn-outline-secondary`
-    butRep.className = `btn btn-outline-secondary`
-})
-
-butCur.addEventListener (`click`, () => {
-    butCur.className = `btn btn-outline-secondary active`
-    butNew.className = `btn btn-outline-secondary`
-    butRep.className = `btn btn-outline-secondary`
-})
-
-
-
 $(document).ready(async function () {
 
     await getAllQuestionsCount();
+    await pagination(1, 20, getMostPopularQuestion);
     await pagination(1, 50, getAllQuestions);
 })
-
 
 function getAllQuestions(page, itemsOnPage) {
 
@@ -40,6 +20,18 @@ function getAllQuestions(page, itemsOnPage) {
 function getNewQuestions(page, itemsOnPage) {
 
     return fetch(`/api/user/question/new?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getMostPopularQuestion(page, itemsOnPage) {
+
+    return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
         {
             method: 'GET',
             headers: {
