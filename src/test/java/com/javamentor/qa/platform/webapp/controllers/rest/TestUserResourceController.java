@@ -1,9 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
+import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,13 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -646,7 +644,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].countAnswer").value(2))
                 .andExpect(jsonPath("$[0].countVote").value(0))
                 .andExpect(jsonPath("$[0].countView").value(1))
-
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
@@ -678,4 +675,3 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.size()").value(1));
     }
 }
-

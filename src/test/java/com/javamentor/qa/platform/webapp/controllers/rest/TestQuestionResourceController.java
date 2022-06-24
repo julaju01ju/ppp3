@@ -1276,7 +1276,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml"
+            "dataset/QuestionResourceController/comment_question.yml",
+            "dataset/QuestionResourceController/answerVote.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionByIdAndCheckSortCommentDESC() throws Exception {
@@ -1302,8 +1303,13 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[2].userId").value(103))
                 .andExpect(jsonPath("$.listCommentDto[3].id").value(102))
                 .andExpect(jsonPath("$.listCommentDto[3].comment").value("Some text of comment 102"))
-                .andExpect(jsonPath("$.listCommentDto[3].userId").value(102));
-
+                .andExpect(jsonPath("$.listCommentDto[3].userId").value(102))
+                .andExpect(jsonPath("$.isUserAnswerVote").value(true));
+        mockMvc.perform(
+                        get("/api/user/question/100")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.isUserAnswerVote").value(false));
     }
 
     @Test
@@ -1364,6 +1370,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
 
     @Test
     @DataSet(value = {
