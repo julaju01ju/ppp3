@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.dao.impl.dto.AnswerDtoDaoImpl;
 import com.javamentor.qa.platform.models.dto.AnswerCreateDto;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.dto.CommentDto;
@@ -79,10 +80,6 @@ public class AnswerResourceController {
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден, либо на вопрос с questionId=* пока еще никто не ответил")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        List<AnswerDto> answerDtoList = answerDtoService.getAllAnswersByQuestionId(id);
-        if (answerDtoList == null){
-            return new ResponseEntity<>("Answer of question id " + id + " not found!", HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
     }
 
