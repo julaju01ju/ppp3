@@ -115,7 +115,7 @@ function fillCard(elementItems) {
                             .attr("style", "font-weight: 400;word-break: break-word !important;overflow-wrap: break-word !important;display: block;font-size: 1rem;line-height: 1.3;margin: 0 0 1em;")
                             .append($('<a class="question-heading">')
                                 .attr("style", "text-decoration: none").text(item.title)
-                                .attr("href", "#" + item.id)))
+                                .attr("href", "/question/" + item.id)))
                         .append($('<div class="row question-content">')
                             .attr("style", "font-size: .8rem; margin-top: 0.1rem")
                             .append($('<p>').text(item.description))))
