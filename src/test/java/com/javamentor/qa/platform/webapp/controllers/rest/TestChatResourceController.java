@@ -193,6 +193,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
+
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/GroupChat/role.yml",
@@ -206,8 +207,8 @@ public class TestChatResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
 
         mockMvc.perform(
-                get("/api/user/chat/group?page=1&items=10")
-                        .header(AUTHORIZATION, USER_TOKEN))
+                        get("/api/user/chat/group?page=1&items=10")
+                                .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(101))

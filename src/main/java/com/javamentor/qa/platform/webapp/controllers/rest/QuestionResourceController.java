@@ -491,4 +491,37 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByReputation", params), HttpStatus.OK);
     }
+
+    @GetMapping("/viewed")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с учетом заданных параметров пагинации, " +
+            "Вопросы сортируются по количеству просмотров: сначала самые просматриваемые.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами, отсортированные по количеству просмотров," +
+                    " сначала самые просматриваемые с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
+    public ResponseEntity<PageDto<QuestionViewDto>> getAllQuestionDtoSortedByViewCount(
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsWithTagsSortedByViewCount", params), HttpStatus.OK);
+
+    }
 }
