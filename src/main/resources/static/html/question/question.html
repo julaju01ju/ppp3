@@ -50,9 +50,17 @@
                         <div class="row" style="height: 423.9px;">
                             <div class="col-1 text-center" id="voteplace">
                                 <ul class="list-unstyled">
-                                    <li><a id="voteUp" href="#"><i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i></a></li>
+                                    <li>
+                                        <a id="voteUp" onclick="voteOnQuestion(UPQUESTION)" style="background: ">
+                                            <i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i>
+                                        </a>
+                                    </li>
                                     <li id="countVote">0</li>
-                                    <li id="voteDown"><a href="#"><i class="fa fa-arrow-circle-down" style="color: rgb(121,135,155);"></i></a></li>
+                                    <li id="voteDown">
+                                        <a onclick="voteOnQuestion(DOWNQUESTION)">
+                                            <i class="fas fa-arrow-circle-down" style="color: rgb(121,135,155);"></i>
+                                        </a>
+                                    </li>
                                     <li><a href="#"><i class="fa fa-save" style="color: rgb(121,135,155);"></i></a></li>
                                     <li><a href="#"><i class="fa fa-rotate-right" style="color: rgb(121,135,155);"></i></a></li>
                                 </ul>
@@ -150,6 +158,8 @@
     <script src="../js/scripts.js"></script>
     <script src="../js/pagination.js"></script>
     <script src="../js/question.js"></script>
+    <script src="../js/vote_on_question.js"></script>
+    <script src="../js/vote_on_answer.js"></script>
 
 </body>
 

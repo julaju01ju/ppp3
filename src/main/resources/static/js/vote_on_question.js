@@ -15,5 +15,10 @@ async function voteOnQuestion(upOrDown){
             responce.text()
                 .then(data=> alert(data));
         }
-    });
+    })
+        .then((data)=>{
+            if(data != undefined){
+                $("#countVote").text(data);
+            }
+        });
 }
