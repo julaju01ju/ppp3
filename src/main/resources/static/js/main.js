@@ -98,7 +98,6 @@ function fillCard(elementItems) {
                         .append($('<span class="label">')
                             .attr("style", "font-size: .7rem").text('голосов'))
                     )
-
                     .append($('<div class="d-flex flex-column">')
                         .attr("style", "margin-right: .7rem; border: 1px solid green; border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem")
                         .append($('<span class="count_question text-center">')
@@ -113,7 +112,6 @@ function fillCard(elementItems) {
                             .attr("style", "font-size: .7rem").text('показов'))
                     )
                 )
-
                 .append($('<div class="d-flex flex-column">')
                     .append($('<div class="question-card-body">')
                         .attr("style", "margin-left: 2rem; overflow: hidden; height: 3rem; margin-bottom: .7rem")
