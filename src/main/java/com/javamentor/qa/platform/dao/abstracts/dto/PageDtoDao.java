@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface PageDtoDao<T> {
 
-    List<T> getItems(Map<String, Object> params);
+    List<T> getItems(Map<String, Object> params, Boolean sortAscendingFlag);
 
     int getTotalResultCount(Map<String, Object> params);
 }

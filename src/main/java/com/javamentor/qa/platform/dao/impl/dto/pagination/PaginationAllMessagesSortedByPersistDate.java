@@ -17,10 +17,30 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
     private EntityManager entityManager;
 
     @Override
-    public List<MessageDto> getItems(Map<String, Object> params) {
+    public List<MessageDto> getItems(Map<String, Object> params, Boolean sortAscendingFlag) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
         Long chatId = (Long) params.get("chatId");
+
+            if (sortAscendingFlag) {
+                return entityManager.createQuery(
+                                "SELECT new com.javamentor.qa.platform.models.dto.MessageDto" +
+                                        "(m.id," +
+                                        "m.message, " +
+                                        "m.userSender.nickname, " +
+                                        "m.userSender.id, " +
+                                        "m.userSender.imageLink, " +
+                                        "m.persistDate)" +
+                                        "FROM Message m " +
+                                        "JOIN User u ON (m.userSender.id = u.id) " +
+                                        "WHERE m.chat.id = :chatId " +
+                                        "ORDER BY m.persistDate asc" //сортировка сначала самые старые сообщения (в порядке возрастания)
+                                , MessageDto.class)
+                        .setParameter("chatId", chatId)
+                        .setFirstResult((page - 1) * itemsOnPage)
+                        .setMaxResults(itemsOnPage)
+                        .getResultList();
+            }
 
         return entityManager.createQuery(
                         "SELECT new com.javamentor.qa.platform.models.dto.MessageDto" +
@@ -33,7 +53,7 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
                                 "FROM Message m " +
                                 "JOIN User u ON (m.userSender.id = u.id) " +
                                 "WHERE m.chat.id = :chatId " +
-                                "ORDER BY m.persistDate desc"
+                                "ORDER BY m.persistDate desc" //сортировка сначала самые новые сообщения (в порядке убывания)
                         , MessageDto.class)
                 .setParameter("chatId", chatId)
                 .setFirstResult((page - 1) * itemsOnPage)
