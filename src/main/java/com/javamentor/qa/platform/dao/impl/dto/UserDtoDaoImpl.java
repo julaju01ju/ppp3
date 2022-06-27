@@ -3,16 +3,14 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,34 +75,37 @@ public class UserDtoDaoImpl implements UserDtoDao {
 
     @Override
     public List<UserDto> getTop10UserDtoForAnswer() {
-        String queryQ = "select u.id, u.email, u.full_name, u.image_link, u.city," +
-                "                (SELECT COALESCE(SUM(reputation.count),0) FROM reputation WHERE reputation.author_id = u.id) as Row0," +
-                "        (select count(id) from answer as a where a.persist_date >= NOW() - INTERVAL '7 DAY' and a.user_id = u.id) as Row1," +
-                "        ((select count(voa.user_id) from votes_on_answers as voa where voa.user_id = u.id and voa.vote = 'UP_VOTE') -" +
-                "                (select count(voa.user_id) from votes_on_answers as voa where voa.user_id = u.id and voa.vote = 'DOWN_VOTE')) as Row2" +
-                "        from user_entity as u" +
-                "        where u.is_deleted = false" +
-                "        ORDER BY Row1 desc, Row2 desc" +
-                "        LIMIT 10;";
+        String queryH = "select u.id, u.email, u.fullName, u.imageLink, u.city," +
+                "CAST((SELECT COALESCE(SUM(r.count),0) FROM Reputation as r WHERE r.author.id = u.id)as int) as r0, " +
+                "(SELECT count(a.id) from Answer as a where a.persistDateTime > :date and a.user.id = u.id) AS r1, " +
+                "((SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'UP_VOTE') - " +
+                " (SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'DOWN_VOTE')) as r2 " +
+                "        FROM User as u " +
+                "        WHERE u.isEnabled = true " +
+                "        ORDER BY r1 desc, r2 desc";
 
-        List list = entityManager.createNativeQuery(queryQ).getResultList();
+        return entityManager.createQuery(queryH)
+                .setParameter("date", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusWeeks(1))
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] objects, String[] strings) {
+                        return new UserDto(
+                                ((Number) (objects[0])).longValue(),
+                                (String) (objects[1]),
+                                (String) (objects[2]),
+                                (String) (objects[3]),
+                                (String) (objects[4]),
+                                ((Number) (objects[5])).intValue()
+                        );
+                    }
 
-        List<UserDto> resList = new ArrayList<>();
-
-        for (int i = 0; i < list.size(); i++) {
-            Object[] o = (Object[]) list.get(i);
-
-            UserDto userDto = new UserDto(((BigInteger) (o[0])).longValue(),
-                    (String) o[1],
-                    (String) o[2],
-                    (String) o[3],
-                    (String) o[4],
-                    ((BigInteger) o[5]).intValue());
-
-            resList.add(userDto);
-        }
-
-        return resList;
+                    @Override
+                    public List<UserDto> transformList(List list) {
+                        return list;
+                    }
+                })
+                .setMaxResults(10).getResultList();
     }
 
 
