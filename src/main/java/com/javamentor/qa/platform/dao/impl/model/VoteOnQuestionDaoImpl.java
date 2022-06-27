@@ -33,7 +33,8 @@ public class VoteOnQuestionDaoImpl extends ReadWriteDaoImpl<VoteQuestion, Long> 
 
     @Override
     public Long getCountOfVotes(Long questionId) {
-        Query query = entityManager.createQuery("select count(vq.vote) from VoteQuestion vq where vq.question.id = :questionId group by vq.question.id", Long.class)
+        Query query = entityManager.createQuery("select sum(case v.vote  when 'UP_VOTE' then 1 else -1 end) " +
+                        "from VoteQuestion v where v.question.id=:questionId", Long.class)
                 .setParameter("questionId", questionId);
         return ((Number) query.getSingleResult()).longValue();
     }
