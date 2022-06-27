@@ -720,4 +720,141 @@ public class TagResourceControllerTest
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByPersistDate/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllTagsOrderByPersistDatePaginationWithEmptyFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/date?filter=&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(112))
+                .andExpect(jsonPath("$.items[0].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(0))
+                .andExpect(jsonPath("$.items[1].id").value(111))
+                .andExpect(jsonPath("$.items[1].name").value("tagname11"))
+                .andExpect(jsonPath("$.items[1].questionsCount").value(0));
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByPersistDate/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllTagsOrderByPersistDatePaginationWithoutFilterParam() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/date?items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(112))
+                .andExpect(jsonPath("$.items[0].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(0))
+                .andExpect(jsonPath("$.items[1].id").value(111))
+                .andExpect(jsonPath("$.items[1].name").value("tagname11"))
+                .andExpect(jsonPath("$.items[1].questionsCount").value(0));
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByPersistDate/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllTagsOrderByPersistDatePaginationWithFilterNotExists() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/date?filter=notexists&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(0))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items").isEmpty());
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByPersistDate/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllTagsOrderByPersistDatePaginationWithFilter() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/date?filter=tagname12&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(112))
+                .andExpect(jsonPath("$.items[0].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(0));
+
+    }
+
+    @Test
+    @DataSet(value = {"dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/getAllFoundTags/question_has_tag.yml",
+            "dataset/TagResourceController/getAllFoundTags/questions.yml",
+            "dataset/TagResourceController/GetAllTagsOrderByPersistDate/tag.yml"}, disableConstraints = true, cleanBefore = true)
+    public void getAllTagsOrderByPersistDatePagination() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/tag/date?&items=10&page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(12))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].id").value(112))
+                .andExpect(jsonPath("$.items[0].name").value("tagname12"))
+                .andExpect(jsonPath("$.items[0].description").value("description12"))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-27T03:00:00"))
+                .andExpect(jsonPath("$.items[0].questionsCount").value(0))
+                .andExpect(jsonPath("$.items[0].questionCountOneDay").value(0))
+                .andExpect(jsonPath("$.items[0].questionCountWeekDay").value(0))
+                .andExpect(jsonPath("$.items[1].id").value(111))
+                .andExpect(jsonPath("$.items[1].name").value("tagname11"))
+                .andExpect(jsonPath("$.items[1].description").value("description11"))
+                .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-26T03:00:00"))
+                .andExpect(jsonPath("$.items[1].questionsCount").value(0))
+                .andExpect(jsonPath("$.items[1].questionCountOneDay").value(0))
+                .andExpect(jsonPath("$.items[1].questionCountWeekDay").value(0))
+                .andExpect(jsonPath("$.items[2].id").value(110))
+                .andExpect(jsonPath("$.items[2].name").value("tagname10"))
+                .andExpect(jsonPath("$.items[2].description").value("description10"))
+                .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-25T03:00:00"))
+                .andExpect(jsonPath("$.items[2].questionsCount").value(0))
+                .andExpect(jsonPath("$.items[2].questionCountOneDay").value(0))
+                .andExpect(jsonPath("$.items[2].questionCountWeekDay").value(0));
+
+
+    }
 }

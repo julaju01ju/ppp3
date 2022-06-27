@@ -216,4 +216,25 @@ public class TagResourceController {
         ignoredTagService.deleteIgnoredTagByTagIdAndUserId(tagId, user.getId());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/date")
+    @ApiOperation("Выводит все тэги, отсортированные по дате добавления, с учетом заданных параметров пагинации, " +
+            " где первый тэг, является самым новым")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все тэги, отсортированные по дате, с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
+    public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByDateDesc(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "items", required = false, defaultValue = "10") Integer items,
+            @RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("tagsFilter", filter);
+
+        PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByDate", params);
+        return new ResponseEntity<>(pageDto, HttpStatus.OK);
+    }
 }
