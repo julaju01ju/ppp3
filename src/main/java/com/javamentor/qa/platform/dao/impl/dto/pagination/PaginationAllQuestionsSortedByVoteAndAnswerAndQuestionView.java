@@ -83,10 +83,12 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndQuestionView implemen
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
                                 "   END " +
+                                "AND q.persist_date >= :truncedDate " +
                                 "ORDER BY votesAndAnswersAndViewCountResult desc ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setParameter("userId", params.get("userId"))
+                .setParameter("truncedDate", params.get("truncedDate"))
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -117,9 +119,11 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndQuestionView implemen
                                 "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
-                                "END ")
+                                "   END " +
+                                "AND q.persist_date >= :truncedDate ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
+                .setParameter("truncedDate", params.get("truncedDate"))
                 .getSingleResult()).intValue();
     }
 }

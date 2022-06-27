@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.service.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.enums.Period;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Service
@@ -46,6 +48,11 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
 
         pageDto.setItemsOnPage((int) params.get("itemsOnPage"));
         pageDto.setCurrentPageNumber((int) params.get("currentPageNumber"));
+        if (!params.containsKey("period")) {
+            params.put("period", Period.ALL);
+        }
+        pageDto.setPeriod((Period) params.get("period"));
+        params.put("truncedDate", getTruncedDate((Period) params.get("period")));
         pageDto.setItems(pageDtoDao.getItems(params));
         pageDto.setTotalResultCount(pageDtoDao.getTotalResultCount(params));
         pageDto.setTotalPageCount((int) (Math.ceil(((double) pageDto.getTotalResultCount() / (int) params.get("itemsOnPage")))));
@@ -59,4 +66,23 @@ public class PageDtoServiceImpl<T> implements PageDtoService<T> {
 
         return pageDto;
     }
+
+    private static LocalDateTime getTruncedDate(Period period) {
+        LocalDateTime res;
+        switch (period) {
+            case WEEK:
+                res = LocalDateTime.now().minusWeeks(1);
+                break;
+            case MONTH:
+                res = LocalDateTime.now().minusMonths(1);
+                break;
+            case YEAR:
+                res = LocalDateTime.now().minusYears(1);
+                break;
+            default:
+                res = LocalDateTime.MIN;
+        }
+        return res;
+    }
+
 }

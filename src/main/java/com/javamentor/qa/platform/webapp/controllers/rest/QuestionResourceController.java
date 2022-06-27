@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.dto.QuestionCreateDto;
 import com.javamentor.qa.platform.models.dto.QuestionDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.CommentDto;
+import com.javamentor.qa.platform.models.dto.enums.Period;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.question.CommentQuestion;
 import com.javamentor.qa.platform.models.entity.question.Question;
@@ -101,7 +102,8 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
 
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
@@ -116,6 +118,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndQuestionView", params), HttpStatus.OK);
@@ -248,7 +251,8 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
 
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
@@ -263,6 +267,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsWithGivenTags", params), HttpStatus.OK);
@@ -281,7 +286,9 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
+
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
@@ -295,6 +302,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsMostPopularWeek", params), HttpStatus.OK);
@@ -313,7 +321,9 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
+
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
@@ -327,6 +337,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationQuestionsNoAnswer", params), HttpStatus.OK);
@@ -345,7 +356,9 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
+
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
@@ -359,6 +372,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsWithTagsSortedByPersistDate", params), HttpStatus.OK);
@@ -378,7 +392,9 @@ public class QuestionResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
-            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag,
+            @RequestParam(value = "period", required = false, defaultValue = "ALL") Period period) {
+
 
         if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильно переданы тэги в списки trackedTag или ignoredTag");
@@ -392,6 +408,7 @@ public class QuestionResourceController {
         params.put("trackedTag", trackedTag);
         params.put("ignoredTag", ignoredTag);
         params.put("userId", userId);
+        params.put("period", period);
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth", params), HttpStatus.OK);
