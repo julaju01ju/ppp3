@@ -33,6 +33,7 @@ public class QuestionDto {
     private List<TagDto> listTagDto;
     private List<CommentDto> listCommentDto;
     private Boolean isUserBookmark;
+    private Boolean isUserAnswerVote;
 
 }
 

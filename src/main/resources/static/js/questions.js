@@ -1,12 +1,58 @@
-$(document).ready(async function () {
+const butCur = document.getElementById(`currentQuestions`)
+const butNew = document.getElementById(`newQuestions`)
+const butRep = document.getElementById(`reputation`)
 
-    await getAllQuestionsCount();
-    await pagination(1, 50, getMostPopularQuestion);
+
+butNew.addEventListener (`click`, () => {
+    butNew.className = `btn btn-outline-secondary active`
+    butCur.className = `btn btn-outline-secondary`
+    butRep.className = `btn btn-outline-secondary`
+})
+
+butCur.addEventListener (`click`, () => {
+    butCur.className = `btn btn-outline-secondary active`
+    butNew.className = `btn btn-outline-secondary`
+    butRep.className = `btn btn-outline-secondary`
+})
+
+butRep.addEventListener (`click`, () => {
+    butRep.className = `btn btn-outline-secondary active`
+    butNew.className = `btn btn-outline-secondary`
+    butCur.className = `btn btn-outline-secondary`
 })
 
 
-function getMostPopularQuestion(page, itemsOnPage) {
 
+$(document).ready(async function () {
+    await getAllQuestionsCount();
+    await pagination(1, 50, getAllQuestions);
+})
+
+
+
+function getAllQuestions(page, itemsOnPage) {
+    return fetch(`/api/user/question?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getNewQuestions(page, itemsOnPage) {
+    return fetch(`/api/user/question/new?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getMostPopularQuestions(page, itemsOnPage) {
     return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
         {
             method: 'GET',
@@ -29,15 +75,14 @@ function getAllQuestionsCount() {
         response.json().then(questionsCount => {
 
             const questionsCountDecl = [" вопрос", " вопроса", " вопросов"];
-            let decl = declOfNum(questionsCount, questionsCountDecl);
+            let decl = declOfNumQuestions(questionsCount, questionsCountDecl);
             $(".counter-questions").text(questionsCount + decl);
-
         })
     });
 }
 
-function fillCard(elementItems) {
 
+function fillCard(elementItems) {
     $('#questions_list').empty();
 
     elementItems.forEach(function (item) {
@@ -118,7 +163,7 @@ function fillCard(elementItems) {
                                             .attr("style", "white-space: nowrap;font-size: 12px;")
                                             .text("asked ")
                                             .append($('<span class="relativetime">')
-                                                .attr("title", item.persistDateTime).text(timeDifference(item.persistDateTime))))
+                                                .attr("title", item.persistDateTime).text(timeDifferenceQuestions(item.persistDateTime))))
                                     ))))))
 
         $('#questions_list').prepend(newElement);
@@ -126,8 +171,7 @@ function fillCard(elementItems) {
     });
 }
 
-function timeDifference(previous) {
-
+function timeDifferenceQuestions(previous) {
     let msPerMinute = 60 * 1000;
     let msPerHour = msPerMinute * 60;
     let msPerDay = msPerHour * 24;
@@ -157,7 +201,10 @@ function timeDifference(previous) {
     }
 }
 
-function declOfNum(n, text_forms) {
+
+function declOfNumQuestions(n, text_forms) {
+    console.log(`1`, n)
+    console.log(`2`, text_forms)
     n = Math.abs(n) % 100;
     let n1 = n % 10;
     if (n > 10 && n < 20) {
