@@ -48,7 +48,7 @@ function fillCard(elementItems) {
                         .attr("style", "margin-left: .5rem; overflow: hidden; height: 3rem; margin-bottom: .7rem>")
                         .append($('<a class="question-heading">')
                             .attr("style", "text-decoration: none").text(item.title)
-                            .attr("href", "/question/" + item.title)))
+                            .attr("href", "/question/" + item.id)))
                     .append($('<div class="row">')
                         .attr("className", "tag-list")
                         .attr("style", "height: 2rem")
