@@ -231,7 +231,7 @@ public class UserResourceController {
             @ApiResponse(code = 200, message = "Получена история репутации авторизованного пользователя"),
             @ApiResponse(code = 500, message = "Страницы пока что не существует")
     })
-    public ResponseEntity<List<UserProfileReputationDto>> getAllUsersReputation() {
+    public ResponseEntity<List<UserProfileReputationDto>> getUserReputationHistory() {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         List<UserProfileReputationDto> listAllUserReputation = userDtoService.getReputationByUserId(userId);
         return new ResponseEntity<>(listAllUserReputation, HttpStatus.OK);
