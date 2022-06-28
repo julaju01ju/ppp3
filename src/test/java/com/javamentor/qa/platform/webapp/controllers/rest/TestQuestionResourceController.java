@@ -47,9 +47,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithoutTagsAndItemsInParamsSortedByReputation() throws Exception {
 
@@ -75,9 +73,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByReputation() throws Exception {
 
@@ -110,9 +106,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithIgnoredTagsInParamsSortedByReputation() throws Exception {
 
@@ -839,7 +833,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG101"))
@@ -942,7 +936,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
@@ -1049,7 +1043,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("Some another name here"))
@@ -1148,7 +1142,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath());
     }
@@ -1892,8 +1886,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
-                .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
                 .andExpect(jsonPath("$.itemsOnPage").value(4))
                 .andReturn().getResponse().getContentAsString();
 
@@ -1911,8 +1905,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
         Assertions.assertTrue(list.get(2).get("description").equals("description to 102"));
         Assertions.assertTrue((int) list.get(2).get("authorId") == 102);
 
-        Assertions.assertTrue((int) list.get(3).get("id") == 101);
-        Assertions.assertTrue(list.get(3).get("description").equals("description to 101"));
+        Assertions.assertTrue((int) list.get(3).get("id") == 105);
+        Assertions.assertTrue(list.get(3).get("description").equals("description to 113"));
         Assertions.assertTrue((int) list.get(3).get("authorId") == 101);
     }
 
@@ -1999,11 +1993,11 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(jsonPath("$.items[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
-                .andExpect(jsonPath("$.items[1].id").value(101))
-                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
+                .andExpect(jsonPath("$.items[1].id").value(105))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
     }
 
     @Test

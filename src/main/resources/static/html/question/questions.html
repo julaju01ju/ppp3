@@ -28,16 +28,17 @@
                     </p>
                 </div>
                 <div class="btn-group btn-group-sm">
-                    <a onclick="pagination(1, 50, getAllQuestions);" id="currentQuestions" href="#" class="btn btn-outline-secondary active" aria-current="page"
+                    <a onclick="pagination(1, getAmountPerPage(), getAllQuestions);" id="currentQuestions" href="#" class="btn btn-outline-secondary active" aria-current="page"
                        style="font-size: .7rem;  padding: .5rem .7rem">Текущие</a>
-                    <a onclick="pagination(1, 50, getNewQuestions);" id="newQuestions" href="#" class="btn btn-outline-secondary">Новые</a>
-                    <a onclick="pagination(1, 50, getMostPopularQuestions);" id="reputation" href="#" class="btn btn-outline-secondary">Репутация</a>
+                    <a onclick="pagination(1, getAmountPerPage(), getNewQuestions);" id="newQuestions" href="#" class="btn btn-outline-secondary">Новые</a>
+                    <a onclick="pagination(1, getAmountPerPage(), getMostPopularQuestions);" id="reputation" href="#" class="btn btn-outline-secondary">Репутация</a>
                 </div>
 
                 <div>
                     <button class="btn btn-info">Фильтры</button>
                 </div>
             </div>
+
 
             <label for="amountPerPage">Items per page</label>
             <input type="hidden" value="50" min="1" max="100" id="amountPerPage"

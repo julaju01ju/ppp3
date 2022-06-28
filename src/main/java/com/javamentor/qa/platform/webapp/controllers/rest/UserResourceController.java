@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.dto.BookMarksDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.models.dto.UserProfileReputationDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.BookMarksDtoService;
@@ -222,6 +223,18 @@ public class UserResourceController {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         List<UserProfileQuestionDto> listAllUserDeletedQuestions = userDtoService.getAllDeletedQuestionsByUserId(userId);
         return new ResponseEntity<>(listAllUserDeletedQuestions, HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/reputation")
+    @ApiOperation("Возвращает историю получения репутации авторизованным пользователем")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получена история репутации авторизованного пользователя"),
+            @ApiResponse(code = 500, message = "Страницы пока что не существует")
+    })
+    public ResponseEntity<List<UserProfileReputationDto>> getUserReputationHistory() {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        List<UserProfileReputationDto> listAllUserReputation = userDtoService.getReputationByUserId(userId);
+        return new ResponseEntity<>(listAllUserReputation, HttpStatus.OK);
     }
 }
 
