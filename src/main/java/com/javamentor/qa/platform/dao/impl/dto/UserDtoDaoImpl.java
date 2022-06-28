@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.models.dto.UserProfileReputationDto;
 import com.javamentor.qa.platform.models.entity.question.Question;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
@@ -65,6 +66,21 @@ public class UserDtoDaoImpl implements UserDtoDao {
                                 "(select (count(ans.id)) from Answer as ans where ans.question.id = q.id), " +
                                 "q.persistDateTime)" +
                                 "from Question q where q.user.id = :id and q.isDeleted = true", UserProfileQuestionDto.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
+    @Override
+    public List<UserProfileReputationDto> getReputationByUserId(Long id) {
+
+        return entityManager.createQuery(
+                        "select new com.javamentor.qa.platform.models.dto.UserProfileReputationDto (" +
+                                "r.count, " +
+                                "r.question.id, " +
+                                "r.question.title, " +
+                                "r.persistDate) " +
+                                "from Reputation r where r.author.id =: id"
+                        , UserProfileReputationDto.class)
                 .setParameter("id", id)
                 .getResultList();
     }
