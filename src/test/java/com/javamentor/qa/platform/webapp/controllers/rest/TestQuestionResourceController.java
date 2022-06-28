@@ -47,9 +47,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithoutTagsAndItemsInParamsSortedByReputation() throws Exception {
 
@@ -75,9 +73,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByReputation() throws Exception {
 
@@ -110,9 +106,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/bookmark.yml",
-
-    },
+            "dataset/QuestionResourceController/bookmark.yml"},
             disableConstraints = true, cleanBefore = true)
     public void getQuestionsWithIgnoredTagsInParamsSortedByReputation() throws Exception {
 
@@ -839,7 +833,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
-                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("TAG101"))
@@ -942,7 +936,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
@@ -1049,7 +1043,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.itemsOnPage").value(3))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("Some another name here"))
@@ -1148,7 +1142,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
-                .andExpect(jsonPath("$.totalResultCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
                 .andExpect(jsonPath("$.items[0].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$.items[1].listTagDto[?(@.id == 102)]").doesNotHaveJsonPath());
     }
@@ -1871,4 +1865,253 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByViewedCount/view.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsInParamsSortedByViewCountDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&items=4")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.currentPageNumber").value(1))
+                .andExpect(jsonPath("$.totalPageCount").value(2))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andReturn().getResponse().getContentAsString();
+
+        List<HashMap> list = JsonPath.read(pageUsers, "$.items");
+
+        Assertions.assertTrue((int) list.get(0).get("id") == 104);
+        Assertions.assertTrue(list.get(0).get("description").equals("description to 104"));
+        Assertions.assertTrue((int) list.get(0).get("authorId") == 101);
+
+        Assertions.assertTrue((int) list.get(1).get("id") == 103);
+        Assertions.assertTrue(list.get(1).get("description").equals("description to 103"));
+        Assertions.assertTrue((int) list.get(1).get("authorId") == 103);
+
+        Assertions.assertTrue((int) list.get(2).get("id") == 102);
+        Assertions.assertTrue(list.get(2).get("description").equals("description to 102"));
+        Assertions.assertTrue((int) list.get(2).get("authorId") == 102);
+
+        Assertions.assertTrue((int) list.get(3).get("id") == 105);
+        Assertions.assertTrue(list.get(3).get("description").equals("description to 113"));
+        Assertions.assertTrue((int) list.get(3).get("authorId") == 101);
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByViewedCount/view.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
+
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByViewCountDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(true));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByViewedCount/view.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
+
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedTagsInParamsSortedByViewCountDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&trackedTag=102&items=4")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(2))
+                .andExpect(jsonPath("$.items[0].id").value(103))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(false))
+                .andExpect(jsonPath("$.items[1].id").value(102))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true));
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByViewedCount/view.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
+
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsSortedByViewCountDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&ignoredTag=102&items=4")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].id").value(105))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/TagResourceController/users.yml",
+            "dataset/TagResourceController/tag.yml",
+            "dataset/TagResourceController/trackedTag.yml",
+            "dataset/TagResourceController/ignoredTag.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getAllQuestionSortedByViewCountWithTagsInParams() throws Exception {
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&trackedTag=100,101&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&trackedTag=100,101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&ignoredTag=102,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&trackedTag=100,102&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&trackedTag=100,102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&ignoredTag=101,103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(
+                        get("/api/user/question/viewed?page=1&items=3&trackedTag=110&ignoredTag=111")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {"dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByViewedCount/view.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/reputations.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getQuestionsSortedByViewCountDESC() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&item=10&trackedTag=-1&ignoredTag=-1")
+                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].name").value("Some another name here"))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].description").value("Some another text here"))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].title").value("title"))
+                .andExpect(jsonPath("$.items[0].description").value("description to 104"))
+                .andExpect(jsonPath("$.items[0].authorId").value(101))
+                .andExpect(jsonPath("$.items[0].authorName").value("Constantin"))
+                .andExpect(jsonPath("$.items[0].authorImage").value("link"))
+                .andExpect(jsonPath("$.items[0].authorReputation").value(50))
+                .andExpect(jsonPath("$.items[0].viewCount").value(4))
+                .andExpect(jsonPath("$.items[0].countValuable").value(0))
+                .andExpect(jsonPath("$.items[0].countAnswer").value(0))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].name").value("TAG101"))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].name").value("Some another name here"))
+                .andExpect(jsonPath("$.items[1].listTagDto[1].description").value("Some another text here"))
+                .andExpect(jsonPath("$.items[1].id").value(103))
+                .andExpect(jsonPath("$.items[1].title").value("title"))
+                .andExpect(jsonPath("$.items[1].description").value("description to 103"))
+                .andExpect(jsonPath("$.items[1].authorId").value(103))
+                .andExpect(jsonPath("$.items[1].authorName").value("Constantin"))
+                .andExpect(jsonPath("$.items[1].authorImage").value("link"))
+                .andExpect(jsonPath("$.items[1].authorReputation").value(25))
+                .andExpect(jsonPath("$.items[1].viewCount").value(3))
+                .andExpect(jsonPath("$.items[1].countValuable").value(-1))
+                .andExpect(jsonPath("$.items[1].countAnswer").value(1))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
+    }
+
 }

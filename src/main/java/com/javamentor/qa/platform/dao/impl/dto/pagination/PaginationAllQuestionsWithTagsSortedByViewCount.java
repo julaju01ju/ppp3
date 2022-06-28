@@ -12,16 +12,18 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<QuestionViewDto> {
+public class PaginationAllQuestionsWithTagsSortedByViewCount implements PageDtoDao<QuestionViewDto> {
+
     @PersistenceContext
-    private EntityManager em;
+    private EntityManager entityManager;
 
     @Override
     public List<QuestionViewDto> getItems(Map<String, Object> params) {
+
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
 
-        return em.createNativeQuery(
+        return entityManager.createNativeQuery(
                         "SELECT " +
                                 "distinct q.id AS q_id, " +
                                 "q.title, " +
@@ -44,7 +46,8 @@ public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<Ques
                                 "(SELECT coalesce(count(a.id),0) FROM answer a " +
                                 "   WHERE a.question_id = q.id) AS answers, " +
 
-                                "(select count(qv.id) from question_viewed qv where qv.question_id = q.id), " +
+                                "(SELECT coalesce(count(qv.id), 0) FROM question_viewed qv " +
+                                "   WHERE qv.question_id = q.id) AS views, " +
 
                                 "(SELECT coalesce(count(b.id), 0) FROM bookmarks b WHERE b.question_id = q.id AND b.user_id = :userId) " +
 
@@ -67,7 +70,7 @@ public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<Ques
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
                                 "   END " +
-                                "ORDER BY reputation DESC")
+                                "ORDER BY views DESC")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setParameter("userId", params.get("userId"))
@@ -79,7 +82,7 @@ public class PaginationAllQuestionsSortedByReputation implements PageDtoDao<Ques
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
-        return ((BigInteger) em.createNativeQuery(
+        return ((BigInteger) entityManager.createNativeQuery(
                         "SELECT " +
                                 "COUNT(DISTINCT q.id) FROM question q LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 "WHERE CASE " +

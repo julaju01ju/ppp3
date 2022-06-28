@@ -6,11 +6,6 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
-import com.javamentor.qa.platform.models.dto.GroupChatDto;
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import io.swagger.annotations.Api;
@@ -25,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -99,7 +93,6 @@ public class ChatResourceController {
         return new ResponseEntity<>(groupChatDtoService.getOptionalGroupChatDto(
                 "paginationGroupChatMessages", params), HttpStatus.OK);
     }
-
 
     @GetMapping("/{id}/single/message")
     @ApiOperation("Возращает все сообщения singleChat как объект класса PageDto<MessageDto> с учетом заданных параметров пагинации, " +

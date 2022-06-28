@@ -1,10 +1,33 @@
 $(document).ready(async function () {
-    await pagination(1,
-        20,
-        getMostPopularQuestion);
+    await getAllQuestionsCountMain();
+    await pagination(1, 50, getAllQuestionsMain);
 })
 
-function getMostPopularQuestion(page, itemsOnPage) {
+
+
+function getAllQuestionsMain(page, itemsOnPage) {
+    return fetch(`/api/user/question?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getNewQuestionsMain(page, itemsOnPage) {
+    return fetch(`/api/user/question/new?page=${page}&items=${itemsOnPage}`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        });
+}
+
+function getMostPopularQuestionsMain(page, itemsOnPage) {
     return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
         {
             method: 'GET',
@@ -44,28 +67,43 @@ function fillCard(elementItems) {
                     )
                 )
                 .append($('<div class="d-flex flex-column">')
-                    .append($('<div class="row question-card-body">')
-                        .attr("style", "margin-left: .5rem; overflow: hidden; height: 3rem; margin-bottom: .7rem>")
+                    .append($('<div class="question-card-body">')
+                        .attr("style", "margin-left: .2rem; overflow: hidden; height: 3rem; margin-bottom: .7rem>")
                         .append($('<a class="question-heading">')
-                            .attr("style", "text-decoration: none").text(item.title)
+                            .attr("style", "color: #0080FF; margin-left: 30px; text-decoration: none").text(item.title)
                             .attr("href", "/question/" + item.id)))
-                    .append($('<div class="row">')
-                        .attr("className", "tag-list")
+                    .append($('<div class="tag-list">')
                         .attr("style", "height: 2rem")
                         .append($('<ul class="d-flex">')
                             .attr("style", "list-style: none")
                             .append(
                                 $.map(item.listTagDto, function (itemTag) {
                                         return $('<li class="list-item">')
-                                            .append('<a class="list-item" href="#">')
-                                            .attr("style", "margin-left: 1rem; font-size: .7rem; background-color: " +
-                                                "lightblue; color: blue; padding: .3rem .5rem; " +
-                                                "border-radius: .2rem; text-decoration: none")
-                                            .text(itemTag.name)
+                                            .append($('<a href="#">')
+                                                .attr("style", "margin-left: 1rem; font-size: .7rem; background-color: lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none")
+                                                .text(itemTag.name))
                                     }
-                                )))))
-
-        $('#questions_list').prepend(newElement);
-
+                                )
+                            )
+                        )
+                    )
+                )
+        $('#questions_list').append(newElement);
     });
+}
+function declOfNum(n, text_forms) {
+    console.log(n)
+    console.log(text_forms)
+    n = Math.abs(n) % 100;
+    let n1 = n % 10;
+    if (n > 10 && n < 20) {
+        return text_forms[2];
+    }
+    if (n1 > 1 && n1 < 5) {
+        return text_forms[1];
+    }
+    if (n1 === 1) {
+        return text_forms[0];
+    }
+    return text_forms[2];
 }
