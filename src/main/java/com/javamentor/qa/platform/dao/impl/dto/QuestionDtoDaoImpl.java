@@ -73,7 +73,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setCountAnswer(((Long) tuple[11]).intValue());
                                               questionDto.setIsUserVote((Enum<VoteType>) tuple[12]);
                                               questionDto.setIsUserBookmark(tuple[13].equals(1L));
-                                              questionDto.setIsUserAnswerVote(tuple[14].equals(1L));
+                                              questionDto.setIsUserAnswerVote(tuple[14].equals(true));
 
                                               return questionDto;
                                           }
