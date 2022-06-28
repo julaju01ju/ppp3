@@ -62,11 +62,12 @@
                             lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
                         Spring</a>
                 </div>
+
                 <div class="btn-group btn-group-sm">
-                    <a onclick="pagination(1, 50, getAllQuestionsMain);" id="currentQuestionsMain" href="#" class="btn btn-outline-secondary active" aria-current="page"
+                    <a onclick="pagination(1, getAmountPerPage(), getAllQuestionsMain);" id="currentQuestionsMain" href="#" class="btn btn-outline-secondary active" aria-current="page"
                        style="font-size: .7rem;  padding: .5rem .7rem">Текущие</a>
-                    <a onclick="pagination(1, 50, getNewQuestionsMain);" id="newQuestionsMain" href="#" class="btn btn-outline-secondary">Новые</a>
-                    <a onclick="pagination(1, 50, getMostPopularQuestionsMain);" id="reputationMain" href="#" class="btn btn-outline-secondary">Репутация</a>
+                    <a onclick="pagination(1, getAmountPerPage(), getNewQuestionsMain);" id="newQuestionsMain" href="#" class="btn btn-outline-secondary">Новые</a>
+                    <a onclick="pagination(1, getAmountPerPage(), getMostPopularQuestionsMain);" id="reputationMain" href="#" class="btn btn-outline-secondary">Репутация</a>
                 </div>
 
                 <div>

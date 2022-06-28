@@ -53,7 +53,7 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
 
                                 "FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
-                                "JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 " where q.title like concat ('%', :title, '%')" +
                                 " and q.description like concat ('%', :body, '%')" +
                                 " and u.full_name like concat ('%', :userName, '%')" +
@@ -78,7 +78,7 @@ public class PaginationSearchQuestionsSortedById implements PageDtoDao<QuestionV
                         "SELECT " +
                                 "COUNT(DISTINCT q.id) FROM question q " +
                                 "JOIN user_entity u ON u.id = q.user_id " +
-                                "JOIN question_has_tag qht ON q.id = qht.question_id " +
+                                "LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                                 " where q.title like concat ('%', :title, '%')" +
                                 " and q.description like concat ('%', :body, '%')" +
                                 " and u.full_name like concat ('%', :userName, '%')" +

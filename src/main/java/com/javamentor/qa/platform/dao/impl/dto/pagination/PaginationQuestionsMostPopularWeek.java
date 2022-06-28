@@ -65,7 +65,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         ") AS qWeight " +
                         "FROM question q " +
                         "JOIN user_entity u ON u.id = q.user_id " +
-                        "JOIN question_has_tag qht ON q.id = qht.question_id " +
+                        "LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                         "WHERE now() - date(q.persist_date) < interval '7' DAY " +
                         "AND CASE " +
                         "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
@@ -102,7 +102,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
 
         return ((BigInteger) em.createNativeQuery(
                 "SELECT " +
-                        "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
+                        "COUNT(DISTINCT q.id) FROM question q LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                         "WHERE q.id NOT IN(SELECT a.question_id FROM answer a WHERE a.question_id = q.id) " +
                         "AND CASE " +
                         "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +

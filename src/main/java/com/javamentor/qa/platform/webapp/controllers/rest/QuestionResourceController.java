@@ -539,6 +539,5 @@ public class QuestionResourceController {
 
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsWithTagsSortedByViewCount", params), HttpStatus.OK);
-
     }
 }
