@@ -19,7 +19,6 @@ public class PaginationAllTagsSortedByDate implements PageDtoDao<TagViewDto> {
     public List<TagViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
-        String tagsFilter = (String) params.get("tagsFilter");
 
         return entityManager.createQuery(
                         "select new com.javamentor.qa.platform.models.dto.TagViewDto" +
@@ -36,20 +35,16 @@ public class PaginationAllTagsSortedByDate implements PageDtoDao<TagViewDto> {
                                 "where t.id = qh.id and q.persistDateTime " +
                                 "between (current_date-7) and current_date ) as one_week) " +
                                 "from Tag t " +
-                                "WHERE t.name LIKE :tagsFilter " +
-                                "order by persistDateTime desc, t.name ", TagViewDto.class)
+                                "order by persistDateTime desc", TagViewDto.class)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
-                .setParameter("tagsFilter", "%" + tagsFilter + "%")
                 .getResultList();
     }
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
-        String tagsFilter = (String) params.get("tagsFilter");
         return (int) entityManager.createQuery
-                ("Select CAST(count(tag.id) as int) AS countTags from Tag tag WHERE tag.name LIKE :tagsFilter")
-                .setParameter("tagsFilter", "%" + tagsFilter + "%")
+                ("Select CAST(count(tag.id) as int) AS countTags from Tag tag")
                 .getSingleResult();
     }
 }

@@ -227,12 +227,10 @@ public class TagResourceController {
     })
     public ResponseEntity<PageDto<TagViewDto>> getAllTagsOrderByDateDesc(
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "items", required = false, defaultValue = "10") Integer items,
-            @RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
+            @RequestParam(value = "items", required = false, defaultValue = "10") Integer items) {
         Map<String, Object> params = new HashMap<>();
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
-        params.put("tagsFilter", filter);
 
         PageDto<TagViewDto> pageDto = tagDtoService.getPageDto("paginationAllTagsSortedByDate", params);
         return new ResponseEntity<>(pageDto, HttpStatus.OK);
