@@ -1,3 +1,26 @@
+const butCurMain = document.getElementById(`currentQuestionsMain`)
+const butNewMain = document.getElementById(`newQuestionsMain`)
+const butRepMain = document.getElementById(`reputationMain`)
+
+
+butNewMain.addEventListener (`click`, () => {
+    butNewMain.className = `btn btn-outline-secondary active`
+    butCurMain.className = `btn btn-outline-secondary`
+    butRepMain.className = `btn btn-outline-secondary`
+})
+
+butCurMain.addEventListener (`click`, () => {
+    butCurMain.className = `btn btn-outline-secondary active`
+    butNewMain.className = `btn btn-outline-secondary`
+    butRepMain.className = `btn btn-outline-secondary`
+})
+
+butRepMain.addEventListener (`click`, () => {
+    butRepMain.className = `btn btn-outline-secondary active`
+    butNewMain.className = `btn btn-outline-secondary`
+    butCurMain.className = `btn btn-outline-secondary`
+})
+
 $(document).ready(async function () {
     await getAllQuestionsCountMain();
     await pagination(1, 50, getAllQuestionsMain);
@@ -36,6 +59,24 @@ function getMostPopularQuestionsMain(page, itemsOnPage) {
                 'Accept': 'application/json', 'Content-Type': 'application/json'
             },
         });
+}
+function getAllQuestionsCountMain() {
+    return fetch(`/api/user/question/count`,
+        {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + getCookie('token'),
+                'Accept': 'application/json', 'Content-Type': 'application/json'
+            },
+        }).then(response => {
+        response.json().then(questionsCount => {
+
+            const questionsCountDecl = [" вопрос", " вопроса", " вопросов"];
+            let decl = declOfNum(questionsCount, questionsCountDecl);
+            $(".counter-questions").text(questionsCount + decl);
+
+        })
+    });
 }
 
 function fillCard(elementItems) {
