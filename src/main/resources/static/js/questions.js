@@ -166,7 +166,7 @@ function fillCard(elementItems) {
                                                 .attr("title", item.persistDateTime).text(timeDifferenceQuestions(item.persistDateTime))))
                                     ))))))
 
-        $('#questions_list').prepend(newElement);
+        $('#questions_list').append(newElement);
 
     });
 }
