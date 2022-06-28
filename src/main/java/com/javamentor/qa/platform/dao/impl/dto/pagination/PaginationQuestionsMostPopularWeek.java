@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.enums.Period;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
     public List<QuestionViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
         return em.createNativeQuery(
                 "SELECT " +
@@ -85,7 +88,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setParameter("userId", params.get("userId"))
-                .setParameter("truncedDate", params.get("truncedDate"))
+                .setParameter("truncedDate", truncedDate)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -94,6 +97,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
 
         return ((BigInteger) em.createNativeQuery(
@@ -119,7 +123,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         "AND q.persist_date >= :truncedDate ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
-                .setParameter("truncedDate", params.get("truncedDate"))
+                .setParameter("truncedDate", truncedDate)
                 .getSingleResult()).intValue();
     }
 }

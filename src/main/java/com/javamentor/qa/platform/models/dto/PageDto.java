@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.models.dto;
 
 
-import com.javamentor.qa.platform.models.dto.enums.Period;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +19,6 @@ public class PageDto<T> {
     private int totalResultCount;
     private List<T> items;
     private int itemsOnPage;
-
-    private Period period;
 
     @Override
     public String toString() {
