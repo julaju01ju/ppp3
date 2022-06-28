@@ -1391,7 +1391,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[3].userId").value(102))
                 .andExpect(jsonPath("$.isUserAnswerVote").value(true));
         mockMvc.perform(
-                        get("/api/user/question/100")
+                        get("/api/user/question/102")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(jsonPath("$.isUserAnswerVote").value(false));
