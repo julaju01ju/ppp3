@@ -1,7 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
 import com.jayway.jsonpath.JsonPath;
@@ -11,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -646,7 +642,6 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].countAnswer").value(2))
                 .andExpect(jsonPath("$[0].countVote").value(0))
                 .andExpect(jsonPath("$[0].countView").value(1))
-
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
@@ -702,5 +697,46 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[1].city").value("TestCity1"))
                 .andExpect(jsonPath("$[1].reputation").value(10));
     }
-}
 
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getUserProfileReputationDto/role.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/users.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/questions.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/reputation.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getUserProfileReputationDto() throws Exception {
+        String USER_TOKEN = getToken("user1@mail.ru", "user");
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/api/user/profile/reputation")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].reputation").value(10))
+                .andExpect(jsonPath("$[0].questionId").value(101))
+                .andExpect(jsonPath("$[1].reputation").value(5))
+                .andExpect(jsonPath("$[1].questionId").value(102))
+                .andExpect(jsonPath("$[4].reputation").value(30))
+                .andExpect(jsonPath("$[4].questionId").value(105))
+                .andExpect(jsonPath("$.size()").value(5));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getUserProfileReputationDto/role.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/users.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/questions.yml",
+            "dataset/UserResourceController/getUserProfileReputationDto/reputation.yml"},
+            disableConstraints = true, cleanBefore = true)
+
+    public void getUserProfileReputationDtoEmpty() throws Exception {
+
+        String USER_TOKEN = getToken("user3@mail.ru", "user");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/profile/reputation")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(0));
+    }
+}

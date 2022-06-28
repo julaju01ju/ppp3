@@ -19,7 +19,7 @@ public class PaginationAllSingleChatsOfUser implements PageDtoDao<SingleChatDto>
     private EntityManager entityManager;
 
     @Override
-    public List<SingleChatDto> getItems(Map params) {
+    public List<SingleChatDto> getItems(Map<String, Object> params) {
 
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
@@ -35,7 +35,8 @@ public class PaginationAllSingleChatsOfUser implements PageDtoDao<SingleChatDto>
                             "else singleChat.userOne.imageLink " +
                         "end, " +
                         "message.message, message.persistDate) " +
-                        "from SingleChat singleChat, Message message " +
+                        "from SingleChat singleChat " +
+                        "join Message message on message.chat.id = singleChat.chat.id " +
                         "where message.persistDate " +
                         "in (" +
                             "select max(messageMaxDate.persistDate) " +
@@ -52,7 +53,7 @@ public class PaginationAllSingleChatsOfUser implements PageDtoDao<SingleChatDto>
     }
 
     @Override
-    public int getTotalResultCount(Map params) {
+    public int getTotalResultCount(Map<String, Object> params) {
         final String query =
                 "select singleChat from SingleChat singleChat " +
                         "join fetch singleChat.userOne userOne " +

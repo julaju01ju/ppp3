@@ -3,6 +3,9 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.models.dto.UserProfileReputationDto;
+import com.javamentor.qa.platform.models.entity.question.Question;
+import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
 import org.springframework.stereotype.Repository;
 
@@ -46,20 +49,17 @@ public class UserDtoDaoImpl implements UserDtoDao {
     @Override
     public List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id) {
         return entityManager.createQuery(
-                        "select new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
-                                "q.id, " +
-                                "q.title, " +
-                                "(select (count(ans.id)) from Answer as ans where ans.question.id = q.id), " +
-                                "q.persistDateTime)" +
-
-                                "from Question q where q.user.id = :id",
-
-                        UserProfileQuestionDto.class)
+                "select new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
+                        "q.id, " +
+                        "q.title, " +
+                        "(select (count(ans.id)) from Answer as ans where ans.question.id = q.id), " +
+                        "q.persistDateTime)" +
+                        "from Question q where q.user.id = :id", UserProfileQuestionDto.class)
                 .setParameter("id", id)
                 .getResultList();
     }
 
-
+    @Override
     public List<UserProfileQuestionDto> getAllDeletedQuestionsByUserId(Long id) {
         return entityManager.createQuery(
                         "select new com.javamentor.qa.platform.models.dto.UserProfileQuestionDto(" +
@@ -109,4 +109,19 @@ public class UserDtoDaoImpl implements UserDtoDao {
     }
 
 
+
+    @Override
+    public List<UserProfileReputationDto> getReputationByUserId(Long id) {
+
+        return entityManager.createQuery(
+                        "select new com.javamentor.qa.platform.models.dto.UserProfileReputationDto (" +
+                                "r.count, " +
+                                "r.question.id, " +
+                                "r.question.title, " +
+                                "r.persistDate) " +
+                                "from Reputation r where r.author.id =: id"
+                        , UserProfileReputationDto.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
 }

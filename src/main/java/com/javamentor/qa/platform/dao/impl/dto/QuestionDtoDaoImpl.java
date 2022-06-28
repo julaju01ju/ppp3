@@ -44,10 +44,12 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                 "(select count(qv.id) from QuestionViewed qv where qv.question.id = q.id), " +
                                 "(select count(a.id) from Answer a where a.question.id = q.id), " +
                                 "(select quv.vote from VoteQuestion quv where quv.question.id = q.id and quv.user.id =:userId), " +
-                                "(select count(b) from BookMarks b where b.question.id = :questionId and b.user.id = :userId) " +
-                                "from Question q " +
+                                "(select count(b) from BookMarks b where b.question.id = :questionId and b.user.id = :userId), " +
+                                "(select (case when count(a) > 0 then true else false end) from Answer a where a.question.id = :questionId and a.user.id = :userId)" +
+                                "from Question  q " +
                                 "LEFT join q.user u " +
                                 "where q.id =:questionId")
+
                 .setParameter("questionId", questionId)
                 .setParameter("userId", userId)
                 .unwrap(Query.class)
@@ -71,6 +73,7 @@ public class QuestionDtoDaoImpl implements QuestionDtoDao {
                                               questionDto.setCountAnswer(((Long) tuple[11]).intValue());
                                               questionDto.setIsUserVote((Enum<VoteType>) tuple[12]);
                                               questionDto.setIsUserBookmark(tuple[13].equals(1L));
+                                              questionDto.setIsUserAnswerVote((Boolean) tuple[14]);
 
                                               return questionDto;
                                           }

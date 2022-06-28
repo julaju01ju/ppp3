@@ -24,18 +24,17 @@
             margin-bottom: 2rem">
                 <div>
                     <p>
-                        <span class="counter-questions">50</span>
-                        вопросов
+                        <span class="counter-questions"></span>
                     </p>
                 </div>
                 <div class="btn-group btn-group-sm" >
                     <a href="#" class="btn btn-outline-secondary" aria-current="page"
                        style="font-size: .7rem;  padding: .5rem .7rem">Новые</a>
-                    <a href="#" class="btn btn-outline-secondary">Текущие
+                    <a href="#" class="btn btn-outline-secondary">Репутация
                     </a>
-                    <a href="#" class="btn btn-outline-secondary" >Конкурсные
-                        <span class="bg-primary p-1" style="color: white; border-radius: .3em">5</span>
-                    </a>
+<!--                    <a href="#" class="btn btn-outline-secondary" >Конкурсные-->
+<!--                        <span class="bg-primary p-1" style="color: white; border-radius: .3em">5</span>-->
+<!--                    </a>-->
                     <a href="#" class="btn btn-outline-secondary active" >Неотвеченные</a>
                 </div>
                 <div>
@@ -43,305 +42,15 @@
                 </div>
             </div>
 
-            <div class="question-card d-flex" style="height: 9rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex flex-column">
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
+            <div id="unansweredQuestions_browser">
+                <div class="container-fluid" id="unansweredQuestions_list">
                 </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 5rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-                        <div class="question-content" style="font-size: .8rem; margin-top: 1rem">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam blanditiis commodi
-                                consectetur corporis cupiditate debitis dicta dolores eaque, molestiae nisi nulla officiis
-                                possimus quod rerum vel, voluptas! Accusantium hic, libero! Asperiores eius eligendi fuga
-                                fugiat magnam numquam obcaecati reprehenderit repudiandae, sed voluptatem. Ab accusamus
-                                accusantium ad adipisci aliquid amet aperiam consequatur consequuntur cumque deserunt
-                                doloribus, ducimus ea et fuga fugit illo inventore ipsam itaque laborum laudantium maiores
-                                modi molestias mollitia nam, natus perspiciatis quas quasi quidem quo sapiente similique
-                                velit veritatis voluptatibus! Adipisci, autem blanditiis commodi culpa debitis deleniti hic
-                                id illo incidunt magnam minus nisi, nobis obcaecati possimus quaerat qui rem repellendus
-                                suscipit voluptatibus voluptatum. Ab alias aperiam consectetur cupiditate dignissimos
-                                distinctio dolore ea eos excepturi, exercitationem explicabo facilis harum hic in ipsa
-                                itaque minima necessitatibus neque numquam perspiciatis porro possimus praesentium provident
-                                quaerat quasi quo quos ratione saepe sapiente voluptatum! Consequuntur qui quidem soluta?
-                                Illum quae, reprehenderit!</p>
-                        </div>
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                                </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <nav>
+                    <ul class="pagination justify-content-end" id="paginationButtons"></ul>
+                </nav>
             </div>
 
-            <div class="question-card d-flex" style="height: 9rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex flex-column">
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 5rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-                        <div class="question-content" style="font-size: .8rem; margin-top: 1rem">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam blanditiis commodi
-                                consectetur corporis cupiditate debitis dicta dolores eaque, molestiae nisi nulla officiis
-                                possimus quod rerum vel, voluptas! Accusantium hic, libero! Asperiores eius eligendi fuga
-                                fugiat magnam numquam obcaecati reprehenderit repudiandae, sed voluptatem. Ab accusamus
-                                accusantium ad adipisci aliquid amet aperiam consequatur consequuntur cumque deserunt
-                                doloribus, ducimus ea et fuga fugit illo inventore ipsam itaque laborum laudantium maiores
-                                modi molestias mollitia nam, natus perspiciatis quas quasi quidem quo sapiente similique
-                                velit veritatis voluptatibus! Adipisci, autem blanditiis commodi culpa debitis deleniti hic
-                                id illo incidunt magnam minus nisi, nobis obcaecati possimus quaerat qui rem repellendus
-                                suscipit voluptatibus voluptatum. Ab alias aperiam consectetur cupiditate dignissimos
-                                distinctio dolore ea eos excepturi, exercitationem explicabo facilis harum hic in ipsa
-                                itaque minima necessitatibus neque numquam perspiciatis porro possimus praesentium provident
-                                quaerat quasi quo quos ratione saepe sapiente voluptatum! Consequuntur qui quidem soluta?
-                                Illum quae, reprehenderit!</p>
-                        </div>
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
-            <div class="question-card d-flex" style="height: 9rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex flex-column">
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 5rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-                        <div class="question-content" style="font-size: .8rem; margin-top: 1rem">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam blanditiis commodi
-                                consectetur corporis cupiditate debitis dicta dolores eaque, molestiae nisi nulla officiis
-                                possimus quod rerum vel, voluptas! Accusantium hic, libero! Asperiores eius eligendi fuga
-                                fugiat magnam numquam obcaecati reprehenderit repudiandae, sed voluptatem. Ab accusamus
-                                accusantium ad adipisci aliquid amet aperiam consequatur consequuntur cumque deserunt
-                                doloribus, ducimus ea et fuga fugit illo inventore ipsam itaque laborum laudantium maiores
-                                modi molestias mollitia nam, natus perspiciatis quas quasi quidem quo sapiente similique
-                                velit veritatis voluptatibus! Adipisci, autem blanditiis commodi culpa debitis deleniti hic
-                                id illo incidunt magnam minus nisi, nobis obcaecati possimus quaerat qui rem repellendus
-                                suscipit voluptatibus voluptatum. Ab alias aperiam consectetur cupiditate dignissimos
-                                distinctio dolore ea eos excepturi, exercitationem explicabo facilis harum hic in ipsa
-                                itaque minima necessitatibus neque numquam perspiciatis porro possimus praesentium provident
-                                quaerat quasi quo quos ratione saepe sapiente voluptatum! Consequuntur qui quidem soluta?
-                                Illum quae, reprehenderit!</p>
-                        </div>
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-card d-flex" style="height: 9rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex flex-column">
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 5rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-                        <div class="question-content" style="font-size: .8rem; margin-top: 1rem">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam blanditiis commodi
-                                consectetur corporis cupiditate debitis dicta dolores eaque, molestiae nisi nulla officiis
-                                possimus quod rerum vel, voluptas! Accusantium hic, libero! Asperiores eius eligendi fuga
-                                fugiat magnam numquam obcaecati reprehenderit repudiandae, sed voluptatem. Ab accusamus
-                                accusantium ad adipisci aliquid amet aperiam consequatur consequuntur cumque deserunt
-                                doloribus, ducimus ea et fuga fugit illo inventore ipsam itaque laborum laudantium maiores
-                                modi molestias mollitia nam, natus perspiciatis quas quasi quidem quo sapiente similique
-                                velit veritatis voluptatibus! Adipisci, autem blanditiis commodi culpa debitis deleniti hic
-                                id illo incidunt magnam minus nisi, nobis obcaecati possimus quaerat qui rem repellendus
-                                suscipit voluptatibus voluptatum. Ab alias aperiam consectetur cupiditate dignissimos
-                                distinctio dolore ea eos excepturi, exercitationem explicabo facilis harum hic in ipsa
-                                itaque minima necessitatibus neque numquam perspiciatis porro possimus praesentium provident
-                                quaerat quasi quo quos ratione saepe sapiente voluptatum! Consequuntur qui quidem soluta?
-                                Illum quae, reprehenderit!</p>
-                        </div>
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="question-card d-flex" style="height: 9rem; padding-left: 1.5rem; padding-top: .7rem;
-            border-bottom: 1px
-            solid lightgrey">
-                <div class="votes-list d-flex flex-column">
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">голосов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">ответов</span>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <span class="count_question text-center" style="color: #7b8185">0</span>
-                        <span class="label" style="font-size: .7rem">показов</span>
-                    </div>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="question-card-body" style="margin-left: 2rem; overflow: hidden; height: 5rem;
-                    margin-bottom: .7rem">
-                        <a href="#" class="question-heading" style="text-decoration: none">Название вопроса</a>
-                        <div class="question-content" style="font-size: .8rem; margin-top: 1rem">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam blanditiis commodi
-                                consectetur corporis cupiditate debitis dicta dolores eaque, molestiae nisi nulla officiis
-                                possimus quod rerum vel, voluptas! Accusantium hic, libero! Asperiores eius eligendi fuga
-                                fugiat magnam numquam obcaecati reprehenderit repudiandae, sed voluptatem. Ab accusamus
-                                accusantium ad adipisci aliquid amet aperiam consequatur consequuntur cumque deserunt
-                                doloribus, ducimus ea et fuga fugit illo inventore ipsam itaque laborum laudantium maiores
-                                modi molestias mollitia nam, natus perspiciatis quas quasi quidem quo sapiente similique
-                                velit veritatis voluptatibus! Adipisci, autem blanditiis commodi culpa debitis deleniti hic
-                                id illo incidunt magnam minus nisi, nobis obcaecati possimus quaerat qui rem repellendus
-                                suscipit voluptatibus voluptatum. Ab alias aperiam consectetur cupiditate dignissimos
-                                distinctio dolore ea eos excepturi, exercitationem explicabo facilis harum hic in ipsa
-                                itaque minima necessitatibus neque numquam perspiciatis porro possimus praesentium provident
-                                quaerat quasi quo quos ratione saepe sapiente voluptatum! Consequuntur qui quidem soluta?
-                                Illum quae, reprehenderit!</p>
-                        </div>
-                    </div>
-                    <div class="tag-list " style="height: 2rem">
-                        <ul class="d-flex" style="list-style: none">
-                            <li class="list-item">
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Java</a>
-                            </li>
-                            <li class="list-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Hibernate</a>
-                            </li>
-                            <li class="light-item" >
-                                <a href="#"  style="margin-left: 1rem; font-size: .7rem; background-color:
-                            lightblue; color: blue; padding: .3rem .5rem; border-radius: .2rem; text-decoration: none">
-                                    Spring</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
 
         </div>
         <div class="col-3 d-flex flex-column p-3" style="color: #7b8185">
@@ -405,6 +114,8 @@
 <script src="../js/layout/SideBar.js"></script>
 <script src="../js/layout/Footer.js"></script>
 <script src="../js/scripts.js"></script>
+<script src="../js/pagination.js"></script>
+<script src="../js/unanswered_questions.js"></script>
 <script src="../js/show_top_tags.js"></script>
 
 
