@@ -21,8 +21,6 @@ butRepMain.addEventListener (`click`, () => {
     butCurMain.className = `btn btn-outline-secondary`
 })
 
-
-
 $(document).ready(async function () {
     await getAllQuestionsCountMain();
     await pagination(1, 50, getAllQuestionsMain);
@@ -62,7 +60,6 @@ function getMostPopularQuestionsMain(page, itemsOnPage) {
             },
         });
 }
-
 function getAllQuestionsCountMain() {
     return fetch(`/api/user/question/count`,
         {
@@ -82,24 +79,22 @@ function getAllQuestionsCountMain() {
     });
 }
 
-
 function fillCard(elementItems) {
     $('#questions_list').empty();
 
     elementItems.forEach(function (item) {
         let newElement =
-            $(`<div class="question-card d-flex">`)
+            $('<div class="question-card d-flex">')
                 .attr("style", "height: 5rem; padding-left: 1.5rem; padding-top: .7rem; border-bottom: 1px solid lightgrey")
-                .append($('<div class="votes-list d-flex ">')
-                    .append($('<div class="d-flex flex-column">')
-                        .attr("style", "margin-right: .7rem")
+                .append($('<div class="votes-list d-flex">')
+                    .append($('<div class="d-flex flex-column" style="margin-right: .7rem">')
                         .append($('<span class="count_question text-center">')
                             .attr("style", "color: #7b8185").text(item.countValuable))
                         .append($('<span class="label">')
                             .attr("style", "font-size: .7rem").text('голосов'))
                     )
-                    .append($('<div class="d-flex flex-column">')
-                        .attr("style", "margin-right: .7rem; border: 1px solid green; border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem")
+                    .append($('<div class="d-flex flex-column" style="margin-right: .7rem; ' +
+                        'border: 1px solid green; border-radius: .5rem; margin-bottom: .5rem; padding: 0 .3rem">')
                         .append($('<span class="count_question text-center">')
                             .attr("style", "color: #7b8185").text(item.countAnswer))
                         .append($('<span class="label">')
@@ -114,9 +109,10 @@ function fillCard(elementItems) {
                 )
                 .append($('<div class="d-flex flex-column">')
                     .append($('<div class="question-card-body">')
-                        .attr("style", "margin-left: 2rem; overflow: hidden; height: 3rem; margin-bottom: .7rem")
-                        .append($('<a href="#" class="question-heading">'))
-                        .attr("style", "color: #0080FF; margin-left: 30px; text-decoration: none").text(item.title))
+                        .attr("style", "margin-left: .2rem; overflow: hidden; height: 3rem; margin-bottom: .7rem>")
+                        .append($('<a class="question-heading">')
+                            .attr("style", "color: #0080FF; margin-left: 30px; text-decoration: none").text(item.title)
+                            .attr("href", "/question/" + item.id)))
                     .append($('<div class="tag-list">')
                         .attr("style", "height: 2rem")
                         .append($('<ul class="d-flex">')
@@ -136,9 +132,6 @@ function fillCard(elementItems) {
         $('#questions_list').append(newElement);
     });
 }
-
-
-
 function declOfNum(n, text_forms) {
     console.log(n)
     console.log(text_forms)

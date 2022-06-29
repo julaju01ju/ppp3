@@ -122,13 +122,13 @@ function getAnswerHTMLForQuestion(item) {
         '                            <div class="col-1 text-center" id="voteplace-1">\n' +
         '                                <ul class="list-unstyled">\n' +
         '                                    <li>' +
-        '                                       <a id="voteUp-1" href="#">' +
+        '                                       <a id="voteUp-1" onclick="voteOnAnswer(UPANSWER,' + item.id + ')">' +
         '                                           <i class="fas fa-arrow-circle-up" style="color: rgb(121,135,155);"></i>' +
         '                                       </a>' +
         '                                    </li>\n' +
-        '                                    <li id="countVote-1">' + votesNumber(item.countValuable) + '</li>\n' +
+        '                                    <li id="countVote-' + item.id + '">' + votesNumber(item.countValuable) + '</li>\n' +
         '                                    <li id="voteDown-1">' +
-        '                                       <a href="#">' +
+        '                                       <a onclick="voteOnAnswer(DOWNANSWER, ' + item.id + ')">' +
         '                                           <i class="fa fa-arrow-circle-down" style="color: rgb(121,135,155);"></i>' +
         '                                       </a>' +
         '                                    </li>\n' +
