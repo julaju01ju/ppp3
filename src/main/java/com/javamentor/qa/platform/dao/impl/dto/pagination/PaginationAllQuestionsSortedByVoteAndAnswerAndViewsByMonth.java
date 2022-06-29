@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.enums.Period;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
     public List<QuestionViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
 
         return entityManager.createNativeQuery(
@@ -84,10 +87,12 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
                                 "   ) " +
                                 "   END " +
                                 "AND q.persist_date >= date_trunc('Month',Now()) - interval '30 days' " +
+                                "AND q.persist_date >= :truncedDate " +
                                 "ORDER BY questionByMonth desc ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setParameter("userId", params.get("userId"))
+                .setParameter("truncedDate", truncedDate)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -99,6 +104,7 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
         return ((BigInteger) entityManager.createNativeQuery(
                         "SELECT " +
@@ -118,9 +124,11 @@ public class PaginationAllQuestionsSortedByVoteAndAnswerAndViewsByMonth implemen
                                 "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
                                 "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                                 "   ) " +
-                                "END ")
+                                "   END " +
+                                "AND q.persist_date >= :truncedDate ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
+                .setParameter("truncedDate", truncedDate)
                 .getSingleResult()).intValue();
     }
 }
