@@ -3,7 +3,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
-import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -675,6 +673,30 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.size()").value(1));
     }
 
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/users.yml",
+            "dataset/UserResourceController/answers.yml",
+            "dataset/UserResourceController/questions.yml",
+            "dataset/UserResourceController/reputations.yml",
+            "dataset/UserResourceController/roles.yml"
+    },
+            disableConstraints = true, cleanBefore = true)
+    public void getTop10UserDtoForAnswer() throws Exception {
+
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/getTop10UserDtoForAnswer")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[1].id").value(101))
+                .andExpect(jsonPath("$[1].email").value("Constantin@mail.mail"))
+                .andExpect(jsonPath("$[1].fullName").value("Constantin"))
+                .andExpect(jsonPath("$[1].linkImage").value("linkTest1"))
+                .andExpect(jsonPath("$[1].city").value("TestCity1"))
+                .andExpect(jsonPath("$[1].reputation").value(10));
+    }
 
     @Test
     @DataSet(value = {

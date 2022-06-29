@@ -16,4 +16,5 @@ public interface UserDtoDao {
     List<UserProfileQuestionDto> getAllQuestionsByUserId(Long id);
     List<UserProfileQuestionDto> getAllDeletedQuestionsByUserId(Long id);
     List<UserProfileReputationDto> getReputationByUserId(Long id);
+    List<UserDto> getTop10UserDtoForAnswer();
 }
