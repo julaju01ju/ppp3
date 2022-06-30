@@ -2170,6 +2170,24 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {
+            "dataset/QuestionResourceController/GetQuestionsSortedByVotes/users.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByVotes/tag.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByVotes/trackedTag.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByVotes/ignoredTag.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsSortedByVotesBadRequest() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/vote?page=1&trackedTag=100,102")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DataSet(value = {
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/GetQuestionsSortedByVotes/votes_on_questions.yml",
@@ -2203,5 +2221,4 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[2].listTagDto[1].id").value(102))
                 .andExpect(jsonPath("$.items[2].isUserBookMarks").value(false));
     }
-
 }
