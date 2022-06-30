@@ -2193,10 +2193,14 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items.length()").value(3))
                 .andExpect(jsonPath("$.itemsOnPage").value(4))
                 .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(104))
                 .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
                 .andExpect(jsonPath("$.items[1].id").value(101))
+                .andExpect(jsonPath("$.items[1].listTagDto[0].id").value(101))
                 .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true))
                 .andExpect(jsonPath("$.items[2].id").value(103))
+                .andExpect(jsonPath("$.items[2].listTagDto[0].id").value(101))
+                .andExpect(jsonPath("$.items[2].listTagDto[1].id").value(102))
                 .andExpect(jsonPath("$.items[2].isUserBookMarks").value(false));
     }
 
