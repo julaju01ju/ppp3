@@ -15,40 +15,20 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
 
     @PersistenceContext
     private EntityManager entityManager;
-    private Boolean sortAscendingFlag = false;
-
-    public Boolean getSortAscendingFlag() {
-        return sortAscendingFlag;
-    }
-
-    public void setSortAscendingFlag(Boolean sortAscendingFlag) {
-        this.sortAscendingFlag = sortAscendingFlag;
-    }
 
     @Override
     public List<MessageDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
         Long chatId = (Long) params.get("chatId");
+        Boolean sortAscendingFlag = (Boolean) params.get("sortAscendingFlag");
+        String sql;
 
-        if (getSortAscendingFlag()) {
-        return entityManager.createQuery(
-                        "SELECT new com.javamentor.qa.platform.models.dto.MessageDto" +
-                                "(m.id," +
-                                "m.message, " +
-                                "m.userSender.nickname, " +
-                                "m.userSender.id, " +
-                                "m.userSender.imageLink, " +
-                                "m.persistDate)" +
-                                "FROM Message m " +
-                                "JOIN User u ON (m.userSender.id = u.id) " +
-                                "WHERE m.chat.id = :chatId " +
-                                "ORDER BY m.persistDate asc " //сортировка сначала самые старые сообщения (в порядке возрастания)
-                        , MessageDto.class)
-                .setParameter("chatId", chatId)
-                .setFirstResult((page - 1) * itemsOnPage)
-                .setMaxResults(itemsOnPage)
-                .getResultList();
+        if (sortAscendingFlag) {
+            sql = "ORDER BY m.persistDate " + "asc";
+        }
+        else {
+            sql = "ORDER BY m.persistDate " + "desc";
         }
 
         return entityManager.createQuery(
@@ -61,15 +41,13 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
                                 "m.persistDate)" +
                                 "FROM Message m " +
                                 "JOIN User u ON (m.userSender.id = u.id) " +
-                                "WHERE m.chat.id = :chatId " +
-                                "ORDER BY m.persistDate desc" //сортировка сначала самые новые сообщения (в порядке убывания)
+                                "WHERE m.chat.id = :chatId " + sql
                         , MessageDto.class)
                 .setParameter("chatId", chatId)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .getResultList();
     }
-
         @Override
         public int getTotalResultCount (Map < String, Object > params){
             Query queryTotal = entityManager.createQuery

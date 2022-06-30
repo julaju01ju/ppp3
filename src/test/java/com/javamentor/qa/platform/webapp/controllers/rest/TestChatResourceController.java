@@ -88,7 +88,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     @DataSet(value = {"dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/roles.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/user_entity.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/chats.yml",
-            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/singleChats.yml",
+            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/single_chat.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/messages.yml",
 
     },
@@ -104,7 +104,8 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
                 .andExpect(jsonPath("$.totalResultCount").value(5))
-                .andExpect(jsonPath("$.itemsOnPage").value(4));
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andExpect(jsonPath("$.sortAscendingFlag").value(false));
 
     }
 
@@ -112,7 +113,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     @DataSet(value = {"dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/roles.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/user_entity.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/chats.yml",
-            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/singleChats.yml",
+            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/single_chat.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/messages.yml",
 
     },
@@ -128,14 +129,15 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(5))
-                .andExpect(jsonPath("$.itemsOnPage").value(10));
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.sortAscendingFlag").value(false));
     }
 
     @Test
     @DataSet(value = {"dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/roles.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/user_entity.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/chats.yml",
-            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/singleChats.yml",
+            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/single_chat.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/messages.yml",
 
     },
@@ -151,14 +153,15 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(0))
-                .andExpect(jsonPath("$.itemsOnPage").value(10));
+                .andExpect(jsonPath("$.itemsOnPage").value(10))
+                .andExpect(jsonPath("$.sortAscendingFlag").value(false));
     }
 
     @Test
     @DataSet(value = {"dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/roles.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/user_entity.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/chats.yml",
-            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/singleChats.yml",
+            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/single_chat.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/messages.yml",
 
     },
@@ -178,7 +181,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     @DataSet(value = {"dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/roles.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/user_entity.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/chats.yml",
-            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/singleChats.yml",
+            "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/single_chat.yml",
             "dataset/ChatResourceController/getAllMessageDtoInSingleChatSortedByPersistDate/messages.yml",
 
     },

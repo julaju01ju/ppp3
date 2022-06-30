@@ -52,14 +52,16 @@ public class ChatResourceController {
 
 
     @GetMapping("/single")
-    @ApiOperation("Возращает SingleChatDtos авторизованного пользователя")
+    @ApiOperation("Возвращает SingleChatDtos авторизованного пользователя")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все SingleChatDtos авторизованного пользователя"),
             @ApiResponse(code = 400, message = "Неправильные параметры запроса"),
     })
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
             @RequestParam("page") Integer page,
-            @RequestParam("items") Integer items) {
+            @RequestParam("items") Integer items,
+            @RequestParam("sortAscendingFlag") Boolean sortAscendingFlag)
+    {
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
@@ -67,6 +69,7 @@ public class ChatResourceController {
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("userId", userId);
+        params.put("sortAscendingFlag", sortAscendingFlag);
 
         return new ResponseEntity<>(singleChatDtoService.getPageDto("paginationAllSingleChatsOfUser",
                 params), HttpStatus.OK);
@@ -95,7 +98,7 @@ public class ChatResourceController {
     }
 
     @GetMapping("/{id}/single/message")
-    @ApiOperation("Возращает все сообщения singleChat как объект класса PageDto<MessageDto> с учетом заданных параметров пагинации, " +
+    @ApiOperation("Возвращает все сообщения singleChat как объект класса PageDto<MessageDto> с учетом заданных параметров пагинации, " +
             "Сообщения сортируются по дате добавления: сначала самые новые.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все сообщения, отсортированные по дате добавление, сначала самые новые " +
@@ -106,7 +109,8 @@ public class ChatResourceController {
     public ResponseEntity<PageDto<MessageDto>> getAllMessageDtoInSingleChatSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
-            @PathVariable("id") Long chatId) {
+            @RequestParam(value = "sortAscendingFlag", defaultValue = "false") Boolean sortAscendingFlag,
+            @PathVariable("id") Long chatId){
 
         if (!singleChatService.existsById(chatId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чат с данным ID = " + chatId + ", не найден.");
@@ -116,6 +120,7 @@ public class ChatResourceController {
         params.put("currentPageNumber", page);
         params.put("itemsOnPage", items);
         params.put("chatId", chatId);
+        params.put("sortAscendingFlag", sortAscendingFlag);
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
