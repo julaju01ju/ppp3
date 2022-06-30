@@ -3,7 +3,7 @@ myHeaders.append('Content-Type', 'application/json');
 myHeaders.append('Authorization','Bearer '+ document.cookie);
 
 
-function getMostPopularQuestion(page, itemsOnPage) {
+function getAllQuestions(page, itemsOnPage) {
 
     return fetch(`/api/user/question/sortedQuestions?page=${page}&items=${itemsOnPage}`,
         {method: 'GET',

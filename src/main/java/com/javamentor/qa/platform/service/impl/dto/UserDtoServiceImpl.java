@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.dao.abstracts.dto.UserDtoDao;
 import com.javamentor.qa.platform.models.dto.TagDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
+import com.javamentor.qa.platform.models.dto.UserProfileReputationDto;
 import com.javamentor.qa.platform.service.abstracts.dto.UserDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,11 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
         return listUserProfileDeletedQuestionDto;
     }
 
+    @Override
+    public List<UserProfileReputationDto> getReputationByUserId(Long id) {
+        return userDtoDao.getReputationByUserId(id);
+    }
+
     private void setListTagDtoIntoUserProfileQuestionDto(List<UserProfileQuestionDto> listUserProfileQuestionDto){
         List<Long> listIdQuestion = listUserProfileQuestionDto
                 .stream()
@@ -66,6 +72,12 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
             e.setListTagDto(tags.get(e.getQuestionId()));
         }
 
+    }
+
+    @Transactional
+    @Override
+    public List<UserDto> getTop10UserDtoForAnswer() {
+        return userDtoDao.getTop10UserDtoForAnswer();
     }
 
 }

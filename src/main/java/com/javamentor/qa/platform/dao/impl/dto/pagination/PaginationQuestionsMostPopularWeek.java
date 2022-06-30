@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.dao.impl.dto.pagination;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.models.dto.QuestionViewDto;
 import com.javamentor.qa.platform.models.dto.QuestionViewDtoResultTransformer;
+import com.javamentor.qa.platform.models.dto.enums.Period;
 import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
     public List<QuestionViewDto> getItems(Map<String, Object> params) {
         int page = (int) params.get("currentPageNumber");
         int itemsOnPage = (int) params.get("itemsOnPage");
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
         return em.createNativeQuery(
                 "SELECT " +
@@ -62,7 +65,7 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         ") AS qWeight " +
                         "FROM question q " +
                         "JOIN user_entity u ON u.id = q.user_id " +
-                        "JOIN question_has_tag qht ON q.id = qht.question_id " +
+                        "LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                         "WHERE now() - date(q.persist_date) < interval '7' DAY " +
                         "AND CASE " +
                         "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
@@ -80,10 +83,12 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                         "   ) " +
                         "   END " +
+                        "AND q.persist_date >= :truncedDate " +
                         "ORDER BY qWeight DESC ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
                 .setParameter("userId", params.get("userId"))
+                .setParameter("truncedDate", truncedDate)
                 .setFirstResult((page - 1) * itemsOnPage)
                 .setMaxResults(itemsOnPage)
                 .unwrap(org.hibernate.query.Query.class)
@@ -92,11 +97,12 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
 
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
+        LocalDateTime truncedDate = (params.containsKey("period")) ? ((Period) params.get("period")).getTrancedDate() : Period.ALL.getTrancedDate();
 
 
         return ((BigInteger) em.createNativeQuery(
                 "SELECT " +
-                        "COUNT(DISTINCT q.id) FROM question q JOIN question_has_tag qht ON q.id = qht.question_id " +
+                        "COUNT(DISTINCT q.id) FROM question q LEFT JOIN question_has_tag qht ON q.id = qht.question_id " +
                         "WHERE q.id NOT IN(SELECT a.question_id FROM answer a WHERE a.question_id = q.id) " +
                         "AND CASE " +
                         "   WHEN -1 IN :ignoredTag AND -1 IN :trackedTag THEN TRUE " +
@@ -113,9 +119,11 @@ public class PaginationQuestionsMostPopularWeek implements PageDtoDao<QuestionVi
                         "       JOIN question_has_tag q_ign_tag ON q_ign.id = q_ign_tag.question_id " +
                         "       WHERE q_ign_tag.tag_id IN :ignoredTag" +
                         "   ) " +
-                        "END ")
+                        "   END " +
+                        "AND q.persist_date >= :truncedDate ")
                 .setParameter("ignoredTag", params.get("ignoredTag"))
                 .setParameter("trackedTag", params.get("trackedTag"))
+                .setParameter("truncedDate", truncedDate)
                 .getSingleResult()).intValue();
     }
 }
