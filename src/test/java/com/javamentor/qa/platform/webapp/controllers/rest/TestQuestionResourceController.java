@@ -37,6 +37,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     @Autowired
     private EntityManager entityManager;
 
+
     @Test
     @DataSet(value = {
             "dataset/QuestionResourceController/users.yml",
@@ -2112,6 +2113,91 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[1].countValuable").value(-1))
                 .andExpect(jsonPath("$.items[1].countAnswer").value(1))
                 .andExpect(jsonPath("$.items[1].isUserBookMarks").value(false));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/questions.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithoutTagsAndItemsInParamsSortedByVotes() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/vote?page=1")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(5))
+                .andExpect(jsonPath("$.items.length()").value(5))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithIgnoredTagsInParamsSortedByVotes() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/vote?page=1&ignoredTag=108&items=10")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(4))
+                .andExpect(jsonPath("$.items.length()").value(4))
+                .andExpect(jsonPath("$.itemsOnPage").value(10));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/vote?page=1&ignoredTag=102&items=8")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.length()").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(8));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/QuestionResourceController/users.yml",
+            "dataset/QuestionResourceController/tag.yml",
+            "dataset/QuestionResourceController/GetQuestionsSortedByVotes/votes_on_questions.yml",
+            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/questions.yml",
+            "dataset/QuestionResourceController/question_has_tag.yml",
+            "dataset/QuestionResourceController/getQuestionsSortedByReputation/reputation.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/bookmark.yml"},
+            disableConstraints = true, cleanBefore = true)
+    public void getQuestionsWithTrackedAndIgnoredTagsInParamsSortedByVotes() throws Exception {
+
+        String USER_TOKEN = super.getToken("SomeEmail@mail.com", "someHardPassword");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/vote?page=1&trackedTag=101,102,104&ignoredTag=103&items=4")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalPageCount").value(1))
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(jsonPath("$.items.length()").value(3))
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andExpect(jsonPath("$.items[0].id").value(104))
+                .andExpect(jsonPath("$.items[0].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[1].id").value(101))
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value(true))
+                .andExpect(jsonPath("$.items[2].id").value(103))
+                .andExpect(jsonPath("$.items[2].isUserBookMarks").value(false));
     }
 
 }
