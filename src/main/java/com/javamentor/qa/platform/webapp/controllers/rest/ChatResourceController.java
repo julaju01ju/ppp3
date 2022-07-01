@@ -60,7 +60,7 @@ public class ChatResourceController {
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
             @RequestParam("page") Integer page,
             @RequestParam("items") Integer items,
-            @RequestParam("sortAscendingFlag") Boolean sortAscendingFlag)
+            @RequestParam(value = "sortAscendingFlag", required = false) Boolean sortAscendingFlag)
     {
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
@@ -76,7 +76,7 @@ public class ChatResourceController {
     }
 
     @GetMapping("/group")
-    @ApiOperation("Возращает все сообщения как объект класса GroupChatDto с учетом заданных параметров пагинации.")
+    @ApiOperation("Возвращает все сообщения как объект класса GroupChatDto с учетом заданных параметров пагинации.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все сообщения с учетом заданных параметров пагинации."),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы."),
@@ -109,7 +109,7 @@ public class ChatResourceController {
     public ResponseEntity<PageDto<MessageDto>> getAllMessageDtoInSingleChatSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
-            @RequestParam(value = "sortAscendingFlag", defaultValue = "false") Boolean sortAscendingFlag,
+            @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag,
             @PathVariable("id") Long chatId){
 
         if (!singleChatService.existsById(chatId)) {

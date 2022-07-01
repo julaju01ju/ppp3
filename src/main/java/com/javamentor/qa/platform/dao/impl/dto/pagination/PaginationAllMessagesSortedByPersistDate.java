@@ -22,13 +22,12 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
         int itemsOnPage = (int) params.get("itemsOnPage");
         Long chatId = (Long) params.get("chatId");
         Boolean sortAscendingFlag = (Boolean) params.get("sortAscendingFlag");
-        String sql;
+        String sql = "ORDER BY m.persistDate ";
 
         if (sortAscendingFlag) {
-            sql = "ORDER BY m.persistDate " + "asc";
-        }
-        else {
-            sql = "ORDER BY m.persistDate " + "desc";
+            sql = sql + "asc";
+        } else {
+            sql = sql + "desc";
         }
 
         return entityManager.createQuery(
@@ -48,11 +47,12 @@ public class PaginationAllMessagesSortedByPersistDate implements PageDtoDao<Mess
                 .setMaxResults(itemsOnPage)
                 .getResultList();
     }
-        @Override
-        public int getTotalResultCount (Map < String, Object > params){
-            Query queryTotal = entityManager.createQuery
-                            ("Select CAST(count(message.id) as int) AS countMessages from Message message WHERE message.chat.id = :chatId")
-                    .setParameter("chatId", params.get("chatId"));
-            return (int) queryTotal.getSingleResult();
-        }
+
+    @Override
+    public int getTotalResultCount(Map<String, Object> params) {
+        Query queryTotal = entityManager.createQuery
+                        ("Select CAST(count(message.id) as int) AS countMessages from Message message WHERE message.chat.id = :chatId")
+                .setParameter("chatId", params.get("chatId"));
+        return (int) queryTotal.getSingleResult();
     }
+}

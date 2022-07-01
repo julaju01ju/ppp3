@@ -19,7 +19,6 @@ public class PageDto<T> {
     private int totalResultCount;
     private List<T> items;
     private int itemsOnPage;
-    private Boolean sortAscendingFlag;
 
     @Override
     public String toString() {
@@ -29,7 +28,6 @@ public class PageDto<T> {
                 ", totalResultCount=" + totalResultCount +
                 ", items=" + items +
                 ", itemsOnPage=" + itemsOnPage +
-                ", sortAscendingFlag=" + sortAscendingFlag +
                 '}';
     }
 }
