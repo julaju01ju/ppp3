@@ -1,11 +1,21 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
+import com.javamentor.qa.platform.dao.impl.dto.pagination.PaginationAllMessagesSortedByPersistDate;
+import com.javamentor.qa.platform.models.dto.MessageDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
+import com.javamentor.qa.platform.service.impl.dto.PageDtoServiceImpl;
+import org.apache.poi.ss.formula.functions.T;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -97,6 +107,7 @@ public class TestChatResourceController extends AbstractControllerTest {
 
         String USER_TOKEN = super.getToken("user1@mail.ru", "user");
 
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
@@ -104,7 +115,12 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
                 .andExpect(jsonPath("$.totalPageCount").value(2))
                 .andExpect(jsonPath("$.totalResultCount").value(5))
-                .andExpect(jsonPath("$.itemsOnPage").value(4));
+                .andExpect(jsonPath("$.itemsOnPage").value(4))
+                .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-05T03:00:00"))
+                .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-04T03:00:00"))
+                .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
+                .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-02T03:00:00"));
+
     }
 
     @Test
@@ -151,6 +167,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalPageCount").value(1))
                 .andExpect(jsonPath("$.totalResultCount").value(0))
                 .andExpect(jsonPath("$.itemsOnPage").value(10));
+
     }
 
     @Test
@@ -273,7 +290,8 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.page.items[2].nickName").value("Petya"))
                 .andExpect(jsonPath("$.page.items[2].userId").value(103))
                 .andExpect(jsonPath("$.page.items[2].image").value("link"))
-                .andExpect(jsonPath("$.page.items[2].persistDateTime").value("2022-06-14T03:00:00"));;
+                .andExpect(jsonPath("$.page.items[2].persistDateTime").value("2022-06-14T03:00:00"));
+        ;
 
     }
 
