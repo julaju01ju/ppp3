@@ -540,4 +540,36 @@ public class QuestionResourceController {
         return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
                 "paginationAllQuestionsWithTagsSortedByViewCount", params), HttpStatus.OK);
     }
+
+    @GetMapping("/vote")
+    @ApiOperation("Возращает все вопросы как объект класса PageDto<QuestionViewDto> с учетом заданных параметров пагинации, " +
+            "Вопросы сортируются по количеству голосов: сначала самые полезные (больше голосов).")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены все вопросы с тэгами, отсортированные по количеству голосов," +
+                    " сначала самые полезные (больше голосов) с учетом заданных параметров пагинации"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
+            @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
+    })
+    public ResponseEntity<PageDto<QuestionViewDto>> getAllQuestionDtoSortedByVotes (
+            @RequestParam("page") Integer page,
+            @RequestParam(value = "items", defaultValue = "10") Integer items,
+            @RequestParam(value = "trackedTag", defaultValue = "-1") List<Long> trackedTag,
+            @RequestParam(value = "ignoredTag", defaultValue = "-1") List<Long> ignoredTag) {
+
+        if (!tagService.isTagsMappingToTrackedAndIgnoredCorrect(trackedTag, ignoredTag)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("currentPageNumber", page);
+        params.put("itemsOnPage", items);
+        params.put("trackedTag", trackedTag);
+        params.put("ignoredTag", ignoredTag);
+        params.put("userId", userId);
+
+        return new ResponseEntity<>(questionDtoService.getPageQuestionsWithTags(
+                "paginationAllQuestionsSortedByVoteUseful", params), HttpStatus.OK);
+    }
 }
