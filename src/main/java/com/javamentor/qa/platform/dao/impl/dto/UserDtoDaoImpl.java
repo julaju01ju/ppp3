@@ -108,6 +108,75 @@ public class UserDtoDaoImpl implements UserDtoDao {
                 .setMaxResults(10).getResultList();
     }
 
+    @Override
+    public List<UserDto> getTop10UserDtoForAnswerOnTheMonth() {
+        String queryH = "select u.id, u.email, u.fullName, u.imageLink, u.city," +
+                "CAST((SELECT COALESCE(SUM(r.count),0) FROM Reputation as r WHERE r.author.id = u.id)as int) as r0, " +
+                "(SELECT count(a.id) from Answer as a where a.persistDateTime > :date and a.user.id = u.id) AS r1, " +
+                "((SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'UP_VOTE') - " +
+                " (SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'DOWN_VOTE')) as r2 " +
+                "        FROM User as u " +
+                "        WHERE u.isEnabled = true " +
+                "        ORDER BY r1 desc, r2 desc";
+
+        return entityManager.createQuery(queryH)
+                .setParameter("date", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusMonths(1))
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] objects, String[] strings) {
+                        return new UserDto(
+                                ((Number) (objects[0])).longValue(),
+                                (String) (objects[1]),
+                                (String) (objects[2]),
+                                (String) (objects[3]),
+                                (String) (objects[4]),
+                                ((Number) (objects[5])).intValue()
+                        );
+                    }
+
+                    @Override
+                    public List<UserDto> transformList(List list) {
+                        return list;
+                    }
+                })
+                .setMaxResults(10).getResultList();
+    }
+
+    @Override
+    public List<UserDto> getTop10UserDtoForAnswerOnTheYear() {
+        String queryH = "select u.id, u.email, u.fullName, u.imageLink, u.city," +
+                "CAST((SELECT COALESCE(SUM(r.count),0) FROM Reputation as r WHERE r.author.id = u.id)as int) as r0, " +
+                "(SELECT count(a.id) from Answer as a where a.persistDateTime > :date and a.user.id = u.id) AS r1, " +
+                "((SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'UP_VOTE') - " +
+                " (SELECT count(va.user.id) from VoteAnswer as va where va.user.id = u.id and va.vote = 'DOWN_VOTE')) as r2 " +
+                "        FROM User as u " +
+                "        WHERE u.isEnabled = true " +
+                "        ORDER BY r1 desc, r2 desc";
+
+        return entityManager.createQuery(queryH)
+                .setParameter("date", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusYears(1))
+                .unwrap(org.hibernate.query.Query.class)
+                .setResultTransformer(new ResultTransformer() {
+                    @Override
+                    public Object transformTuple(Object[] objects, String[] strings) {
+                        return new UserDto(
+                                ((Number) (objects[0])).longValue(),
+                                (String) (objects[1]),
+                                (String) (objects[2]),
+                                (String) (objects[3]),
+                                (String) (objects[4]),
+                                ((Number) (objects[5])).intValue()
+                        );
+                    }
+
+                    @Override
+                    public List<UserDto> transformList(List list) {
+                        return list;
+                    }
+                })
+                .setMaxResults(10).getResultList();
+    }
 
 
     @Override
