@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,6 @@ public class ChatResourceController {
     private final SingleChatService singleChatService;
     private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
-    public static Boolean sortAscendingFlagForTest;
 
     @Autowired
     public ChatResourceController(
@@ -61,7 +59,7 @@ public class ChatResourceController {
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
             @RequestParam("page") Integer page,
             @RequestParam("items") Integer items,
-            @RequestParam(value = "sortAscendingFlag", required = false) Boolean sortAscendingFlag)
+            @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag)
     {
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
@@ -122,7 +120,6 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("chatId", chatId);
         params.put("sortAscendingFlag", sortAscendingFlag);
-        this.sortAscendingFlagForTest = (Boolean) params.get(sortAscendingFlag);
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);

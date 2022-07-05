@@ -106,7 +106,6 @@ public class TestChatResourceController extends AbstractControllerTest {
     public void getAllMessageDtoInSingleChatSortedByPersistDateWithValidParameter() throws Exception {
 
         String USER_TOKEN = super.getToken("user1@mail.ru", "user");
-        Boolean flag = ChatResourceController.sortAscendingFlagForTest;
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -117,8 +116,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalResultCount").value(5))
                 .andExpect(jsonPath("$.itemsOnPage").value(4));
 
-        if (flag == false) {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4")
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=false")
                             .header(AUTHORIZATION, USER_TOKEN))
                     .andDo(print())
                     .andExpect(status().isOk())
@@ -126,17 +124,16 @@ public class TestChatResourceController extends AbstractControllerTest {
                     .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-04T03:00:00"))
                     .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
                     .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-02T03:00:00"));
-        }
-        else {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4")
+
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=true")
                             .header(AUTHORIZATION, USER_TOKEN))
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-05T03:00:00"))
-                    .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-04T03:00:00"))
-                    .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-03T03:00:00"))
-                    .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-02T03:00:00"));
-        }
+                    .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-04T03:00:00"))
+                    .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
+                    .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-02T03:00:00"))
+                    .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-01T03:00:00"));
+
     }
 
     @Test
