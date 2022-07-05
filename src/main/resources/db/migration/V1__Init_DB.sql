@@ -78,6 +78,7 @@ create table comment_question (
 
 create table group_chat (
     chat_id int8 not null,
+    is_global boolean not null,
     primary key (chat_id)
 );
 

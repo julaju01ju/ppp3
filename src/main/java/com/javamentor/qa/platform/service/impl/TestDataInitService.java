@@ -375,6 +375,7 @@ public class TestDataInitService {
             }
             groupChat.setChat(chat);
             groupChat.setUsers(groupChatUsers);
+            groupChat.setGlobal(true);
             groupChatService.persist(groupChat);
             messageService.persistAll(messages);
         }
