@@ -80,4 +80,16 @@ public class UserDtoServiceImpl extends PageDtoServiceImpl<UserDto> implements U
         return userDtoDao.getTop10UserDtoForAnswer();
     }
 
+    @Transactional
+    @Override
+    public List<UserDto> getTop10UserDtoForAnswerOnTheMonth() {
+        return userDtoDao.getTop10UserDtoForAnswerOnTheMonth();
+    }
+
+    @Transactional
+    @Override
+    public List<UserDto> getTop10UserDtoForAnswerOnTheYear() {
+        return userDtoDao.getTop10UserDtoForAnswerOnTheYear();
+    }
+
 }
