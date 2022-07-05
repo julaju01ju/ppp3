@@ -37,6 +37,7 @@ public class ChatResourceController {
     private final SingleChatService singleChatService;
     private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
+    public static Boolean sortAscendingFlagForTest;
 
     @Autowired
     public ChatResourceController(
@@ -121,6 +122,7 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("chatId", chatId);
         params.put("sortAscendingFlag", sortAscendingFlag);
+        this.sortAscendingFlagForTest = (Boolean) params.get(sortAscendingFlag);
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
