@@ -10,4 +10,5 @@ public interface AnswerDtoService {
     List<AnswerDto> getAllAnswersByQuestionId(Long id);
     List<AnswerDto> getDeletedAnswersByUserId(Long id);
     Long getAmountAllAnswersByUserId(Long id);
+    List <AnswerDto> getAndSortAnswersByCountValuable (Long id);
 }

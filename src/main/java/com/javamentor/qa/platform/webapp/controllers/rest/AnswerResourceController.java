@@ -73,14 +73,16 @@ public class AnswerResourceController {
 
     @GetMapping("/{questionId}/answer")
     @ApiOperation(
-            value = "Возвращает ответы на вопрос с questionId=* в виде List<AnswerDto>")
+            value = "Возвращает ответы на вопрос с questionId=* в виде List<AnswerDto>, в отсортированном виде. " +
+                    "Сначала идет ответ, который был помог, затем ответы в порядке убывания по полезности")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены ответы на вопрос с questionId=*"),
             @ApiResponse(code = 400, message = "Неверный формат введенного questionId (необходимо ввести целое положительное число)"),
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден, либо на вопрос с questionId=* пока еще никто не ответил")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
+        return new ResponseEntity<>(answerDtoService.getAndSortAnswersByCountValuable(id), HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")

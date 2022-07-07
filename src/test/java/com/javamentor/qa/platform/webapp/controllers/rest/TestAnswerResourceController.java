@@ -26,7 +26,7 @@ public class TestAnswerResourceController
     @Test
     @DataSet(value = {
             "dataset/AnswerResourceController/users.yml",
-            "dataset/AnswerResourceController/answers.yml",
+            "dataset/AnswerResourceController/answersWithCountValuable.yml",
             "dataset/AnswerResourceController/questions.yml",
             "dataset/AnswerResourceController/reputations.yml",
             "dataset/AnswerResourceController/answervote.yml",
@@ -58,7 +58,15 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].comment").value("FirstComment"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].fullName").value("USER"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102))
-                .andExpect(jsonPath("$[1].listOfComeentsDto[0].id").value(105));
+                .andExpect(jsonPath("$[1].listOfComeentsDto[0].id").value(105))
+                .andExpect(jsonPath("$[0].countValuable").value(50))
+                .andExpect(jsonPath("$[1].countValuable").value(35))
+                .andExpect(jsonPath("$[2].countValuable").value(20))
+                .andExpect(jsonPath("$[0].isHelpful").value("true"))
+                .andExpect(jsonPath("$[1].isHelpful").value("false"))
+                .andExpect(jsonPath("$[2].isHelpful").value("false"));
+
+
     }
 
     //ошибка в контроллере
