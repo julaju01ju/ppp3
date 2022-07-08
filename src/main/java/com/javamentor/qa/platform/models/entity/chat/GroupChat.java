@@ -23,7 +23,7 @@ public class GroupChat{
     private Long id;
 
     @Column(name = "is_global")
-    private boolean isGlobal;
+    private boolean isGlobal = false;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @MapsId
