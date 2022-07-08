@@ -67,11 +67,4 @@ public class GroupChat{
         return Objects.hash(id, chat, users);
     }
 
-    public boolean isGlobal() {
-        return isGlobal;
-    }
-
-    public void setGlobal(boolean global) {
-        isGlobal = global;
-    }
 }

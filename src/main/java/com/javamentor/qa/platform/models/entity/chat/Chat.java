@@ -53,4 +53,8 @@ public class Chat {
     public int hashCode() {
         return Objects.hash(id, title, persistDate, chatType);
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

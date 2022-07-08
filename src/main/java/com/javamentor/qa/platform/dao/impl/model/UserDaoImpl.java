@@ -30,7 +30,6 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-
     @Cacheable(value = "checkIfExists", key = "#email")
     public boolean checkIfExists(String email) {
         return (boolean) entityManager.createQuery(" SELECT COUNT(e) > 0 FROM User e"

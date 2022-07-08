@@ -375,10 +375,28 @@ public class TestDataInitService {
             }
             groupChat.setChat(chat);
             groupChat.setUsers(groupChatUsers);
-            groupChat.setGlobal(true);
             groupChatService.persist(groupChat);
             messageService.persistAll(messages);
         }
+    }
+
+    public void createGlobalGroupChat() {
+        GroupChat groupChat = new GroupChat();
+        Chat chat = new Chat(ChatType.GROUP);
+        chat.setTitle("Some global group chat");
+        Set<User> groupChatUsers = new HashSet<>();
+        List<Message> messages = new ArrayList<>();
+        for (long k = 1; k < 5; k++) {
+            User user = userService.getById(k).get();
+            groupChatUsers.add(user);
+            messages.add(new Message("Some message in global group chat " + k, user, chat));
+        }
+        groupChat.setChat(chat);
+        groupChat.setUsers(groupChatUsers);
+        groupChat.setGlobal(true);
+        groupChatService.persist(groupChat);
+        messageService.persistAll(messages);
+
     }
 
     public void init() {
@@ -395,5 +413,6 @@ public class TestDataInitService {
         createRelatedTags();
         createSingleChat(4);
         createGroupChat(2);
+        createGlobalGroupChat();
     }
 }
