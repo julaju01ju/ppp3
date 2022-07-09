@@ -1,10 +1,15 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.SingleChatDto;
+import com.javamentor.qa.platform.models.entity.chat.Chat;
+import com.javamentor.qa.platform.models.entity.chat.ChatType;
+import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
@@ -16,15 +21,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @Api("Chats Api")
@@ -36,17 +39,20 @@ public class ChatResourceController {
     private final SingleChatService singleChatService;
     private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
+    private final UserService userService;
+
 
     @Autowired
     public ChatResourceController(
             SingleChatDtoServiceImpl singleChatDtoService,
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
-            MessageDtoService messageDtoService){
+            MessageDtoService messageDtoService, UserService userService){
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
+        this.userService = userService;
     }
 
 
@@ -123,5 +129,33 @@ public class ChatResourceController {
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
+    }
+
+    @PostMapping("/group")
+    @ApiOperation("Добавление нового группового чата. В RequestBody ожидает объект CreateGroupChatDto")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Групповой чат успешно добавлен"),
+            @ApiResponse(code = 400, message = "Поле объекта CreateGroupChatDto " +
+                    "userIds должно быть заполнено")
+    })
+    public ResponseEntity<?> addGroupChat(@RequestBody CreateGroupChatDto createGroupChatDto) {
+        GroupChat groupChat = new GroupChat();
+        Set<User> users = new HashSet<>();
+        if(createGroupChatDto.getUserIds() == null) {
+            return new ResponseEntity<>("Поле объекта CreateGroupChatDto userIds должно быть заполнено", HttpStatus.BAD_REQUEST);
+        }
+        createGroupChatDto.getUserIds().forEach(userId -> {
+            if(userService.getUserById(userId).isPresent()) {
+                users.add(userService.getUserById(userId).get());
+            }
+        });
+        if (users.isEmpty()) {
+            return new ResponseEntity<>("Поле объекта CreateGroupChatDto userIds должно быть заполнено", HttpStatus.BAD_REQUEST);
+        }
+        groupChat.setUsers(users);
+        Chat chat = new Chat(ChatType.GROUP);
+        chat.setTitle(createGroupChatDto.getChatName());
+        groupChat.setChat(chat);
+        return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);
     }
 }
