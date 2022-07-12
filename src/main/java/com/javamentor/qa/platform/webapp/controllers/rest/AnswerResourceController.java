@@ -81,7 +81,7 @@ public class AnswerResourceController {
             @ApiResponse(code = 404, message = "Вопрос с questionId=* не найден, либо на вопрос с questionId=* пока еще никто не ответил")
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
-        return new ResponseEntity<>(answerDtoService.getAndSortAnswersByCountValuable(id), HttpStatus.OK);
+        return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
 
     }
 

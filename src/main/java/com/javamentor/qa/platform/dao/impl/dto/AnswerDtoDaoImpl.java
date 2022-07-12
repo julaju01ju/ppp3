@@ -37,11 +37,11 @@ public class AnswerDtoDaoImpl
                         "a.isHelpful," +
                         "a.isDeleted," +
                         "a.dateAcceptTime," +
-                        "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id)," +
+                        "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id), " +
                         "(select u.imageLink from User as u where u.id = a.user.id)," +
                         "(select u.nickname from User as u where u.id = a.user.id) " +
-                        "from Answer as a " +
-                        "where a.question.id = :id and a.isDeleted = false";
+                        "from Answer a, VoteAnswer va where a.question.id = :id and a.isDeleted = false and va.answer.id = a.id " +
+                        "order by a.isHelpful desc, va.vote desc";
 
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
