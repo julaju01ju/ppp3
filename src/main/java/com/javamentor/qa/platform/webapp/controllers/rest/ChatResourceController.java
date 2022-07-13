@@ -9,6 +9,7 @@ import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
+import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
 import com.javamentor.qa.platform.models.dto.MessageDto;
@@ -21,9 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,6 +48,7 @@ public class ChatResourceController {
     private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
     private final UserService userService;
+    private final GroupChatService groupChatService;
 
 
     @Autowired
@@ -47,12 +56,13 @@ public class ChatResourceController {
             SingleChatDtoServiceImpl singleChatDtoService,
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
-            MessageDtoService messageDtoService, UserService userService){
+            MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService){
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
         this.userService = userService;
+        this.groupChatService = groupChatService;
     }
 
 
@@ -138,24 +148,15 @@ public class ChatResourceController {
             @ApiResponse(code = 400, message = "Поле объекта CreateGroupChatDto " +
                     "userIds должно быть заполнено")
     })
-    public ResponseEntity<?> addGroupChat(@RequestBody CreateGroupChatDto createGroupChatDto) {
+    public ResponseEntity<?> addGroupChat(@Valid @RequestBody CreateGroupChatDto createGroupChatDto) {
         GroupChat groupChat = new GroupChat();
         Set<User> users = new HashSet<>();
-        if(createGroupChatDto.getUserIds() == null) {
-            return new ResponseEntity<>("Поле объекта CreateGroupChatDto userIds должно быть заполнено", HttpStatus.BAD_REQUEST);
-        }
-        createGroupChatDto.getUserIds().forEach(userId -> {
-            if(userService.getUserById(userId).isPresent()) {
-                users.add(userService.getUserById(userId).get());
-            }
-        });
-        if (users.isEmpty()) {
-            return new ResponseEntity<>("Поле объекта CreateGroupChatDto userIds должно быть заполнено", HttpStatus.BAD_REQUEST);
-        }
+        users.addAll(userService.getUsersByIds(createGroupChatDto.getUserIds()));
         groupChat.setUsers(users);
         Chat chat = new Chat(ChatType.GROUP);
         chat.setTitle(createGroupChatDto.getChatName());
         groupChat.setChat(chat);
+        groupChatService.persist(groupChat);
         return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);
     }
 }

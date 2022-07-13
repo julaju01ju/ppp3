@@ -13,5 +13,5 @@ public interface UserService extends ReadWriteService<User,Long>{
 
     List<User> getAllByRole(Role role);
 
-    Optional<User> getUserById(Long id);
+    List<User> getUsersByIds(List<Long> ids);
 }

@@ -7,9 +7,11 @@ import com.javamentor.qa.platform.dao.impl.dto.pagination.PaginationAllMessagesS
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.PageDtoServiceImpl;
 import org.apache.poi.ss.formula.functions.T;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,9 @@ public class TestChatResourceController extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     @DataSet(value = {
@@ -399,6 +405,8 @@ public class TestChatResourceController extends AbstractControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
+
+        Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
     }
 
     @Test
@@ -425,5 +433,6 @@ public class TestChatResourceController extends AbstractControllerTest {
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
     }
 }

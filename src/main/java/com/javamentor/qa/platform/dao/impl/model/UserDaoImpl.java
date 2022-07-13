@@ -30,10 +30,9 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
-    public Optional<User> getUserById(Long id) {
-        String hql = "select u from User u where u.id = :id";
-        TypedQuery<User> query = entityManager.createQuery(hql, User.class).setParameter("id", id);
-        return SingleResultUtil.getSingleResultOrNull(query);
+    public List<User> getUsersByIds(List<Long> ids) {
+        String hql = "from User u where u.id in :ids";
+        return entityManager.createQuery(hql).setParameter("ids", ids).getResultList();
     }
 
 
