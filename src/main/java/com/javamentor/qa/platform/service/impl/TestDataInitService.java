@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.service.impl;
 
-import com.javamentor.qa.platform.dao.abstracts.model.RelatedTagDao;
 import com.javamentor.qa.platform.models.entity.BookMarks;
 import com.javamentor.qa.platform.models.entity.chat.*;
 import com.javamentor.qa.platform.models.entity.question.*;
@@ -9,9 +8,8 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
-import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -366,6 +364,7 @@ public class TestDataInitService {
             GroupChat groupChat = new GroupChat();
             Chat chat = new Chat(ChatType.GROUP);
             chat.setTitle("Some group chat " + i);
+            groupChat.setImageChat("Some group chat image " + i);
             Set<User> groupChatUsers = new HashSet<>();
             List<Message> messages = new ArrayList<>();
             for (long k = 1; k < 5; k++) {

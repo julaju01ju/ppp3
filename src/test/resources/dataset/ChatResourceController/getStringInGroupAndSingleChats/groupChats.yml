@@ -1,0 +1,5 @@
+group_chat:
+  - chat_id: 101
+    image_chat: "Some image in Group chat 1"
+  - chat_id: 102
+    image_chat: "Some image in Group chat 2"

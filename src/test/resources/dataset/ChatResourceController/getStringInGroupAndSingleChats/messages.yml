@@ -1,0 +1,52 @@
+message:
+  - id: 101
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user sender 102 in group chat 101"
+    persist_date: 2021-12-01 00:00:00
+    chat_id: 101
+    user_sender_id: 101
+  - id: 102
+    last_redaction_date: 2021-12-07 00:00:00
+    message: "Hello user sender 101 in group chat 101"
+    persist_date: 2021-12-02 00:00:00
+    chat_id: 101
+    user_sender_id: 102
+
+  - id: 103
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user sender 104 in group chat 102"
+    persist_date: 2021-12-01 00:00:00
+    chat_id: 102
+    user_sender_id: 103
+  - id: 104
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user sender 103 in group chat 102"
+    persist_date: 2021-12-02 00:00:00
+    chat_id: 102
+    user_sender_id: 104
+
+  - id: 105
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello104 single chat"
+    persist_date: 2021-12-03 00:00:00
+    chat_id: 103
+    user_sender_id: 103
+  - id: 106
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello103 single chat"
+    persist_date: 2021-12-03 01:00:00
+    chat_id: 103
+    user_sender_id: 104
+
+  - id: 107
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello105 single chat"
+    persist_date: 2021-12-04 00:00:00
+    chat_id: 104
+    user_sender_id: 104
+  - id: 108
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello104 single chat"
+    persist_date: 2021-12-04 02:00:00
+    chat_id: 104
+    user_sender_id: 105

@@ -1,0 +1,81 @@
+user_entity:
+  - id: 101
+    full_name: "USER"
+    password: "$2a$12$8fN.8ujWHGmGrEo.iHBXSOOcZhY6AZczeP1GJI0NTgU9C8hM1eFmW"
+    persist_date: "2021-12-09"
+    last_redaction_date: "2021-12-09"
+    email: "user1@mail.ru"
+    about: "about1"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR"
+    role_id: 101
+  - id: 102
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmail@mail.com"
+    full_name: "Constantin"
+    image_link: "link102"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName103"
+    password: "$2a$12$7hq5eGQ8UvHfX2RRcPSlrunT.DzY3AxzPoNWXlrWrUyHnhglotCYG"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 101
+  - id: 103
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmail@mail.mail"
+    full_name: "Constantin"
+    image_link: "link103"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName102"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 101
+  - id: 104
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEmaiaal@mail.mail"
+    full_name: "Constantin"
+    image_link: "link104"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName104"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 101
+  - id: 105
+    about: "Something"
+    city: "Moscow"
+    email: "SomeEddmail@mail.mail"
+    full_name: "Constantin"
+    image_link: "link105"
+    is_deleted: false
+    is_enabled: true
+    last_redaction_date: 2021-12-06 00:00:00
+    link_github: "github@link"
+    link_site: "site@link"
+    link_vk: "vk@link"
+    nickname: "NickName105"
+    password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
+    persist_date: 2021-12-06 00:00:00
+    role_id: 101

@@ -78,6 +78,7 @@ create table comment_question (
 
 create table group_chat (
     chat_id int8 not null,
+    image_chat varchar(255),
     primary key (chat_id)
 );
 

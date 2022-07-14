@@ -1,12 +1,11 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.dto.SingleChatDto;
+import com.javamentor.qa.platform.models.dto.*;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.FindChatByStringDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @Api("Chats Api")
@@ -38,23 +38,27 @@ public class ChatResourceController {
     private final GroupChatDtoService groupChatDtoService;
     private final MessageDtoService messageDtoService;
 
+    private final FindChatByStringDtoService findChatByStringDtoService;
+
     @Autowired
     public ChatResourceController(
             SingleChatDtoServiceImpl singleChatDtoService,
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
-            MessageDtoService messageDtoService){
+            MessageDtoService messageDtoService,
+            FindChatByStringDtoService findChatByStringDtoService) {
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
+        this.findChatByStringDtoService = findChatByStringDtoService;
     }
 
 
     @GetMapping("/single")
-    @ApiOperation("Возращает SingleChatDtos авторизованного пользователя")
+    @ApiOperation("Возращает SingleChatDto авторизованного пользователя")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Получены все SingleChatDtos авторизованного пользователя"),
+            @ApiResponse(code = 200, message = "Получены все SingleChatDto авторизованного пользователя"),
             @ApiResponse(code = 400, message = "Неправильные параметры запроса"),
     })
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
@@ -81,8 +85,7 @@ public class ChatResourceController {
     })
     public ResponseEntity<?> getGroupChatOutPutWithAllMessage(
             @RequestParam("page") Integer currentPage,
-            @RequestParam(value = "items", defaultValue = "10") Integer items)
-    {
+            @RequestParam(value = "items", defaultValue = "10") Integer items) {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
         Map<String, Object> params = new HashMap<>();
@@ -119,5 +122,19 @@ public class ChatResourceController {
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
+    }
+    @GetMapping
+    @ApiOperation("Возвращает сообщения в Single и Group чатам по заданному параметру")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Выполнен поиск по заданной строке!"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр поиска!"),
+            @ApiResponse(code = 500, message = "По данному запросу ничего не было найдено")
+    })
+    public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
+            @RequestParam(value = "findMessage") String findMessages) {
+        if (findChatByStringDtoService.ifNotExistSearchedString(findMessages)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: "+ findMessages+" не было найдено!");
+        }
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(findMessages), HttpStatus.OK);
     }
 }
