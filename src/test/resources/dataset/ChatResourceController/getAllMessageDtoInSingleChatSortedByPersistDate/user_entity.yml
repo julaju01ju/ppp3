@@ -1,7 +1,7 @@
 user_entity:
   - id: 101
     full_name: "USER1"
-    password: "$2a$12$YONbfiCw2rdQixPEONvvkuiz4nDHyGSwW/Y0t0sL4P89iamdBNba2"
+    password: "$2a$10$U3HoMKhVyo5yt/9KMMEzv.Nt2FnGl6ul/JcF.nHeLcDe0KuPFDmEu"
     persist_date: "2022-01-06"
     last_redaction_date: "2022-06-06"
     email: "user1@mail.ru"
