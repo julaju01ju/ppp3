@@ -41,7 +41,7 @@ public class AnswerDtoDaoImpl
                         "(select u.imageLink from User as u where u.id = a.user.id)," +
                         "(select u.nickname from User as u where u.id = a.user.id) " +
                         "from Answer a, VoteAnswer va where a.question.id = :id and a.isDeleted = false and va.answer.id = a.id " +
-                        "order by a.isHelpful desc, va.vote desc";
+                        "order by a.isHelpful desc, sum(case va.vote when 'UP_VOTE' then 1 else -1 end) desc";
 
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
