@@ -12,4 +12,6 @@ public interface UserService extends ReadWriteService<User,Long>{
     void disableUserByEmail(String email);
 
     List<User> getAllByRole(Role role);
+
+    List<User> getUsersByIds(List<Long> ids);
 }

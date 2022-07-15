@@ -1,24 +1,33 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.dao.impl.dto.pagination.PaginationAllMessagesSortedByPersistDate;
+import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.PageDtoServiceImpl;
 import org.apache.poi.ss.formula.functions.T;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import javax.persistence.EntityManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +36,9 @@ public class TestChatResourceController extends AbstractControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     @DataSet(value = {
@@ -327,4 +339,100 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createGroupChatDtoWithoutUserIds() throws Exception {
+
+        CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
+        createGroupChatDto.setChatName("Test");
+
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+
+        mockMvc.perform(
+                post("/api/user/chat/group")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createGroupChatDtoWithEmptyUserIds() throws Exception {
+
+        CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
+        createGroupChatDto.setChatName("Test");
+        createGroupChatDto.setUserIds(new ArrayList<Long>());
+
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/group")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createGroupChatDtoWithoutChatName() throws Exception {
+
+        CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
+        List<Long> userIds = new ArrayList<>();
+        userIds.add(101L);
+        userIds.add(102L);
+        userIds.add(103L);
+        createGroupChatDto.setUserIds(userIds);
+
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/group")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createGroupChatDtoWithUserIdsAndChatName() throws Exception {
+
+        CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
+        List<Long> userIds = new ArrayList<>();
+        userIds.add(101L);
+        userIds.add(102L);
+        userIds.add(103L);
+        createGroupChatDto.setUserIds(userIds);
+        createGroupChatDto.setChatName("Test");
+
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/group")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
+    }
 }
