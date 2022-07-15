@@ -53,4 +53,9 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
 
     @Override
     public List<User> getAllByRole(Role role) { return userDao.getAllByRole(role); }
+
+    @Override
+    public List<User> getUsersByIds(List<Long> ids) {
+        return userDao.getUsersByIds(ids);
+    }
 }

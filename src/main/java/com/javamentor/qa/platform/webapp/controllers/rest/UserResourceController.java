@@ -247,5 +247,27 @@ public class UserResourceController {
         return new ResponseEntity<>(userDtoService.getTop10UserDtoForAnswer(), HttpStatus.OK);
     }
 
+
+    @GetMapping("/getTop10UserDtoForAnswerOnTheMonth")
+    @ApiOperation("Возвращает ТОП 10 пользователей по ответам за последнюю месяц")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены ТОП 10 пользователей по ответам"),
+            @ApiResponse(code = 500, message = "")
+    })
+    public ResponseEntity<List<UserDto>> getTop10UserDtoForAnswerOnTheMonth() {
+        return new ResponseEntity<>(userDtoService.getTop10UserDtoForAnswerOnTheMonth(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getTop10UserDtoForAnswerOnTheYear")
+    @ApiOperation("Возвращает ТОП 10 пользователей по ответам за последний год")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Получены ТОП 10 пользователей по ответам"),
+            @ApiResponse(code = 500, message = "")
+    })
+    public ResponseEntity<List<UserDto>> getTop10UserDtoForAnswerOnTheYear() {
+        return new ResponseEntity<>(userDtoService.getTop10UserDtoForAnswerOnTheYear(), HttpStatus.OK);
+    }
+
+
 }
 

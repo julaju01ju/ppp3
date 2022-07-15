@@ -50,6 +50,8 @@ public class TestDataInitService {
     private SingleChatService singleChatService;
 
     private MessageService messageService;
+
+    private QuestionViewedService questionViewedService;
     public TestDataInitService() {
     }
 
@@ -69,6 +71,7 @@ public class TestDataInitService {
             @Lazy RelatedTagService relatedTagService,
             @Lazy GroupChatService groupChatService,
             @Lazy SingleChatService singleChatService,
+            @Lazy QuestionViewedService questionViewedService,
             @Lazy MessageService messageService) {
         this.roleService = roleService;
         this.userService = userService;
@@ -85,6 +88,7 @@ public class TestDataInitService {
         this.groupChatService = groupChatService;
         this.singleChatService = singleChatService;
         this.messageService = messageService;
+        this.questionViewedService = questionViewedService;
     }
 
     public void createRole() {
@@ -194,6 +198,15 @@ public class TestDataInitService {
             question3.setTags(tagList);
             question3.setUser(userService.getAll().get(i));
             questionService.persist(question3);
+        }
+    }
+
+    public void createQuestionViewed(int count) {
+        for (int i = 0; i < count; i++) {
+            QuestionViewed questionViewed = new QuestionViewed();
+            questionViewed.setUser(userService.getById((long) (1 + (int) (Math.random() * 49))).get());
+            questionViewed.setQuestion(questionService.getById((long) (1 + (int) (Math.random() * 49))).get());
+            questionViewedService.persist(questionViewed);
         }
     }
 
@@ -393,5 +406,6 @@ public class TestDataInitService {
         createRelatedTags();
         createSingleChat(4);
         createGroupChat(2);
+        createQuestionViewed(50);
     }
 }
