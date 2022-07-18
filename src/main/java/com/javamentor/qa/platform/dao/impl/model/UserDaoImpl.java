@@ -30,6 +30,11 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
         return SingleResultUtil.getSingleResultOrNull(query);
     }
 
+    public List<User> getUsersByIds(List<Long> ids) {
+        String hql = "from User u where u.id in :ids";
+        return entityManager.createQuery(hql).setParameter("ids", ids).getResultList();
+    }
+
 
     @Cacheable(value = "checkIfExists", key = "#email")
     public boolean checkIfExists(String email) {
