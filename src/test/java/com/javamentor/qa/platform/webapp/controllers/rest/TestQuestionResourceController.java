@@ -300,8 +300,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
-            "dataset/QuestionResourceController/votes_on_answers.yml",
-            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/AnswerVoteTest.yml",
+            "dataset/QuestionResourceController/AnswersTest2.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
@@ -356,7 +356,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(2))
+                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(1))
                 .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(true));
 
         mockMvc.perform(
@@ -364,15 +364,15 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(1))
-                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(true));
+                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(2))
+                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(false));
         mockMvc.perform(
                         get("/api/user/question/103")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(-1))
-                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(true));
+                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(false));
 
     }
 

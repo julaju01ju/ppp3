@@ -40,8 +40,13 @@ public class AnswerDtoDaoImpl
                         "(select sum(case va.vote when 'UP_VOTE' then 1 else -1 end) from VoteAnswer as va where va.answer.id = a.id), " +
                         "(select u.imageLink from User as u where u.id = a.user.id)," +
                         "(select u.nickname from User as u where u.id = a.user.id) " +
-                        "from Answer a, VoteAnswer va where a.question.id = :id and a.isDeleted = false and va.answer.id = a.id " +
-                        "order by a.isHelpful desc, sum(case va.vote when 'UP_VOTE' then 1 else -1 end) desc";
+                        "from Answer as a " +
+                        "join VoteAnswer as v "+
+                        "on v.answer.id = a.id "+
+                        "where a.question.id = :id and a.isDeleted = false " +
+                        "group by a.id " +
+                        "order by a.isHelpful desc, sum(case v.vote when 'UP_VOTE' then 1 else -1 end) desc";
+
 
         return (List<AnswerDto>) entityManager.createQuery(query)
                 .setParameter("id", id)
