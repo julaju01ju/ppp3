@@ -159,4 +159,34 @@ public class ChatResourceController {
         groupChatService.persist(groupChat);
         return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);
     }
+
+    @PostMapping("/group/{id}/join")
+    @ApiOperation("Добавляет пользователя в групповой чат. Получает id группового чата и пользователя в параметрах запроса. "
+            +"Проверяет существование группового чата и пользователя. " +
+            "Проверяет, что пользователь не был ранее добавлен в групповой чат.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "пользователь успешно добавлен в групповой чат"),
+            @ApiResponse(code = 404, message = "групповой чат или пользователь не найден"),
+            @ApiResponse(code = 400, message = "пользователь уже есть в групповом чате")})
+    public ResponseEntity<?> addUserToGroupChat(@PathVariable("id") Long groupChatId, @RequestParam Long userId) {
+
+        if (groupChatService.getGroupChatById(groupChatId).isEmpty()) {
+            return new ResponseEntity<>("групповой чат не найден", HttpStatus.NOT_FOUND);
+        }
+        GroupChat groupChat = groupChatService.getGroupChatById(groupChatId).get();
+
+        if (userService.getUserById(userId).isEmpty()) {
+            return new ResponseEntity<>("пользователь не найден", HttpStatus.NOT_FOUND);
+        }
+        User user = userService.getUserById(userId).get();
+
+        if(groupChat.getUsers().contains(user)) {
+            return new ResponseEntity<>("пользователь уже есть в групповом чате", HttpStatus.BAD_REQUEST);
+        }
+        Set<User> users = groupChat.getUsers();
+        users.add(user);
+        groupChat.setUsers(users);
+        groupChatService.update(groupChat);
+        return new ResponseEntity<>("пользователь успешно добавлен в групповой чат", HttpStatus.OK);
+    }
 }

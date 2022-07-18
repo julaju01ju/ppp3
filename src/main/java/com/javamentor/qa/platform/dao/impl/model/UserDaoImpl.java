@@ -31,7 +31,7 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     }
 
     public List<User> getUsersByIds(List<Long> ids) {
-        String hql = "from User u where u.id in :ids";
+        String hql = "select u from User u where u.id in :ids";
         return entityManager.createQuery(hql).setParameter("ids", ids).getResultList();
     }
 
@@ -62,6 +62,12 @@ public class UserDaoImpl extends ReadWriteDaoImpl<User, Long> implements UserDao
     @Cacheable(value = "getAllByRole", key = "#role")
     public List<User> getAllByRole(Role role) {
          return entityManager.createQuery("select u from User u join fetch u.role where u.role = :role").setParameter("role", role).getResultList();
+    }
+
+    @Override
+    public Optional<User> getUserById(Long id) {
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id = :id", User.class).setParameter("id", id);
+        return SingleResultUtil.getSingleResultOrNull(query);
     }
 
 }

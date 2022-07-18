@@ -26,7 +26,7 @@ public class GroupChat{
     @MapsId
     private Chat chat = new Chat(ChatType.GROUP);
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "groupchat_has_users",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
