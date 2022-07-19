@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.service.impl.dto;
 
+import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.CommentDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.QuestionDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.TagDtoDao;
@@ -26,12 +27,15 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> 
     private final QuestionDtoDao questionDtoDao;
     private final CommentDtoDao commentDtoDao;
     private final TagDtoDao tagDtoDao;
+    private final AnswerDtoDao answerDtoDao;
 
     @Autowired
-    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, CommentDtoDao commentDtoDao, TagDtoDao tagDtoDao) {
+    public QuestionDtoServiceImpl(QuestionDtoDao questionDtoDao, CommentDtoDao commentDtoDao,
+                                  TagDtoDao tagDtoDao, AnswerDtoDao answerDtoDao) {
         this.questionDtoDao = questionDtoDao;
         this.commentDtoDao = commentDtoDao;
         this.tagDtoDao = tagDtoDao;
+        this.answerDtoDao = answerDtoDao;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class QuestionDtoServiceImpl extends PageDtoServiceImpl<QuestionViewDto> 
         Optional<QuestionDto> questionDto = questionDtoDao.getQuestionByQuestionIdAndUserId(questionId, userId);
         questionDto.ifPresent(dto -> dto.setListCommentDto(commentDtoDao.getCommentDtosByQuestionId(questionId)));
         questionDto.ifPresent(dto -> dto.setListTagDto(tagDtoDao.getTagsByQuestionId(questionId)));
+        questionDto.ifPresent(dto -> dto.setListAnswerDto(answerDtoDao.getAllByQuestionId(questionId)));
         return questionDto;
     }
 

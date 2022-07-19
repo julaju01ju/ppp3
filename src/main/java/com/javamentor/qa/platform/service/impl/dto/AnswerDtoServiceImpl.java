@@ -34,7 +34,7 @@ public class AnswerDtoServiceImpl implements AnswerDtoService {
         List<AnswerDto> answerDtos = answerDtoDao.getAllByQuestionId(id);
         List<Long> ids = answerDtos.stream().map(
                 answerDtoElement -> answerDtoElement.getId()).collect(Collectors.toList());
-        Map<Long, List<CommentDto>> comments = commentDtoDao.getCommentDtosByAnswerIds(ids);;
+        Map<Long, List<CommentDto>> comments = commentDtoDao.getCommentDtosByAnswerIds(ids);
         for (AnswerDto answer : answerDtos) {
             answer.setListOfComeentsDto(comments.get(answer.getId()));
         }
@@ -50,6 +50,5 @@ public class AnswerDtoServiceImpl implements AnswerDtoService {
     public Long getAmountAllAnswersByUserId(Long id) {
         return answerDtoDao.getAmountAllAnswersByUserId(id);
     }
-
 
 }
