@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 public class SingleChatDto {
 
     private Long id;
+    private Long userRecipientId;
+    private Long userSenderId;
     private String name;
     private String image;
     private String lastMessage;

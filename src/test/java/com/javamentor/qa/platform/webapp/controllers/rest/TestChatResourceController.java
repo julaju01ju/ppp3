@@ -5,9 +5,11 @@ import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
 import com.javamentor.qa.platform.dao.impl.dto.pagination.PaginationAllMessagesSortedByPersistDate;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
+import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
+import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
 import com.javamentor.qa.platform.service.impl.dto.PageDtoServiceImpl;
 import org.apache.poi.ss.formula.functions.T;
@@ -317,6 +319,8 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.page.items[2].userId").value(103))
                 .andExpect(jsonPath("$.page.items[2].image").value("link"))
                 .andExpect(jsonPath("$.page.items[2].persistDateTime").value("2022-06-14T03:00:00"));
+        ;
+
     }
 
     @Test
@@ -368,7 +372,7 @@ public class TestChatResourceController extends AbstractControllerTest {
 
         CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
         createGroupChatDto.setChatName("Test");
-        createGroupChatDto.setUserIds(new ArrayList<>());
+        createGroupChatDto.setUserIds(new ArrayList<Long>());
 
         String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
 
@@ -433,6 +437,56 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/role.yml",
+            "dataset/ChatResourceController/users.yml",
+            "dataset/ChatResourceController/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createSingleChatDtoWithWrongUserId() throws Exception {
+
+        CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
+        createSingleChatDto.setUserRecipientId(1001L);
+        createSingleChatDto.setMessage(" ");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/single")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createSingleChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/role.yml",
+            "dataset/ChatResourceController/users.yml",
+            "dataset/ChatResourceController/messages.yml",
+            "dataset/ChatResourceController/singleChats.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createSingleChatDtoWithUserIdAndMessages() throws Exception {
+
+        CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
+        createSingleChatDto.setUserRecipientId(101L);
+        createSingleChatDto.setMessage("Hello101");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/single")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createSingleChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("from SingleChat", SingleChat.class));
     }
 
     @Test

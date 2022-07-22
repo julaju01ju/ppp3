@@ -10,10 +10,11 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
+import com.javamentor.qa.platform.service.abstracts.model.MessageService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
+import com.javamentor.qa.platform.webapp.converters.SingleChatConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -51,20 +52,19 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-
+    private final MessageService messageService;
+    private final SingleChatConverter singleChatConverter;
 
     @Autowired
-    public ChatResourceController(
-            SingleChatDtoServiceImpl singleChatDtoService,
-            GroupChatDtoService groupChatDtoService,
-            SingleChatService singleChatService,
-            MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService){
+    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, MessageService messageService, SingleChatConverter singleChatConverter) {
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
+        this.messageService = messageService;
+        this.singleChatConverter = singleChatConverter;
     }
 
 
@@ -161,6 +161,29 @@ public class ChatResourceController {
         groupChatService.persist(groupChat);
         return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);
     }
+
+    @PostMapping(value = "/single")
+    @ResponseBody
+    @ApiOperation(value = "Добавление singleChat")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "SingleChat добавлен"),
+            @ApiResponse(code = 400, message = "SingleChat не был добавлен")
+    })
+    public ResponseEntity<?> addSingleChat(@Valid @RequestBody CreateSingleChatDto createSingleChatDto, @RequestParam(name = "message", required=false)  String message){
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        createSingleChatDto.setUserSenderId(user.getId());
+        SingleChat singleChat = singleChatConverter.createSingleChatDtoToSingleChat(createSingleChatDto);
+        singleChatService.persist(singleChat);
+        messageService.persist(new Message(message, user, singleChat.getChat()));
+        Map<String, String> maps = new HashMap<>();
+        maps.put("message", message);
+        maps.put("userSender", user.getId().toString());
+        SingleChatDto singleChatDto = singleChatConverter.singleChatToSingleChatDto(singleChat);
+        singleChatDto.setLastMessage(message);
+        return new ResponseEntity<>("SingleChat чат успешно добавлен", HttpStatus.OK);
+    }
+
 
     @PostMapping("/group/{id}/join")
     @ApiOperation("Добавляет пользователя в групповой чат. Получает id группового чата и пользователя в параметрах запроса. "
