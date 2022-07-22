@@ -32,10 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @Api("Chats Api")
@@ -170,20 +167,22 @@ public class ChatResourceController {
             @ApiResponse(code = 400, message = "пользователь уже есть в групповом чате")})
     public ResponseEntity<?> addUserToGroupChat(@PathVariable("id") Long groupChatId, @RequestParam Long userId) {
 
-        if (groupChatService.getGroupChatById(groupChatId).isEmpty()) {
+        Optional<GroupChat> groupChatOptional = groupChatService.getGroupChatById(groupChatId);
+        if (groupChatOptional.isEmpty()) {
             return new ResponseEntity<>("групповой чат не найден", HttpStatus.NOT_FOUND);
         }
-        GroupChat groupChat = groupChatService.getGroupChatById(groupChatId).get();
+        GroupChat groupChat = groupChatOptional.get();
 
-        if (userService.getUserById(userId).isEmpty()) {
+        Optional<User> userOptional = userService.getById(userId);
+        if (userOptional.isEmpty()) {
             return new ResponseEntity<>("пользователь не найден", HttpStatus.NOT_FOUND);
         }
-        User user = userService.getUserById(userId).get();
+        User user = userOptional.get();
 
-        if(groupChat.getUsers().contains(user)) {
+        Set<User> users = groupChat.getUsers();
+        if(users.contains(user)) {
             return new ResponseEntity<>("пользователь уже есть в групповом чате", HttpStatus.BAD_REQUEST);
         }
-        Set<User> users = groupChat.getUsers();
         users.add(user);
         groupChat.setUsers(users);
         groupChatService.update(groupChat);

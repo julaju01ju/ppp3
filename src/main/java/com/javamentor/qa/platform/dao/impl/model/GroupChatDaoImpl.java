@@ -17,7 +17,8 @@ public class GroupChatDaoImpl extends ReadWriteDaoImpl<GroupChat, Long> implemen
 
     @Override
     public Optional<GroupChat> getGroupChatById(Long id) {
-        TypedQuery<GroupChat> query = entityManager.createQuery("select gch from GroupChat gch where gch.id = :id", GroupChat.class).setParameter("id", id);
+        TypedQuery<GroupChat> query = entityManager.createQuery("select gch from GroupChat gch left join fetch gch.users" +
+                " where gch.id = :id", GroupChat.class).setParameter("id", id);
     return SingleResultUtil.getSingleResultOrNull(query);
     }
 }

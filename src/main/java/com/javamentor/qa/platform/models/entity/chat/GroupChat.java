@@ -29,7 +29,7 @@ public class GroupChat{
     @MapsId
     private Chat chat = new Chat(ChatType.GROUP);
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "groupchat_has_users",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))

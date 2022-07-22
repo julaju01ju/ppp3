@@ -60,9 +60,4 @@ public class UserServiceImpl extends ReadWriteServiceImpl<User,Long> implements 
     public List<User> getUsersByIds(List<Long> ids) {
         return userDao.getUsersByIds(ids);
     }
-
-    @Override
-    public Optional<User> getUserById(Long id) {
-        return userDao.getUserById(id);
-    }
 }

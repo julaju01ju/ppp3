@@ -14,6 +14,4 @@ public interface UserDao extends ReadWriteDao<User, Long>{
     void disableUserByEmail(String email);
 
     List<User> getAllByRole(Role role);
-
-    Optional<User> getUserById(Long id);
 }
