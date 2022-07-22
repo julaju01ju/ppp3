@@ -1,19 +1,16 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.dto.SingleChatDto;
-import com.javamentor.qa.platform.models.entity.chat.Chat;
-import com.javamentor.qa.platform.models.entity.chat.ChatType;
-import com.javamentor.qa.platform.models.entity.chat.GroupChat;
+import com.javamentor.qa.platform.models.dto.*;
+import com.javamentor.qa.platform.models.entity.chat.*;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
+import com.javamentor.qa.platform.service.abstracts.model.MessageService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
+import com.javamentor.qa.platform.webapp.converters.SingleChatConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,13 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -49,21 +40,24 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-
+    private final MessageService messageService;
+    private final SingleChatConverter singleChatConverter;
 
     @Autowired
-    public ChatResourceController(
-            SingleChatDtoServiceImpl singleChatDtoService,
-            GroupChatDtoService groupChatDtoService,
-            SingleChatService singleChatService,
-            MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService){
+    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, MessageService messageService, SingleChatConverter singleChatConverter) {
         this.singleChatDtoService = singleChatDtoService;
-        this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
+        this.groupChatDtoService = groupChatDtoService;
         this.messageDtoService = messageDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
+        this.messageService = messageService;
+        this.singleChatConverter = singleChatConverter;
     }
+
+
+
+
 
 
     @GetMapping("/single")
@@ -159,4 +153,27 @@ public class ChatResourceController {
         groupChatService.persist(groupChat);
         return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);
     }
+
+    @PostMapping(value = "/single")
+    @ResponseBody
+    @ApiOperation(value = "Добавление singleChat")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "SingleChat добавлен"),
+            @ApiResponse(code = 400, message = "SingleChat не был добавлен")
+    })
+    public ResponseEntity<?> addSingleChat(@Valid @RequestBody CreateSingleChatDto createSingleChatDto, @RequestParam(name = "message", required=false)  String message){
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        createSingleChatDto.setUserSenderId(user.getId());
+        SingleChat singleChat = singleChatConverter.createSingleChatDtoToSingleChat(createSingleChatDto);
+        singleChatService.persist(singleChat);
+        messageService.persist(new Message(message, user, singleChat.getChat()));
+        Map<String, String> maps = new HashMap<>();
+        maps.put("message", message);
+        maps.put("userSender", user.getId().toString());
+        SingleChatDto singleChatDto = singleChatConverter.singleChatToSingleChatDto(singleChat);
+        singleChatDto.setLastMessage(message);
+        return new ResponseEntity<>("SingleChat чат успешно добавлен", HttpStatus.OK);
+    }
+
 }
