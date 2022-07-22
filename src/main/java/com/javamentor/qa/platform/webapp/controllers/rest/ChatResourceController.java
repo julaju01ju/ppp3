@@ -30,9 +30,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Optional;
+
+
 
 @RestController
 @Api("Chats Api")
@@ -167,7 +172,7 @@ public class ChatResourceController {
             @ApiResponse(code = 400, message = "пользователь уже есть в групповом чате")})
     public ResponseEntity<?> addUserToGroupChat(@PathVariable("id") Long groupChatId, @RequestParam Long userId) {
 
-        Optional<GroupChat> groupChatOptional = groupChatService.getGroupChatById(groupChatId);
+        Optional<GroupChat> groupChatOptional = groupChatService.getGroupChatWithUsersById(groupChatId);
         if (groupChatOptional.isEmpty()) {
             return new ResponseEntity<>("групповой чат не найден", HttpStatus.NOT_FOUND);
         }

@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface GroupChatService extends ReadWriteService<GroupChat, Long>{
 
-    Optional<GroupChat> getGroupChatById(Long id);
+    Optional<GroupChat> getGroupChatWithUsersById(Long id);
 }
