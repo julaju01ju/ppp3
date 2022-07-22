@@ -300,7 +300,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/tag.yml",
             "dataset/QuestionResourceController/votes_on_questions.yml",
-            "dataset/QuestionResourceController/answers.yml",
+            "dataset/QuestionResourceController/AnswerVoteTest.yml",
+            "dataset/QuestionResourceController/AnswersTest2.yml",
             "dataset/QuestionResourceController/questions.yml",
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
@@ -349,6 +350,29 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.listCommentDto[2].comment").value("Some text of comment 103"))
                 .andExpect(jsonPath("$.listCommentDto[2].userId").value(103))
                 .andExpect(jsonPath("$.isUserBookmark").value(true));
+
+        mockMvc.perform(
+                        get("/api/user/question/101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(1))
+                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(true));
+
+        mockMvc.perform(
+                        get("/api/user/question/102")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(2))
+                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(false));
+        mockMvc.perform(
+                        get("/api/user/question/103")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.listAnswerDto[0].countValuable").value(-1))
+                .andExpect(jsonPath("$.listAnswerDto[0].isHelpful").value(false));
 
     }
 
@@ -911,7 +935,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.items[0].listTagDto[0].id").value(102))
                 .andExpect(jsonPath("$.items[0].isUserBookMarks").value("false"))
                 .andExpect(jsonPath("$.items[1].listTagDto[1].id").value(102))
-                .andExpect(jsonPath("$.items[1].isUserBookMarks").value("false"));;
+                .andExpect(jsonPath("$.items[1].isUserBookMarks").value("false"));
+        ;
     }
 
     @Test
@@ -1883,7 +1908,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         String pageUsers = mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&items=4")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.currentPageNumber").value(1))
@@ -1961,7 +1986,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&trackedTag=102&items=4")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))
@@ -2078,7 +2103,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/question/viewed?page=1&item=10&trackedTag=-1&ignoredTag=-1")
-                .header(AUTHORIZATION, USER_TOKEN))
+                        .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalPageCount").value(1))

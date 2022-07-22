@@ -34,7 +34,7 @@ public class QuestionDto {
     private List<CommentDto> listCommentDto;
     private Boolean isUserBookmark;
     private Boolean isUserAnswerVote;
-
+    private List<AnswerDto> listAnswerDto;
 }
 
 

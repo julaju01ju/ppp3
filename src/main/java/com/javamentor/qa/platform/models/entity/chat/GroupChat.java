@@ -22,6 +22,9 @@ public class GroupChat{
     @Id
     private Long id;
 
+    @Column(name = "is_global")
+    private boolean isGlobal = false;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @MapsId
     private Chat chat = new Chat(ChatType.GROUP);
@@ -63,4 +66,5 @@ public class GroupChat{
     public int hashCode() {
         return Objects.hash(id, chat, users);
     }
+
 }
