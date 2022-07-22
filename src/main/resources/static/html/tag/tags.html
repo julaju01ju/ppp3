@@ -10,7 +10,7 @@
           crossorigin="anonymous">
     <title>KataAcademy</title>
 </head>
-<body onload="pagination(1, 16, getTagByItem)">
+<body>
 <div class="container-fluid">
     <div id="app-header"></div>
     <div class="row" style="height: 80vh" id="main-content">
@@ -21,27 +21,27 @@
             </div>
             <div>
                 <h6 class="h6">Тег — это ключевое слово или ярлык, который классифицирует ваш вопрос среди других похожих
-                вопросов. Использование правильных тегов облегчает другим пользователям поиск и ответ на ваш вопрос.</h6>
+                    вопросов. Использование правильных тегов облегчает другим пользователям поиск и ответ на ваш вопрос.</h6>
             </div>
             <div class="question-nav p-3 d-flex justify-content-between" style="border-bottom: 1px solid lightgrey;
             margin-bottom: 2rem">
 
                 <div class="btn-group btn-group-sm" >
-                    <a href="#" class="btn btn-outline-secondary active" aria-current="page"
-                       style="font-size: .9rem;  padding: .5rem .7rem; margin-right: 5px; border-radius: 3px">Новые</a>
-                    <a href="#" class="btn btn-outline-secondary active" aria-current="page"
-                       style="font-size: .9rem;  padding: .5rem .7rem; margin-right: 5px; border-radius: 3px">Текущие</a>
-                    <a href="#" class="btn btn-outline-secondary active" aria-current="page"
-                       style="font-size: .9rem;  padding: .5rem .7rem; margin-right: 5px; border-radius: 3px">Популярные</a>
+                    <a onclick="pagination(1, 16, getAllTags);" id="currentTags" href="#" class="btn btn-outline-secondary active" aria-current="page"
+                       style="font-size: .7rem;  padding: .5rem .7rem">Текущие</a>
+                    <a onclick="pagination(1, 16, getNewTags);" id="newTags" href="#" class="btn btn-outline-secondary">Новые</a>
+                    <a onclick="pagination(1, 16, getPopularTags);" id="popularTags" href="#" class="btn btn-outline-secondary">Популярные</a>
                 </div>
                 <div>
                     <button class="btn btn-info">Фильтры</button>
                 </div>
             </div>
-<!--                        Tag List ~JS~  -->
+            <!--                        Tag List ~JS~  -->
+            <input type="hidden" value="50" min="1" max="100" id="amountPerPage"
+                   style="width: 4pc">
             <div class="row row-cols-1 row-cols-md-4 g-4" id="tagList"></div>
             <br>
-<!--                        Pages ~JS~  -->
+            <!--                        Pages ~JS~  -->
             <nav>
                 <ul class="pagination justify-content-end" id="paginationButtons"></ul>
             </nav>
@@ -98,3 +98,5 @@
 <script src="../js/scripts.js"></script>
 </body>
 </html>
+
+
