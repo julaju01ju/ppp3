@@ -52,6 +52,8 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
+
+
     private final FindChatByStringDtoService findChatByStringDtoService;
 
     @Autowired
@@ -60,9 +62,8 @@ public class ChatResourceController {
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
             MessageDtoService messageDtoService,
-            FindChatByStringDtoService findChatByStringDtoService,
-            UserService userService,
-            GroupChatService groupChatService) {
+            FindChatByStringDtoService findChatByStringDtoService) {
+            MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService){
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
@@ -82,7 +83,8 @@ public class ChatResourceController {
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
             @RequestParam("page") Integer page,
             @RequestParam("items") Integer items,
-            @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag) {
+            @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag)
+    {
 
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
@@ -105,7 +107,8 @@ public class ChatResourceController {
     })
     public ResponseEntity<?> getGroupChatOutPutWithAllMessage(
             @RequestParam("page") Integer currentPage,
-            @RequestParam(value = "items", defaultValue = "10") Integer items) {
+            @RequestParam(value = "items", defaultValue = "10") Integer items)
+    {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
 
         Map<String, Object> params = new HashMap<>();
@@ -130,7 +133,7 @@ public class ChatResourceController {
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag,
-            @PathVariable("id") Long chatId) {
+            @PathVariable("id") Long chatId){
 
         if (!singleChatService.existsById(chatId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чат с данным ID = " + chatId + ", не найден.");
@@ -145,7 +148,6 @@ public class ChatResourceController {
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
     }
-
     @GetMapping
     @ApiOperation("Возвращает сообщения в Single и Group чатам по заданному параметру")
     @ApiResponses(value = {
@@ -163,7 +165,7 @@ public class ChatResourceController {
         if (findChatByStringDtoService.ifNotExistSearchedString(params)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: " +"\'" +findMessages+"\'" + " не было найдено!");
         }
-        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(params), HttpStatus.OK);
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(findMessages), HttpStatus.OK);
     }
 
     @PostMapping("/group")
