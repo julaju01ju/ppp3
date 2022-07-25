@@ -52,8 +52,6 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-
-
     private final FindChatByStringDtoService findChatByStringDtoService;
 
     @Autowired
@@ -62,8 +60,9 @@ public class ChatResourceController {
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
             MessageDtoService messageDtoService,
-            FindChatByStringDtoService findChatByStringDtoService) {
-            MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService){
+            FindChatByStringDtoService findChatByStringDtoService,
+            UserService userService,
+            GroupChatService groupChatService){
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
@@ -165,7 +164,7 @@ public class ChatResourceController {
         if (findChatByStringDtoService.ifNotExistSearchedString(params)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: " +"\'" +findMessages+"\'" + " не было найдено!");
         }
-        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(findMessages), HttpStatus.OK);
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(params), HttpStatus.OK);
     }
 
     @PostMapping("/group")
