@@ -19,12 +19,12 @@ public class FindChatByStringDtoServiceImpl implements FindChatByStringDtoServic
     }
 
     @Override
-    public List<ChatDto> getChatByString(String searchedString) {
-        return findChatByStringDtoDao.getChatByString(searchedString);
+    public List<ChatDto> getChatByString(Map<String,Object> params) {
+        return findChatByStringDtoDao.getChatByString(params);
     }
 
     @Override
-    public boolean ifNotExistSearchedString(String  searchedString) {
-        return getChatByString(searchedString).isEmpty();
+    public boolean ifNotExistSearchedString(Map<String,Object> params) {
+        return getChatByString(params).isEmpty();
     }
 }

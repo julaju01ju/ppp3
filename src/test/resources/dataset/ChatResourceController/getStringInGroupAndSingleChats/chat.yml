@@ -1,17 +1,21 @@
 chat:
-  - id: 101
+  - id: 1
     chat_type: 1
     persist_date: 2022-07-13 00:00:00
     title: "Some group chat 1"
-  - id: 102
+  - id: 2
     chat_type: 1
     persist_date: 2022-07-13 00:00:00
     title: "Some group chat 2"
-  - id: 103
+  - id: 3
     chat_type: 0
     persist_date: 2022-06-13 00:00:00
     title: "Some single chat 1"
-  - id: 104
+  - id: 4
     chat_type: 0
     persist_date: 2022-06-13 00:00:00
     title: "Some single chat 2"
+  - id: 5
+    chat_type: 1
+    persist_date: 2022-07-13 00:00:00
+    title: "Some group chat 5"

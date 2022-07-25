@@ -3,10 +3,11 @@ package com.javamentor.qa.platform.service.abstracts.dto;
 import com.javamentor.qa.platform.models.dto.ChatDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface FindChatByStringDtoService {
-    List<ChatDto> getChatByString(String searchedString);
+    List<ChatDto> getChatByString(Map<String,Object> params);
 
-    boolean ifNotExistSearchedString(String searchedString);
+    boolean ifNotExistSearchedString(Map<String,Object> params);
 }
