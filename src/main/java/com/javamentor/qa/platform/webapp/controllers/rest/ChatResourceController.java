@@ -8,7 +8,7 @@ import com.javamentor.qa.platform.models.entity.chat.Chat;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.abstracts.dto.FindChatByStringDtoService;
+import com.javamentor.qa.platform.service.abstracts.dto.ChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
@@ -52,7 +52,7 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-    private final FindChatByStringDtoService findChatByStringDtoService;
+    private final ChatDtoService findChatByStringDtoService;
 
     @Autowired
     public ChatResourceController(
@@ -60,7 +60,7 @@ public class ChatResourceController {
             GroupChatDtoService groupChatDtoService,
             SingleChatService singleChatService,
             MessageDtoService messageDtoService,
-            FindChatByStringDtoService findChatByStringDtoService,
+            ChatDtoService findChatByStringDtoService,
             UserService userService,
             GroupChatService groupChatService){
         this.singleChatDtoService = singleChatDtoService;
@@ -157,14 +157,7 @@ public class ChatResourceController {
     public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
             @RequestParam(value = "findMessage") String findMessages) {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("findMessage", findMessages);
-        params.put("userId", userId);
-        if (findChatByStringDtoService.ifNotExistSearchedString(params)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: " +"\'" +findMessages+"\'" + " не было найдено!");
-        }
-        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(params), HttpStatus.OK);
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(userId, findMessages), HttpStatus.OK);
     }
 
     @PostMapping("/group")

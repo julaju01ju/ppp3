@@ -62,18 +62,18 @@ message:
   - id: 11
     last_redaction_date: 2021-12-06 00:00:00
     message: "Hello users in group chat 5, from user number 2"
-    persist_date: 2022-07-03 00:00:00
+    persist_date: 2022-07-03 14:00:00
     chat_id: 5
     user_sender_id: 2
   - id: 12
     last_redaction_date: 2021-12-06 00:00:00
     message: "Hello users in group chat 5, from user number 3"
-    persist_date: 2022-07-04 00:00:00
+    persist_date: 2022-07-04 12:00:00
     chat_id: 5
     user_sender_id: 3
   - id: 13
     last_redaction_date: 2021-12-06 00:00:00
     message: "Hello users in group chat 5, from user number 5"
-    persist_date: 2022-07-05 00:00:00
+    persist_date: 2022-07-05 17:00:00
     chat_id: 5
     user_sender_id: 5

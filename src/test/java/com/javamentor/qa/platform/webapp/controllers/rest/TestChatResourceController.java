@@ -2,15 +2,8 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.javamentor.qa.platform.dao.abstracts.dto.PageDtoDao;
-import com.javamentor.qa.platform.dao.impl.dto.pagination.PaginationAllMessagesSortedByPersistDate;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
-import com.javamentor.qa.platform.models.dto.MessageDto;
-import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
-import com.javamentor.qa.platform.service.abstracts.dto.PageDtoService;
-import com.javamentor.qa.platform.service.impl.dto.PageDtoServiceImpl;
-import org.apache.poi.ss.formula.functions.T;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -445,7 +437,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
-    }, disableConstraints = true, cleanBefore = true)
+    }, disableConstraints = true, cleanBefore = true )
     public void getFindChatWithValidParametersInSingleAndGroupChatByTitle() throws Exception {
 
         String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
@@ -454,18 +446,19 @@ public class TestChatResourceController extends AbstractControllerTest {
                         get("/api/user/chat/?findMessage=chat")
                                 .header(AUTHORIZATION, USER_TOKEN))
 
-                .andDo(print()).andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(3))
                 .andExpect(jsonPath("$[0].name").value("Some single chat 1"))
                 .andExpect(jsonPath("$[0].image").value("link102"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello user 1 in single chat number 3"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-04T17:40:30"))
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-04T20:40:30"))
 
                 .andExpect(jsonPath("$[1].id").value(1))
                 .andExpect(jsonPath("$[1].name").value("Some group chat 1"))
                 .andExpect(jsonPath("$[1].image").value("Some image in Group chat 1"))
                 .andExpect(jsonPath("$[1].lastMessage").value("Hello users in group chat 1, from user number 3"))
-                .andExpect(jsonPath("$[1].persistDateTimeLastMessage").value("2022-07-01T04:55:21"));
+                .andExpect(jsonPath("$[1].persistDateTimeLastMessage").value("2022-07-01T07:55:21"));
     }
 
     @Test
@@ -489,7 +482,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Some single chat 2"))
                 .andExpect(jsonPath("$[0].image").value("link103"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello user 2 in single chat number 4"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2021-12-05T02:00:00"));
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2021-12-05T05:00:00"));
     }
 
     @Test
@@ -514,7 +507,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Some group chat 5"))
                 .andExpect(jsonPath("$[0].image").value("Some image in group Chat 5"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello users in group chat 5, from user number 5"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T01:00:00"));
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T20:00:00"));
     }
 
 
@@ -556,7 +549,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         mockMvc.perform(
                         get("/api/user/chat/?findMessage=153")
                                 .header(AUTHORIZATION, USER_TOKEN)).andDo(print())
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk());
 
     }
 }

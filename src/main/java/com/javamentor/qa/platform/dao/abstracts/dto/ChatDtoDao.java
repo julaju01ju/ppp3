@@ -4,8 +4,8 @@ import com.javamentor.qa.platform.models.dto.ChatDto;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public interface FindChatByStringDtoDao {
-    List<ChatDto> getChatByString (Map<String,Object> params);
+
+public interface ChatDtoDao {
+    List<ChatDto> getChatByString (Long userId, String searchedString);
 }

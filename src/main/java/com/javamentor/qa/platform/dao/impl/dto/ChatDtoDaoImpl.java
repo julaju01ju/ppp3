@@ -1,10 +1,8 @@
 package com.javamentor.qa.platform.dao.impl.dto;
 
-import com.javamentor.qa.platform.dao.abstracts.dto.FindChatByStringDtoDao;
+import com.javamentor.qa.platform.dao.abstracts.dto.ChatDtoDao;
 import com.javamentor.qa.platform.models.dto.ChatDto;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
-import com.javamentor.qa.platform.models.entity.chat.GroupChat;
-import com.javamentor.qa.platform.models.entity.user.User;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,13 +12,13 @@ import java.util.Map;
 
 
 @Repository
-public class FindChatByStringDtoDaoImpl implements FindChatByStringDtoDao {
+public class ChatDtoDaoImpl implements ChatDtoDao {
 
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<ChatDto> getChatByString(Map<String,Object> params) {
+    public List<ChatDto> getChatByString(Long userId, String searchedString) {
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.ChatDto " +
                         "(ch.id, "+
                         "ch.title, "+
@@ -43,8 +41,8 @@ public class FindChatByStringDtoDaoImpl implements FindChatByStringDtoDao {
                         "join g.users as ghu on ghu.id = :userId)) and " +
                         "m.persistDate = (select max(mes.persistDate) from Message as mes where mes.chat.id=ch.id) " +
                         "order by m.persistDate desc ", ChatDto.class)
-                .setParameter("searchString", "%" + params.get("findMessage") + "%")
-                .setParameter("userId", params.get("userId"))
+                .setParameter("searchString", "%" + searchedString + "%")
+                .setParameter("userId", userId)
                 .setParameter("chatTypeSingle", ChatType.SINGLE)
                 .getResultList();
     }

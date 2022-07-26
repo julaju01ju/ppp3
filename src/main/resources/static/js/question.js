@@ -300,8 +300,7 @@ function addCommentToQuestionPOST() {
                     let ul = document.querySelector("#questionComments");
                     let li = document.createElement("li");
                     li.appendChild(document.createTextNode(data.comment));
-                    li.appendChild(document.createTextNode(data.fullName));
-                    li.setAttribute("id", "comment-"+data.id);
+                    li.setAttribute("id", "comment-" + data.id);
                     ul.appendChild(li);
                 })
             }
