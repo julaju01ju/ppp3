@@ -1,7 +1,15 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.*;
-import com.javamentor.qa.platform.models.entity.chat.*;
+import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
+import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
+import com.javamentor.qa.platform.models.dto.MessageDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.SingleChatDto;
+import com.javamentor.qa.platform.models.entity.chat.Chat;
+import com.javamentor.qa.platform.models.entity.chat.ChatType;
+import com.javamentor.qa.platform.models.entity.chat.GroupChat;
+import com.javamentor.qa.platform.models.entity.chat.Message;
+import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
@@ -19,14 +27,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Optional;
+
+
 
 @RestController
 @Api("Chats Api")
@@ -46,18 +63,14 @@ public class ChatResourceController {
     @Autowired
     public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, MessageService messageService, SingleChatConverter singleChatConverter) {
         this.singleChatDtoService = singleChatDtoService;
-        this.singleChatService = singleChatService;
         this.groupChatDtoService = groupChatDtoService;
+        this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
         this.messageService = messageService;
         this.singleChatConverter = singleChatConverter;
     }
-
-
-
-
 
 
     @GetMapping("/single")
@@ -176,4 +189,36 @@ public class ChatResourceController {
         return new ResponseEntity<>("SingleChat чат успешно добавлен", HttpStatus.OK);
     }
 
+
+    @PostMapping("/group/{id}/join")
+    @ApiOperation("Добавляет пользователя в групповой чат. Получает id группового чата и пользователя в параметрах запроса. "
+            +"Проверяет существование группового чата и пользователя. " +
+            "Проверяет, что пользователь не был ранее добавлен в групповой чат.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "пользователь успешно добавлен в групповой чат"),
+            @ApiResponse(code = 404, message = "групповой чат или пользователь не найден"),
+            @ApiResponse(code = 400, message = "пользователь уже есть в групповом чате")})
+    public ResponseEntity<?> addUserToGroupChat(@PathVariable("id") Long groupChatId, @RequestParam Long userId) {
+
+        Optional<GroupChat> groupChatOptional = groupChatService.getGroupChatWithUsersById(groupChatId);
+        if (groupChatOptional.isEmpty()) {
+            return new ResponseEntity<>("групповой чат не найден", HttpStatus.NOT_FOUND);
+        }
+        GroupChat groupChat = groupChatOptional.get();
+
+        Optional<User> userOptional = userService.getById(userId);
+        if (userOptional.isEmpty()) {
+            return new ResponseEntity<>("пользователь не найден", HttpStatus.NOT_FOUND);
+        }
+        User user = userOptional.get();
+
+        Set<User> users = groupChat.getUsers();
+        if(users.contains(user)) {
+            return new ResponseEntity<>("пользователь уже есть в групповом чате", HttpStatus.BAD_REQUEST);
+        }
+        users.add(user);
+        groupChat.setUsers(users);
+        groupChatService.update(groupChat);
+        return new ResponseEntity<>("пользователь успешно добавлен в групповой чат", HttpStatus.OK);
+    }
 }

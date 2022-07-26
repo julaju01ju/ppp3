@@ -6,6 +6,8 @@ import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> implements GroupChatService {
 
@@ -16,4 +18,10 @@ public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> 
         super(groupChatDao);
         this.groupChatDao = groupChatDao;
     }
+
+    @Override
+    public Optional<GroupChat> getGroupChatWithUsersById(Long id) {
+        return groupChatDao.getGroupChatWithUsersById(id);
+    }
+
 }
