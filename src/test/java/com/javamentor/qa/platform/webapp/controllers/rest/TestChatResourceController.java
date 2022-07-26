@@ -459,13 +459,13 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Some single chat 1"))
                 .andExpect(jsonPath("$[0].image").value("link102"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello user 1 in single chat number 3"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-04T20:40:30"))
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-04T17:40:30"))
 
                 .andExpect(jsonPath("$[1].id").value(1))
                 .andExpect(jsonPath("$[1].name").value("Some group chat 1"))
                 .andExpect(jsonPath("$[1].image").value("Some image in Group chat 1"))
                 .andExpect(jsonPath("$[1].lastMessage").value("Hello users in group chat 1, from user number 3"))
-                .andExpect(jsonPath("$[1].persistDateTimeLastMessage").value("2022-07-01T07:55:21"));
+                .andExpect(jsonPath("$[1].persistDateTimeLastMessage").value("2022-07-01T04:55:21"));
     }
 
     @Test
@@ -489,7 +489,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Some single chat 2"))
                 .andExpect(jsonPath("$[0].image").value("link103"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello user 2 in single chat number 4"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2021-12-05T05:00:00"));
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2021-12-05T02:00:00"));
     }
 
     @Test
@@ -514,7 +514,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Some group chat 5"))
                 .andExpect(jsonPath("$[0].image").value("Some image in group Chat 5"))
                 .andExpect(jsonPath("$[0].lastMessage").value("Hello users in group chat 5, from user number 5"))
-                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T03:00:00"));
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T01:00:00"));
     }
 
 
