@@ -242,7 +242,6 @@ function fillQuestionComments() {
     // let li = document.createElement("li");
     // li.appendChild(document.createTextNode("Text"));
     // ul.appendChild(li);
-
 }
 
 function fillCommentsToAnswer(answerId){
