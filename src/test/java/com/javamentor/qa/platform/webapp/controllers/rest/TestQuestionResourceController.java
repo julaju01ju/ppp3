@@ -388,7 +388,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/comment.yml",
             "dataset/QuestionResourceController/comment_question.yml",
-    }, cleanBefore = true)
+    },  disableConstraints = true, cleanBefore = true)
     public void getQuestionByIdNotIsUserBookMarks() throws Exception {
 
         String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
@@ -974,7 +974,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"
     },
-            disableConstraints = true, transactional = true)
+            disableConstraints = true, cleanBefore = true)
 
     public void postUpVoteQuestion() throws Exception {
 
@@ -996,7 +996,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"
     },
-            disableConstraints = true, transactional = true)
+            disableConstraints = true, cleanBefore = true)
 
     public void postDownVoteQuestion() throws Exception {
 
@@ -1865,7 +1865,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
-    })
+    }, disableConstraints = true, cleanBefore = true)
     public void addCommentByQuestionIdNotFound() throws Exception {
         String USER_TOKEN = getToken("privet@mail.ru", "USER");
 
@@ -1882,7 +1882,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
-    })
+            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = getToken("privet@mail.ru", "USER");
 
