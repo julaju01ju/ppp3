@@ -156,10 +156,15 @@ public class ChatResourceController {
     })
     public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
             @RequestParam(value = "findMessage") String findMessages) {
-        if (findChatByStringDtoService.ifNotExistSearchedString(findMessages)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: "+ findMessages+" не было найдено!");
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("findMessage", findMessages);
+        params.put("userId", userId);
+        if (findChatByStringDtoService.ifNotExistSearchedString(params)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чатов содержащих сообщение: " +"\'" +findMessages+"\'" + " не было найдено!");
         }
-        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(findMessages), HttpStatus.OK);
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(params), HttpStatus.OK);
     }
 
     @PostMapping("/group")
