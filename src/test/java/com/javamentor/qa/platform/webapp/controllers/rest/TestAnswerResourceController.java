@@ -59,6 +59,7 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].fullName").value("USER"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102))
                 .andExpect(jsonPath("$[1].listOfComeentsDto[0].id").value(105));
+
     }
 
     //ошибка в контроллере

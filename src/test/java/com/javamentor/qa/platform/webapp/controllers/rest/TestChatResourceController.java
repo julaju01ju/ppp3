@@ -3,17 +3,18 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
+import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
+import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,23 +121,23 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalResultCount").value(5))
                 .andExpect(jsonPath("$.itemsOnPage").value(4));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=false")
-                        .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-05T03:00:00"))
-                .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-04T03:00:00"))
-                .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
-                .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-02T03:00:00"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=false")
+                            .header(AUTHORIZATION, USER_TOKEN))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-05T03:00:00"))
+                    .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-04T03:00:00"))
+                    .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
+                    .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-02T03:00:00"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=true")
-                        .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-04T03:00:00"))
-                .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
-                .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-02T03:00:00"))
-                .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-01T03:00:00"));
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4&sortAscendingFlag=true")
+                            .header(AUTHORIZATION, USER_TOKEN))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.items[3].persistDateTime").value("2022-06-04T03:00:00"))
+                    .andExpect(jsonPath("$.items[2].persistDateTime").value("2022-06-03T03:00:00"))
+                    .andExpect(jsonPath("$.items[1].persistDateTime").value("2022-06-02T03:00:00"))
+                    .andExpect(jsonPath("$.items[0].persistDateTime").value("2022-06-01T03:00:00"));
 
     }
 
@@ -344,10 +345,10 @@ public class TestChatResourceController extends AbstractControllerTest {
         String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
 
         mockMvc.perform(
-                        post("/api/user/chat/group")
-                                .header(AUTHORIZATION, USER_TOKEN)
-                                .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
-                                .contentType(MediaType.APPLICATION_JSON))
+                post("/api/user/chat/group")
+                        .header(AUTHORIZATION, USER_TOKEN)
+                        .content(new ObjectMapper().writeValueAsString(createGroupChatDto))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest());
     }
@@ -427,6 +428,133 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
     }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/role.yml",
+            "dataset/ChatResourceController/users.yml",
+            "dataset/ChatResourceController/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createSingleChatDtoWithWrongUserId() throws Exception {
+
+        CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
+        createSingleChatDto.setUserRecipientId(1001L);
+        createSingleChatDto.setMessage(" ");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/single")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createSingleChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/role.yml",
+            "dataset/ChatResourceController/users.yml",
+            "dataset/ChatResourceController/messages.yml",
+            "dataset/ChatResourceController/singleChats.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createSingleChatDtoWithUserIdAndMessages() throws Exception {
+
+        CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
+        createSingleChatDto.setUserRecipientId(101L);
+        createSingleChatDto.setMessage("Hello101");
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/single")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createSingleChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        Assertions.assertNotNull(entityManager.createQuery("from SingleChat", SingleChat.class));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+            "dataset/ChatResourceController/GroupChat/chat.yml",
+            "dataset/ChatResourceController/GroupChat/groupChat.yml",
+            "dataset/ChatResourceController/GroupChat/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addUserToGroupChatUserDoesNotExist() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        mockMvc.perform(
+                post("/api/user/chat/group/101/join?userId=110")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+            "dataset/ChatResourceController/GroupChat/chat.yml",
+            "dataset/ChatResourceController/GroupChat/groupChat.yml",
+            "dataset/ChatResourceController/GroupChat/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addUserToGroupChatGroupChatDoesNotExist() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        mockMvc.perform(
+                        post("/api/user/chat/group/110/join?userId=101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+            "dataset/ChatResourceController/GroupChat/chat.yml",
+            "dataset/ChatResourceController/GroupChat/groupChat.yml",
+            "dataset/ChatResourceController/GroupChat/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addUserToGroupChatUserExistsAndGroupChatExists() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        mockMvc.perform(
+                        post("/api/user/chat/group/101/join?userId=101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        Assertions.assertEquals(BigInteger.valueOf(101), entityManager.createNativeQuery("select user_id from groupchat_has_users where chat_id = 101").getSingleResult());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/GroupChat/role.yml",
+            "dataset/ChatResourceController/GroupChat/users.yml",
+            "dataset/ChatResourceController/GroupChat/chat.yml",
+            "dataset/ChatResourceController/GroupChat/groupChat.yml",
+            "dataset/ChatResourceController/GroupChat/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void addUserToGroupChatUserAlreadyAddedToGroupChat() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        mockMvc.perform(
+                        post("/api/user/chat/group/101/join?userId=101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+
+        mockMvc.perform(
+                        post("/api/user/chat/group/101/join?userId=101")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
 
     @Test
     @DataSet(value = {
