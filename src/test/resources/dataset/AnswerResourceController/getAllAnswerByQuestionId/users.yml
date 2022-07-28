@@ -1,0 +1,70 @@
+role:
+  - id: 100
+    name: "ROLE_ADMIN"
+  - id: 101
+    name: "ROLE_USER"
+user_entity:
+#  - id: 102
+#    full_name: "ADMIN"
+#    password: "$2a$10$Xb1oUBYItmnOu5RsXOwzZ.5ECR9gXlUFQ7qwIs7exAidDvXxs970G"
+#    persist_date: "2021-12-09"
+#    last_redaction_date: "2021-12-09"
+#    email: "admin@mail.ru"
+#    about: "about1"
+#    city: "city"
+#    link_site: "site"
+#    link_github: "github"
+#    link_vk: "vk"
+#    is_enabled: 1
+#    is_deleted: false
+#    image_link: "image"
+#    nickname: "ADM"
+#    role_id: 101
+  - id: 101
+    full_name: "USER"
+    password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
+    persist_date: "2021-12-09"
+    last_redaction_date: "2021-12-09"
+    email: "user@mail.ru"
+    about: "about1"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR"
+    role_id: 101
+  - id: 102
+    full_name: "USER"
+    password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
+    persist_date: "2021-12-09"
+    last_redaction_date: "2021-12-09"
+    email: "user2@mail.ru"
+    about: "about1"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR"
+    role_id: 101
+  - id: 103
+    full_name: "USER"
+    password: "$2a$10$t23DKH6ME2VrAKAvjTURKuF4/9fjiorE9kwg2SZ0yiwmiwIIv7/zm"
+    persist_date: "2021-12-09"
+    last_redaction_date: "2021-12-09"
+    email: "user3@mail.ru"
+    about: "about1"
+    city: "city"
+    link_site: "site"
+    link_github: "github"
+    link_vk: "vk"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image"
+    nickname: "USR"
+    role_id: 101

@@ -79,7 +79,6 @@ public class AnswerResourceController {
     })
     public ResponseEntity<?> getAllAnswerByQuestionId(@PathVariable("questionId") Long id) {
         return new ResponseEntity<>(answerDtoService.getAllAnswersByQuestionId(id), HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{questionId}/answer/{answerId}")
