@@ -1,0 +1,79 @@
+message:
+  - id: 1
+    last_redaction_date: 2022-07-01 02:00:00
+    message: "Hello users in group chat 1, from user number 1"
+    persist_date: 2022-07-01 02:00:00
+    chat_id: 1
+    user_sender_id: 1
+  - id: 2
+    last_redaction_date: 2022-07-01 03:30:00
+    message: "Hello users in group chat 1, from user number 2"
+    persist_date: 2022-07-01 03:30:00
+    chat_id: 1
+    user_sender_id: 2
+  - id: 3
+    last_redaction_date: 2022-07-01 04:55:21
+    message: "Hello users in group chat 1, from user number 3"
+    persist_date: 2022-07-01 04:55:21
+    chat_id: 1
+    user_sender_id: 3
+  - id: 4
+    last_redaction_date: 2021-12-01 00:00:00
+    message: "Hello users in group chat 2, from user number 3"
+    persist_date: 2021-12-01 00:00:00
+    chat_id: 2
+    user_sender_id: 3
+  - id: 5
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello users in group chat 2, from user number 4"
+    persist_date: 2021-12-02 00:00:00
+    chat_id: 2
+    user_sender_id: 4
+  - id: 6
+    last_redaction_date: 2021-12-07 00:00:00
+    message: "Hello users in group chat 2, from user number 5"
+    persist_date: 2021-12-03 00:00:00
+    chat_id: 2
+    user_sender_id: 5
+  - id: 7
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user 2 in single chat number 3"
+    persist_date: 2022-07-04 17:31:35
+    chat_id: 3
+    user_sender_id: 1
+  - id: 8
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user 1 in single chat number 3"
+    persist_date: 2022-07-04 17:40:30
+    chat_id: 3
+    user_sender_id: 2
+  - id: 9
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user 2 in single chat number 4"
+    persist_date: 2021-12-04 00:00:00
+    chat_id: 4
+    user_sender_id: 4
+  - id: 10
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello user 2 in single chat number 4"
+    persist_date: 2021-12-05 02:00:00
+    chat_id: 4
+    user_sender_id: 3
+  - id: 11
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello users in group chat 5, from user number 2"
+    persist_date: 2022-07-03 14:00:00
+    chat_id: 5
+    user_sender_id: 2
+  - id: 12
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello users in group chat 5, from user number 3"
+    persist_date: 2022-07-04 12:00:00
+    chat_id: 5
+    user_sender_id: 3
+  - id: 13
+    last_redaction_date: 2021-12-06 00:00:00
+    message: "Hello users in group chat 5, from user number 5"
+    persist_date: 2022-07-05 17:00:00
+    chat_id: 5
+    user_sender_id: 5

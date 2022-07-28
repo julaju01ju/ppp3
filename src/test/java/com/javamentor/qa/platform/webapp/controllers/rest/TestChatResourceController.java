@@ -555,4 +555,129 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true )
+    public void getFindChatWithValidParametersInSingleAndGroupChatByTitle() throws Exception {
+
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
+
+        mockMvc.perform(
+                        get("/api/user/chat/?findMessage=chat")
+                                .header(AUTHORIZATION, USER_TOKEN))
+
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(3))
+                .andExpect(jsonPath("$[0].name").value("Some single chat 1"))
+                .andExpect(jsonPath("$[0].image").value("link102"))
+                .andExpect(jsonPath("$[0].lastMessage").value("Hello user 1 in single chat number 3"))
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-04T20:40:30"))
+
+                .andExpect(jsonPath("$[1].id").value(1))
+                .andExpect(jsonPath("$[1].name").value("Some group chat 1"))
+                .andExpect(jsonPath("$[1].image").value("Some image in Group chat 1"))
+                .andExpect(jsonPath("$[1].lastMessage").value("Hello users in group chat 1, from user number 3"))
+                .andExpect(jsonPath("$[1].persistDateTimeLastMessage").value("2022-07-01T07:55:21"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getFindChatWithValidParametersUserHasOnlySingleChat() throws Exception {
+        String USER_TOKEN = super.getToken("user4@mail.ru", "pass4");
+
+        mockMvc.perform(
+                get("/api/user/chat/?findMessage=chat")
+                        .header(AUTHORIZATION, USER_TOKEN))
+        .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(4))
+                .andExpect(jsonPath("$[0].name").value("Some single chat 2"))
+                .andExpect(jsonPath("$[0].image").value("link103"))
+                .andExpect(jsonPath("$[0].lastMessage").value("Hello user 2 in single chat number 4"))
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2021-12-05T05:00:00"));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+
+    public void getFindChatWithValidParametersUserHasOnlyGroupChat() throws Exception{
+        String USER_TOKEN = super.getToken("user5@mail.ru", "pass5");
+
+        mockMvc.perform(
+                        get("/api/user/chat/?findMessage=chat")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(5))
+                .andExpect(jsonPath("$[0].name").value("Some group chat 5"))
+                .andExpect(jsonPath("$[0].image").value("Some image in group Chat 5"))
+                .andExpect(jsonPath("$[0].lastMessage").value("Hello users in group chat 5, from user number 5"))
+                .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T20:00:00"));
+    }
+
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+
+    public void getFindStringWithoutParametersInSingleAndGroupChat() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
+
+        mockMvc.perform(
+                        get("/api/user/chat")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+
+    public void getFindStringWithIncorrectParameters() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
+
+        mockMvc.perform(
+                        get("/api/user/chat/?findMessage=153")
+                                .header(AUTHORIZATION, USER_TOKEN)).andDo(print())
+                .andExpect(status().isOk());
+
+    }
 }

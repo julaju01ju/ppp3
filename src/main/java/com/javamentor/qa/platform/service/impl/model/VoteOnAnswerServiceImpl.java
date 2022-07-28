@@ -1,14 +1,8 @@
 package com.javamentor.qa.platform.service.impl.model;
 
-import com.javamentor.qa.platform.dao.abstracts.model.AnswerDao;
 import com.javamentor.qa.platform.dao.abstracts.model.ReputationDao;
 import com.javamentor.qa.platform.dao.abstracts.model.VoteOnAnswerDao;
-import com.javamentor.qa.platform.exception.VoteException;
-import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
-import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
-import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
-import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.models.entity.user.reputation.Reputation;
 import com.javamentor.qa.platform.models.entity.user.reputation.ReputationType;
 import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
@@ -16,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static com.javamentor.qa.platform.models.entity.question.answer.VoteType.UP_VOTE;
 
 @Service
 @Transactional

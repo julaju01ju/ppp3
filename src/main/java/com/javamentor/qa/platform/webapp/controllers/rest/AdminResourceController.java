@@ -7,7 +7,6 @@ import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.model.UserServiceImpl;
-import com.javamentor.qa.platform.webapp.converters.AnswerConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
