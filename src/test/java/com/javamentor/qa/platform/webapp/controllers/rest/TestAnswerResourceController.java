@@ -263,7 +263,7 @@ public class TestAnswerResourceController
                 .andDo(print())
                 .andExpect(status().isOk());
                 Assertions.assertEquals(String.valueOf(answerCreateDto.getBody()), entityManager.createQuery("select a.htmlBody from Answer as a " +
-                        "where a.htmlBody = 'Some text from the test'").getSingleResult());
+                        "where a.htmlBody = :text ").setParameter("text", answerCreateDto.getBody()).getSingleResult());
     }
 
     @Test
