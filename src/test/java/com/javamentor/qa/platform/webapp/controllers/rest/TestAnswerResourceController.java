@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import javax.persistence.EntityManager;
+import java.math.BigInteger;
+
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,13 +27,13 @@ public class TestAnswerResourceController
 
     @Test
     @DataSet(value = {
-            "dataset/AnswerResourceController/users.yml",
-            "dataset/AnswerResourceController/answers.yml",
-            "dataset/AnswerResourceController/questions.yml",
-            "dataset/AnswerResourceController/reputations.yml",
-            "dataset/AnswerResourceController/answervote.yml",
-            "dataset/AnswerResourceController/comment.yml",
-            "dataset/AnswerResourceController/comment_answer.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/users.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/answers.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/questions.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/reputations.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/answervote.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/comment.yml",
+            "dataset/AnswerResourceController/getAllAnswerByQuestionId/comment_answer.yml"
     },  disableConstraints = true, cleanBefore = true)
     public void getAllAnswerDtosByQustionId() throws Exception {
 
@@ -52,13 +54,22 @@ public class TestAnswerResourceController
                 .andExpect(jsonPath("$[0].image").value("image"))
                 .andExpect(jsonPath("$[0].nickName").value("USR"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto.length()").value(3))
-                .andExpect(jsonPath("$[1].listOfComeentsDto.length()").value(2))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].id").value(103))
-                .andExpect(jsonPath("$[0].listOfComeentsDto[0].dateAdded").value("2021-12-09T09:00:00"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[0].dateAdded").value("2021-12-09T03:00:00"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].comment").value("FirstComment"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].fullName").value("USER"))
                 .andExpect(jsonPath("$[0].listOfComeentsDto[0].reputation").value(102))
-                .andExpect(jsonPath("$[1].listOfComeentsDto[0].id").value(105));
+                .andExpect(jsonPath("$[0].listOfComeentsDto[1].id").value(102))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[1].dateAdded").value("2021-12-07T03:00:00"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[1].comment").value("FirstComment"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[1].fullName").value("USER"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[1].reputation").value(102))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[2].id").value(101))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[2].dateAdded").value("2021-12-06T03:00:00"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[2].comment").value("FirstComment"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[2].fullName").value("USER"))
+                .andExpect(jsonPath("$[0].listOfComeentsDto[2].reputation").value(102));
+
 
     }
 
@@ -210,7 +221,7 @@ public class TestAnswerResourceController
                         post("/api/user/question/102/answer/102/downVote")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.content().string("1"))
+                .andExpect(MockMvcResultMatchers.content().string("-1"))
                 .andExpect(status().isOk());
         Assertions.assertNotNull(entityManager.createQuery("SELECT va FROM VoteAnswer va WHERE va.answer.id =:answerId AND va.user.id =: userId", VoteAnswer.class)
                 .setParameter("answerId", 102L)
@@ -236,33 +247,23 @@ public class TestAnswerResourceController
 
     @Test
     @DataSet(value = {
-            "dataset/AnswerResourceController/users.yml",
-            "dataset/AnswerResourceController/answers.yml",
-            "dataset/AnswerResourceController/questions.yml",
+            "dataset/AnswerResourceController/addAnswerByQuestionId/users.yml",
+            "dataset/AnswerResourceController/addAnswerByQuestionId/answers.yml",
+            "dataset/AnswerResourceController/addAnswerByQuestionId/questions.yml"
     }, disableConstraints = true, cleanBefore = true )
     public void checkAddAnswerByQuestionId() throws Exception{
-
-        String USER_TOKEN = super.getToken("user@mail.ru","USER");
-        AnswerCreateDto answerCreateDto = new AnswerCreateDto("Лучший совет-перезагрузка!");
-
+        String USER_TOKEN = super.getToken("user2@mail.ru","pass2");
+        AnswerCreateDto answerCreateDto = new AnswerCreateDto("Some text from the test");
         mockMvc.perform(
-                        post("/api/user/question/103/answer/add")
+                        post("/api/user/question/22/answer/add")
                                 .content(new ObjectMapper().writeValueAsString(answerCreateDto))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .header(AUTHORIZATION, USER_TOKEN)
                                 )
                 .andDo(print())
                 .andExpect(status().isOk());
-
-        mockMvc.perform(
-                        get("/api/user/question/103/answer")
-                                .header(AUTHORIZATION, USER_TOKEN))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].questionId").value(103))
-                .andExpect(jsonPath("$[0].userId").value(101));
-
+                Assertions.assertEquals(String.valueOf(answerCreateDto.getBody()), entityManager.createQuery("select a.htmlBody from Answer as a " +
+                        "where a.htmlBody = :text ").setParameter("text", answerCreateDto.getBody()).getSingleResult());
     }
 
     @Test

@@ -4,7 +4,10 @@ import com.javamentor.qa.platform.models.dto.AnswerDto;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
+
+
+
+
 
 @Mapper(componentModel = "spring")
 public abstract class AnswerConverter {
