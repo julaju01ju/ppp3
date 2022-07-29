@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.service.impl.model;
 
-import com.javamentor.qa.platform.dao.abstracts.model.ReadWriteDao;
 import com.javamentor.qa.platform.dao.abstracts.model.UserDao;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service

@@ -3,8 +3,6 @@ package com.javamentor.qa.platform.dao.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.GroupChatDtoDao;
 import com.javamentor.qa.platform.dao.util.SingleResultUtil;
 import com.javamentor.qa.platform.models.dto.GroupChatDto;
-import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

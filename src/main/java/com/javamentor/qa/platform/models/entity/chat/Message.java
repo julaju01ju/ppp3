@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.models.entity.chat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

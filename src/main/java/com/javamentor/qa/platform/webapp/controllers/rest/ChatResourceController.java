@@ -1,5 +1,6 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
+import com.javamentor.qa.platform.models.dto.ChatDto;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
@@ -11,6 +12,7 @@ import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.chat.Message;
 import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import com.javamentor.qa.platform.models.entity.user.User;
+import com.javamentor.qa.platform.service.abstracts.dto.ChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +62,7 @@ public class ChatResourceController {
     private final GroupChatService groupChatService;
     private final MessageService messageService;
     private final SingleChatConverter singleChatConverter;
+    private final ChatDtoService findChatByStringDtoService;
 
     @Autowired
     public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, MessageService messageService, SingleChatConverter singleChatConverter) {
@@ -66,6 +70,7 @@ public class ChatResourceController {
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
+        this.findChatByStringDtoService = findChatByStringDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
         this.messageService = messageService;
@@ -146,6 +151,18 @@ public class ChatResourceController {
 
         return new ResponseEntity<>(messageDtoService.getPageDto(
                 "paginationAllMessagesSortedByPersistDate", params), HttpStatus.OK);
+    }
+    @GetMapping
+    @ApiOperation("Возвращает сообщения в Single и Group чатам по заданному параметру")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Выполнен поиск по заданной строке!"),
+            @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр поиска!"),
+            @ApiResponse(code = 500, message = "По данному запросу ничего не было найдено")
+    })
+    public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
+            @RequestParam(value = "findMessage") String findMessages) {
+        Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(userId, findMessages), HttpStatus.OK);
     }
 
     @PostMapping("/group")
