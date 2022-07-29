@@ -454,7 +454,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -482,7 +482,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -510,7 +510,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -533,7 +533,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -562,7 +562,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -591,7 +591,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -616,7 +616,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -654,7 +654,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -688,7 +688,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -731,7 +731,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -777,7 +777,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {"dataset/QuestionResourceController/role.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
             "dataset/QuestionResourceController/user_entity.yml",
             "dataset/QuestionResourceController/tag.yml"
     },
@@ -970,14 +970,15 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
-            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"
     },
-            disableConstraints = true, transactional = true)
+            disableConstraints = true, cleanBefore = true)
 
     public void postUpVoteQuestion() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(
                         post("/api/user/question/101/upVote")
@@ -991,14 +992,15 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
-            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"
     },
-            disableConstraints = true, transactional = true)
+            disableConstraints = true, cleanBefore = true)
 
     public void postDownVoteQuestion() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(
                         post("/api/user/question/101/downVote")
@@ -1012,14 +1014,15 @@ public class TestQuestionResourceController extends AbstractControllerTest {
 
     @Test
     @DataSet(value = {"dataset/QuestionResourceController/typesOfVote.yml",
-            "dataset/QuestionResourceController/user.yml",
+            "dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml"
     },
             disableConstraints = true, cleanBefore = true)
 
     public void postWrongIdQuestion() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(
                         post("/api/user/question/333/downVote")
@@ -1029,16 +1032,16 @@ public class TestQuestionResourceController extends AbstractControllerTest {
     }
 
     @Test
-    @DataSet(value = {
-            "dataset/QuestionResourceController/user.yml",
+    @DataSet(value = {"dataset/QuestionResourceController/roles.yml",
+            "dataset/QuestionResourceController/users.yml",
             "dataset/QuestionResourceController/voteQuestionApi.yml",
-            "dataset/QuestionResourceController/votes_on_questions.yml"
+            "dataset/QuestionResourceController/votes_on_questions.yml",
     },
             disableConstraints = true, cleanBefore = true)
 
     public void repeatVotingForQuestion() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("SomeEmail@mail.mail", "someHardPassword");
 
         mockMvc.perform(
                         post("/api/user/question/100/downVote")
@@ -1862,7 +1865,7 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
-    })
+    }, cleanBefore = true)
     public void addCommentByQuestionIdNotFound() throws Exception {
         String USER_TOKEN = getToken("privet@mail.ru", "USER");
 
@@ -1879,7 +1882,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
             "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
-    })
+            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+    }, disableConstraints = true, cleanBefore = true)
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = getToken("privet@mail.ru", "USER");
 
