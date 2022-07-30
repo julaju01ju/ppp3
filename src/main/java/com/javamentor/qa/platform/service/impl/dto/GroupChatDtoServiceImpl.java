@@ -5,6 +5,8 @@ import com.javamentor.qa.platform.models.dto.GroupChatDto;
 import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
