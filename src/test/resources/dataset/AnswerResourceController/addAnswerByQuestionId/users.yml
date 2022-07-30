@@ -1,0 +1,52 @@
+role:
+- id: 101
+  name: "ROLE_USER"
+user_entity:
+  - id: 21
+    full_name: "USER1"
+    password: "$2a$12$LD7SpAlxB.1NhlYagVg6/eu1FBkWG6lxVhGTSOoowgyjjPEJfxTEG"
+    persist_date: "2022-07-29"
+    last_redaction_date: "2022-07-29"
+    email: "user1@mail.ru"
+    about: "about1"
+    city: "city1"
+    link_site: "site1"
+    link_github: "github1"
+    link_vk: "vk1"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image1"
+    nickname: "USR1"
+    role_id: 101
+  - id: 22
+    full_name: "USER2"
+    password: "$2a$12$qOSPM1UcA8XQXJiHBfbq6.Gxeom8NFUiCW233Kxl3V5o71GtGKkt."
+    persist_date: "2022-07-29"
+    last_redaction_date: "2022-07-29"
+    email: "user2@mail.ru"
+    about: "about2"
+    city: "city2"
+    link_site: "site2"
+    link_github: "github2"
+    link_vk: "vk2"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image2"
+    nickname: "USR2"
+    role_id: 101
+  - id: 23
+    full_name: "USER3"
+    password: "$2a$12$6nRAkegmdIvDFdqcLUSV.eC0cL6RLhfnoPom24wo8oLFjP84zwvje"
+    persist_date: "2022-07-29"
+    last_redaction_date: "2022-07-29"
+    email: "user3@mail.ru"
+    about: "about3"
+    city: "city3"
+    link_site: "site3"
+    link_github: "github3"
+    link_vk: "vk3"
+    is_enabled: 1
+    is_deleted: false
+    image_link: "image3"
+    nickname: "USR3"
+    role_id: 101
