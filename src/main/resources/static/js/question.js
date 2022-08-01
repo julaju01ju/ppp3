@@ -4,8 +4,8 @@ const sendAnswer = document.querySelector('#handleQuestion');
 $(document).ready(async function () {
 
     await questionFilling();
-    fillQuestionComments();
     await answersFilling();
+
 })
 
 function questionFilling(){
@@ -26,7 +26,7 @@ function questionFilling(){
                     "Измените номер вопроса или обновите страницу через 2 минуты.";
             } else {
                 response.json().then(data => {
-                    document.querySelector('#question-title').textContent = data.title;
+                    document.querySelector('#question-title').textContent = 'asd';
                     document.querySelector('#question-body p').textContent = data.description;
                     document.querySelector('#question-persist-date').textContent =
                         "Дата создания: " + getDateFromDateTime(data.persistDateTime);
@@ -35,7 +35,10 @@ function questionFilling(){
                     document.querySelector('#question-view-count').textContent =
                         "Просмотров: " + data.viewCount;
                     document.querySelector('#countVote').innerHTML = votesNumber(data.countValuable);
-
+                    const commentContainer = document.querySelector('#questionComments');
+                    data.listCommentDto.forEach((comment) => {
+                        commentContainer.appendChild( createQuestionComment(comment))
+                    })
                     let text = "";
                     data.listTagDto.forEach(tag => {
                         text += '<li className = "text-start list-inline-item">' +
@@ -45,6 +48,7 @@ function questionFilling(){
                                     '</a>'+
                                 '</li>';
                     })
+
                     document.querySelector('#tag-list').innerHTML = text;
                     document.querySelector('#users-info').innerHTML =
 '                                    <div class="row">\n' +
@@ -235,13 +239,11 @@ function votesNumber(data) {
     return !data ? 0 : data;
 }
 
-function fillQuestionComments() {
-    //Дополнить после появления API для вывода комментариев
-    // Пример реализации в addCommentToQuestionPOST
-    // let ul = document.querySelector(answerId);
-    // let li = document.createElement("li");
-    // li.appendChild(document.createTextNode("Text"));
-    // ul.appendChild(li);
+function createQuestionComment(data) {
+    let li = document.createElement("li");
+    li.appendChild(document.createTextNode(`${data.comment} - ${data.fullName} ${new Date(data.dateAdded).toLocaleString()}`));
+    li.setAttribute("id", "comment-" + data.id);
+    return li;
 }
 
 function fillCommentsToAnswer(answerId){
@@ -286,7 +288,7 @@ function addCommentToQuestionPOST() {
                 'Authorization': 'Bearer ' + getCookie('token'),
                 'Accept': 'application/json', 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(bodytext)
+            body: bodytext
         }).then(response => {
             if (response.status != 200) {
                 if (response.status === 400) {
@@ -297,10 +299,7 @@ function addCommentToQuestionPOST() {
             } else {
                 response.json().then(data => {
                     let ul = document.querySelector("#questionComments");
-                    let li = document.createElement("li");
-                    li.appendChild(document.createTextNode(data.comment));
-                    li.setAttribute("id", "comment-" + data.id);
-                    ul.appendChild(li);
+                    ul.appendChild(createQuestionComment(data));
                 })
             }
         })
