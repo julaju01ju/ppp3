@@ -440,6 +440,27 @@ public class TestChatResourceController extends AbstractControllerTest {
 
         CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
         createSingleChatDto.setUserRecipientId(1001L);
+
+        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+
+        mockMvc.perform(
+                        post("/api/user/chat/single")
+                                .header(AUTHORIZATION, USER_TOKEN)
+                                .content(new ObjectMapper().writeValueAsString(createSingleChatDto))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/role.yml",
+            "dataset/ChatResourceController/users.yml",
+            "dataset/ChatResourceController/messages.yml",
+    }, disableConstraints = true, cleanBefore = true)
+    public void createSingleChatDtoWithEmptyMessage() throws Exception {
+
+        CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
         createSingleChatDto.setMessage(" ");
 
         String USER_TOKEN = super.getToken("user@mail.ru", "USER");
@@ -452,6 +473,7 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest());
     }
+
 
 
     @Test

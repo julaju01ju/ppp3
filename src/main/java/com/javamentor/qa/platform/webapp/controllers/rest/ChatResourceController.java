@@ -191,19 +191,20 @@ public class ChatResourceController {
             @ApiResponse(code = 200, message = "SingleChat добавлен"),
             @ApiResponse(code = 400, message = "SingleChat не был добавлен")
     })
-    public ResponseEntity<?> addSingleChat(@Valid @RequestBody CreateSingleChatDto createSingleChatDto, @RequestParam(name = "message", required=false)  String message){
-        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+    public ResponseEntity<?> addSingleChat(@Valid @RequestBody CreateSingleChatDto createSingleChatDto){
+        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        Optional<User> user = userService.getById(createSingleChatDto.getUserRecipientId());
+        if(user.isEmpty()) {
+            return ResponseEntity.badRequest().body("UserRecipientId doesn't exist");
+        }
 
-        createSingleChatDto.setUserSenderId(user.getId());
-        SingleChat singleChat = singleChatConverter.createSingleChatDtoToSingleChat(createSingleChatDto);
+        SingleChat singleChat = new SingleChat();
+        singleChat.setUserOne(sender);
+        singleChat.setUseTwo(user.get());
         singleChatService.persist(singleChat);
-        messageService.persist(new Message(message, user, singleChat.getChat()));
-        Map<String, String> maps = new HashMap<>();
-        maps.put("message", message);
-        maps.put("userSender", user.getId().toString());
-        SingleChatDto singleChatDto = singleChatConverter.singleChatToSingleChatDto(singleChat);
-        singleChatDto.setLastMessage(message);
-        return new ResponseEntity<>("SingleChat чат успешно добавлен", HttpStatus.OK);
+        singleChatService.addSingleChatAndMessage(singleChat, createSingleChatDto.getMessage());
+        return new ResponseEntity<>("SingleChat чат успешно добавлен",HttpStatus.OK);
+
     }
 
 
