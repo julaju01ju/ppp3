@@ -19,12 +19,7 @@ public class SingleChatDaoImpl extends ReadWriteDaoImpl<SingleChat, Long> implem
     @Override
     public Optional<SingleChat> addSingleChatAndMessage(SingleChat singleChat, String message) {
         TypedQuery<SingleChat> query = entityManager.createQuery(
-                        "select sch from SingleChat sch" +
-                                " join Message m  on sch.id = m.chat.id " +
-                                "where sch.useTwo = :id " +
-                                "AND m.message = :message", SingleChat.class)
-                .setParameter("id", singleChat.getUseTwo())
-                .setParameter("message", message);
+                        "from SingleChat ", SingleChat.class);
         return SingleResultUtil.getSingleResultOrNull(query);
 
     }
