@@ -25,6 +25,9 @@ public class GroupChat{
     @Column(name = "is_global")
     private boolean isGlobal = false;
 
+    @Column(name = "title")
+    private String title;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @MapsId
     private Chat chat = new Chat(ChatType.GROUP);
@@ -63,6 +66,7 @@ public class GroupChat{
         return Objects.equals(id, groupChat.id) &&
                 Objects.equals(chat, groupChat.chat) &&
                 Objects.equals(users, groupChat.users) &&
+                Objects.equals(title, groupChat.title) &&
                 Objects.equals(imageChat, groupChat.imageChat);
     }
 

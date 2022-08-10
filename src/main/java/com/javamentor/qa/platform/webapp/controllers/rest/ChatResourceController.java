@@ -178,7 +178,7 @@ public class ChatResourceController {
         users.addAll(userService.getUsersByIds(createGroupChatDto.getUserIds()));
         groupChat.setUsers(users);
         Chat chat = new Chat(ChatType.GROUP);
-        chat.setTitle(createGroupChatDto.getChatName());
+        groupChat.setTitle(createGroupChatDto.getChatName());
         groupChat.setChat(chat);
         groupChatService.persist(groupChat);
         return new ResponseEntity<>("Групповой чат успешно добавлен", HttpStatus.OK);

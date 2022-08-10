@@ -355,7 +355,6 @@ public class TestDataInitService {
         for (long i = 1; i <= count; i++) {
             SingleChat singleChat = new SingleChat();
             Chat chat = new Chat(ChatType.SINGLE);
-            chat.setTitle("Some single chat " + i);
             singleChat.setChat(chat);
             User userOne = userService.getById(i).get();
             User userTwo = userService.getById(i+i).get();
@@ -375,7 +374,7 @@ public class TestDataInitService {
         for (long i = 1; i <= count; i++) {
             GroupChat groupChat = new GroupChat();
             Chat chat = new Chat(ChatType.GROUP);
-            chat.setTitle("Some group chat " + i);
+            groupChat.setTitle("Some group chat " + i);
             groupChat.setImageChat("Some group chat image " + i);
             Set<User> groupChatUsers = new HashSet<>();
             List<Message> messages = new ArrayList<>();
@@ -394,7 +393,7 @@ public class TestDataInitService {
     public void createGlobalGroupChat() {
         GroupChat groupChat = new GroupChat();
         Chat chat = new Chat(ChatType.GROUP);
-        chat.setTitle("Some global group chat");
+        groupChat.setTitle("Some global group chat");
         Set<User> groupChatUsers = new HashSet<>();
         List<Message> messages = new ArrayList<>();
         for (long k = 1; k < 5; k++) {

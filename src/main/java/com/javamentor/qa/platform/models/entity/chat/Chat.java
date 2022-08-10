@@ -23,9 +23,6 @@ public class Chat {
     @GeneratedValue(generator = "Chat_seq")
     private Long id;
 
-    @Column
-    private String title;
-
     @Column(name = "persist_date", updatable = false)
     @Type(type = "org.hibernate.type.LocalDateTimeType")
     @CreationTimestamp
@@ -45,12 +42,12 @@ public class Chat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Chat chat = (Chat) o;
-        return Objects.equals(id, chat.id) && Objects.equals(title, chat.title) &&
+        return Objects.equals(id, chat.id) &&
                 Objects.equals(persistDate, chat.persistDate) && chatType == chat.chatType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, persistDate, chatType);
+        return Objects.hash(id, persistDate, chatType);
     }
 }
