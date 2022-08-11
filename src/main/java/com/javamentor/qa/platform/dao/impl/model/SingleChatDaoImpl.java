@@ -13,14 +13,9 @@ import java.util.Optional;
 @Repository
 public class SingleChatDaoImpl extends ReadWriteDaoImpl<SingleChat, Long> implements SingleChatDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Override
     public Optional<SingleChat> addSingleChatAndMessage(SingleChat singleChat, String message) {
-        TypedQuery<SingleChat> query = entityManager.createQuery(
-                        "from SingleChat ", SingleChat.class);
-        return SingleResultUtil.getSingleResultOrNull(query);
+        return Optional.empty();
 
     }
 }
