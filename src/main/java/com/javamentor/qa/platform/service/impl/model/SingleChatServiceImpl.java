@@ -34,7 +34,6 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
 
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         messageService.persist(new Message(message, sender, singleChat.getChat()));
-
     }
 }
 
