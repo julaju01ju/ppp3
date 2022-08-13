@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long> implements SingleChatService {
@@ -26,14 +25,16 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
         super(singleChatDao);
         this.singleChatDao = singleChatDao;
         this.messageService = messageService;
+
     }
 
     @Override
     @Transactional
-    public Optional<SingleChat> addSingleChatAndMessage(SingleChat singleChat, String message) {
+    public void addSingleChatAndMessage(SingleChat singleChat, String message) {
+
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         messageService.persist(new Message(message, sender, singleChat.getChat()));
-        return singleChatDao.addSingleChatAndMessage(singleChat, message);
-    }
 
+    }
 }
+
