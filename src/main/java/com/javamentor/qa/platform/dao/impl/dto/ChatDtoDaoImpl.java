@@ -8,39 +8,50 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Map;
 
 
 @Repository
 public class ChatDtoDaoImpl implements ChatDtoDao {
 
-
     @PersistenceContext
     private EntityManager entityManager;
 
     public List<ChatDto> getChatByString(Long userId, String searchedString) {
+
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.ChatDto " +
                         "(ch.id, "+
-                        "ch.title, "+
+                        "case when ch.chatType = 1 then gc.title else " +
+                                "case when sc.userOne.id = :userId then (select u.fullName from User as u WHERE u.id = sc.useTwo.id) " +
+                                "else (select u.fullName from User as u WHERE u.id = sc.userOne.id) end " +
+                        "end, "+
                         "case " +
-                        "when ch.chatType=:chatTypeSingle then u.imageLink " +
-                        "else " +
-                        "(select gc.imageChat from GroupChat as gc where gc.id=ch.id)" +
+                            "when ch.chatType = :chatTypeSingle then u.imageLink " +
+                            "else " +
+                            "(select gc.imageChat from GroupChat as gc where gc.id = ch.id)" +
                         "end , "+
-                        "m.message, "+
-                        "m.persistDate) "+
-                        "from Chat  as ch " +
+                        "m.message, m.persistDate) "+
+                        "from Chat as ch " +
                         "join Message as m  on ch.id = m.chat.id " +
-                        "left join GroupChat as gc on m.chat.id=gc.chat.id " +
+                        "left join GroupChat as gc on m.chat.id = gc.chat.id " +
+                        "left join SingleChat as sc on m.chat.id = sc.chat.id " +
                         "left join User as u on m.userSender.id = u.id "+
-                        "where upper(ch.title) like upper(:searchString) and "+
-                        "(ch.id in(select sc.chat.id from SingleChat as sc " +
-                        "where sc.userOne.id= :userId or sc.useTwo = :userId) " +
+                        "where " +
+                        "(upper(gc.title) like upper(:searchString) " +
                         "or " +
-                        "ch.id in (select g.id  from  GroupChat as g " +
-                        "join g.users as ghu on ghu.id = :userId)) and " +
-                        "m.persistDate = (select max(mes.persistDate) from Message as mes where mes.chat.id=ch.id) " +
-                        "order by m.persistDate desc ", ChatDto.class)
+                        "(ch.id in(select sc.chat.id from SingleChat sc where " +
+                        "case " +
+                            "when sc.userOne.id = :userId " +
+                            "then upper(sc.userOne.fullName) " +
+                            "else upper(sc.useTwo.fullName) end like upper(:searchString)))) " +
+                        "and " +
+                        "((sc.userOne = :userId or sc.useTwo = :userId)" +
+                        "or " +
+                        "ch.id in (select g.id from GroupChat as g " +
+                            "join g.users as ghu on ghu.id = :userId)) " +
+                        "and " +
+                        "m.persistDate = (select max(mes.persistDate) from Message as mes where mes.chat.id = ch.id) " +
+                        "order by m.persistDate desc", ChatDto.class)
+
                 .setParameter("searchString", "%" + searchedString + "%")
                 .setParameter("userId", userId)
                 .setParameter("chatTypeSingle", ChatType.SINGLE)

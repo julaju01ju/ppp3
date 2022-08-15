@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -366,7 +368,14 @@ public class TestDataInitService {
             List<Message> saveMessages = new ArrayList<>();
             saveMessages.add(messageUserOne);
             saveMessages.add(messageUserTwo);
-            messageService.persistAll(saveMessages);
+            for (Message message : saveMessages){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                messageService.persist(message);
+            }
         }
     }
 
@@ -386,7 +395,14 @@ public class TestDataInitService {
             groupChat.setChat(chat);
             groupChat.setUsers(groupChatUsers);
             groupChatService.persist(groupChat);
-            messageService.persistAll(messages);
+            for (Message message : messages){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                messageService.persist(message);
+            }
         }
     }
 
@@ -405,7 +421,15 @@ public class TestDataInitService {
         groupChat.setUsers(groupChatUsers);
         groupChat.setGlobal(true);
         groupChatService.persist(groupChat);
-        messageService.persistAll(messages);
+
+        for (Message message : messages){
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            messageService.persist(message);
+        }
 
     }
 
