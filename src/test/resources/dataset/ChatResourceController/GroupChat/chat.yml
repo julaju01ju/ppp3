@@ -2,8 +2,6 @@ chat:
   - id: 101
     chat_type: 1
     persist_date: 2022-06-13 00:00:00
-    title: "Some group chat 1"
   - id: 102
     chat_type: 1
     persist_date: 2022-06-13 00:00:00
-    title: "Some group chat 2"
