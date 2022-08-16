@@ -9,13 +9,10 @@ import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -396,11 +393,6 @@ public class TestDataInitService {
             groupChat.setUsers(groupChatUsers);
             groupChatService.persist(groupChat);
             for (Message message : messages){
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
                 messageService.persist(message);
             }
         }
@@ -423,11 +415,6 @@ public class TestDataInitService {
         groupChatService.persist(groupChat);
 
         for (Message message : messages){
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             messageService.persist(message);
         }
 
