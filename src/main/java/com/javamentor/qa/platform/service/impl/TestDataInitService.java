@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.models.entity.question.*;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
+import com.javamentor.qa.platform.models.entity.user.MessageStar;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.*;
@@ -51,6 +52,7 @@ public class TestDataInitService {
     private MessageService messageService;
 
     private QuestionViewedService questionViewedService;
+    private MessageStarService messageStarService;
     public TestDataInitService() {
     }
 
@@ -71,7 +73,8 @@ public class TestDataInitService {
             @Lazy GroupChatService groupChatService,
             @Lazy SingleChatService singleChatService,
             @Lazy QuestionViewedService questionViewedService,
-            @Lazy MessageService messageService) {
+            @Lazy MessageService messageService,
+            @Lazy MessageStarService messageStarService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -88,6 +91,7 @@ public class TestDataInitService {
         this.singleChatService = singleChatService;
         this.messageService = messageService;
         this.questionViewedService = questionViewedService;
+        this.messageStarService = messageStarService;
     }
 
     public void createRole() {
@@ -420,6 +424,28 @@ public class TestDataInitService {
 
     }
 
+    public void createMessageStar(long count){
+        for (int i = 1; i < count; i++) {
+            Random r = new Random();
+            int random =r.nextInt(3 - 1 + 1) + 1;
+
+            for (int k = 1; k <= random; k++){
+                int messageRandom =r.nextInt(19 - 1 + 1) + 1;
+                long chatId = messageService.getAll().get(messageRandom).getChat().getId();
+                if(Long.parseLong(String.valueOf(messageStarService.isUserHasNoMoreThanThreeMessageStar(userService.getAll().get(i).getId()))) < 3 &&
+                        Long.parseLong(String.valueOf(messageStarService.isChatHasUser(chatId,userService.getAll().get(i).getId()))) > 0){
+                    MessageStar messageStar = new MessageStar();
+                    messageStar.setPersistDateTime(LocalDateTime.of(2022, 8, 18, 23, 12));
+                    messageStar.setUser(userService.getAll().get(i));
+                    messageStar.setMessage(messageService.getAll().get(messageRandom));
+                    messageStarService.persist(messageStar);
+                }
+            }
+        }
+    }
+
+
+
     public void init() {
         createRole();
         createAdmin(0);
@@ -436,5 +462,6 @@ public class TestDataInitService {
         createGroupChat(2);
         createGlobalGroupChat();
         createQuestionViewed(50);
+        createMessageStar(50);
     }
 }
