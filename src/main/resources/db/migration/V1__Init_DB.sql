@@ -16,7 +16,7 @@ create sequence user_seq start 1 increment 1;
 create sequence user_badges_seq start 1 increment 1;
 create sequence user_favorite_question_seq start 1 increment 1;
 create sequence vote_question_seq start 1 increment 1;
-create sequence message_star_seq start 1 increment 1;
+
 
 create table answer (
                         id int8 not null,
@@ -232,13 +232,7 @@ create table votes_on_questions (
                                     primary key (id)
 );
 
-create table message_star (
-                              id int8 not null,
-                              persist_date timestamp not null,
-                              message_id int8 not null,
-                              user_id int8 not null,
-                              primary key (id)
-);
+
 
 alter table answer
     add constraint answer_question_fk
@@ -445,12 +439,3 @@ alter table votes_on_questions
         foreign key (user_id)
             references user_entity;
 
-alter table message_star
-    add constraint message_star_message_fk
-        foreign key (message_id)
-            references question;
-
-alter table message_star
-    add constraint message_star_user_fk
-        foreign key (user_id)
-            references user_entity;

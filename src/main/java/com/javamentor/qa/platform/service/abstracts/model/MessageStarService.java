@@ -6,8 +6,8 @@ public interface MessageStarService extends ReadWriteService<MessageStar, Long>{
 
 
 
-    Object isChatHasUser(long chatId, long userId);
+    boolean isChatHasUser(long chatId, long userId);
 
-    Object isUserHasNoMoreThanThreeMessageStar(long userId);
+    boolean isUserHasNoMoreThanThreeMessageStar(long userId);
 
 }

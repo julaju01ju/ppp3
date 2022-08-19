@@ -23,24 +23,24 @@ public class MessageStarDaoImpl extends ReadWriteDaoImpl<MessageStar, Long> impl
 
 //    проверяет состоит ли юзер в чате, проверка проходит через группу groupchat_has_user
     @Override
-    public Object isChatHasUser(long chatId, long userId) {
+    public boolean isChatHasUser(long chatId, long userId) {
 
-        Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM groupchat_has_users WHERE chat_id = :chatId AND  user_id = :userId")
+        Query query = entityManager.createNativeQuery("SELECT chat_id FROM groupchat_has_users WHERE chat_id = :chatId AND  user_id = :userId")
                 .setParameter("userId", userId).setParameter("chatId", chatId);
 
-        return query.getSingleResult();
+        return query.getResultList().size() > 0;
     }
 
 //    проверяет не больше ли трех избранных сообщений у юзера
     @Override
-    public Object isUserHasNoMoreThanThreeMessageStar(long userId) {
+    public boolean isUserHasNoMoreThanThreeMessageStar(long userId) {
 
 
         Query query = entityManager.createNativeQuery("SELECT COUNT(*) FROM message_star WHERE user_id = :userId")
                 .setParameter("userId", userId);
 
 
-        return query.getSingleResult();
+        return Integer.parseInt(String.valueOf(query.getSingleResult())) < 3;
     }
 
 

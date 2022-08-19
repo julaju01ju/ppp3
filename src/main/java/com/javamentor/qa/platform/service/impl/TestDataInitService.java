@@ -432,8 +432,8 @@ public class TestDataInitService {
             for (int k = 1; k <= random; k++){
                 int messageRandom =r.nextInt(19 - 1 + 1) + 1;
                 long chatId = messageService.getAll().get(messageRandom).getChat().getId();
-                if(Long.parseLong(String.valueOf(messageStarService.isUserHasNoMoreThanThreeMessageStar(userService.getAll().get(i).getId()))) < 3 &&
-                        Long.parseLong(String.valueOf(messageStarService.isChatHasUser(chatId,userService.getAll().get(i).getId()))) > 0){
+                if(messageStarService.isUserHasNoMoreThanThreeMessageStar(userService.getAll().get(i).getId())  &&
+                        messageStarService.isChatHasUser(chatId,userService.getAll().get(i).getId())){
                     MessageStar messageStar = new MessageStar();
                     messageStar.setPersistDateTime(LocalDateTime.of(2022, 8, 18, 23, 12));
                     messageStar.setUser(userService.getAll().get(i));
