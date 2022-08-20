@@ -440,40 +440,7 @@ public class QuestionResourceController {
         return new ResponseEntity<>("Вопрос успешно добавлен в закладки", HttpStatus.OK);
     }
 
-    @PostMapping("/{questionId}/comment")
-    @ApiOperation("Добавление комментария в вопрос по questionId=*, далее посредством запроса в б/д возвращает" +
-            "данный комментарий как CommentDto")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Комментарий успешно добавлен в вопрос."),
-            @ApiResponse(code = 404, message = "Вопрос с данным questionId=* не найден." +
-                                                "Либо комментарий с commentId=* не найден."),
-            @ApiResponse(code = 400, message = "Пустой комментарий.")
-    })
-    public ResponseEntity<?> addCommentByQuestionId(@PathVariable("questionId") Long questionId,
-                                                    @Valid @RequestBody Optional<String> text) {
-        User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Optional<Question> question = questionService.getById(questionId);
 
-        if (question.isEmpty()) {
-            return new ResponseEntity<>("Вопрос с данным ID = " + questionId + ", не найден.", HttpStatus.NOT_FOUND);
-        }
-
-        if (text.isEmpty()) {
-            return new ResponseEntity<>("Комментарий не может быть пустым.", HttpStatus.BAD_REQUEST);
-        }
-
-        CommentQuestion commentQuestion = new CommentQuestion();
-        commentQuestion.setQuestion(question.get());
-        commentQuestion.setText(text.get());
-        commentQuestion.setUser(sender);
-        commentQuestionService.persist(commentQuestion);
-        Long commentId = commentQuestion.getComment().getId();
-        Optional<CommentDto> optComDto = commentDtoService.getCommentDtoByCommentId(commentId);
-
-        return optComDto.isEmpty() ?
-                new ResponseEntity<>("Комментарий с ID = " + commentId + ", не найден.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(optComDto, HttpStatus.OK);
-    }
 
 
     @GetMapping("/reputation")
