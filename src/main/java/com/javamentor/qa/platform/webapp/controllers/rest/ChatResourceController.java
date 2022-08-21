@@ -1,15 +1,9 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.ChatDto;
-import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
-import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
-import com.javamentor.qa.platform.models.dto.MessageDto;
-import com.javamentor.qa.platform.models.dto.PageDto;
-import com.javamentor.qa.platform.models.dto.SingleChatDto;
+import com.javamentor.qa.platform.models.dto.*;
 import com.javamentor.qa.platform.models.entity.chat.Chat;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
-import com.javamentor.qa.platform.models.entity.chat.Message;
 import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.ChatDtoService;
@@ -17,9 +11,9 @@ import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
 import com.javamentor.qa.platform.service.abstracts.model.MessageService;
+import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import com.javamentor.qa.platform.webapp.converters.SingleChatConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,22 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Optional;
+import java.util.*;
 
 
 
@@ -239,4 +223,45 @@ public class ChatResourceController {
         groupChatService.update(groupChat);
         return new ResponseEntity<>("пользователь успешно добавлен в групповой чат", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("Удаления чата по Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Чат успешно удален"),
+            @ApiResponse(code = 404, message = "Чат не найден"),
+            @ApiResponse(code = 400, message = "Ошибка удаления чата")})
+    @Transactional
+    public ResponseEntity<?> deleteChatById(@PathVariable Long id){
+
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        GroupChat groupChat = groupChatService.getById(id).orElse(null);
+
+        if (groupChat != null){
+            if(!groupChat.getUsers().remove(user)){
+                return new ResponseEntity<>("Ошибка удаления чата", HttpStatus.BAD_REQUEST);
+            }
+
+            groupChatService.update(groupChat);
+            return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
+
+        } else {
+            SingleChat singleChat = singleChatService.getById(id).orElse(null);
+            if (singleChat != null) {
+                if(user.getId() == singleChat.getUserOne().getId()){
+                    singleChat.setDeleteOne(true);
+                }else if(user.getId() == singleChat.getUseTwo().getId()){
+                    singleChat.setDeleteTwo(true);
+                }else {
+                    return new ResponseEntity<>("Ошибка удаления чата", HttpStatus.BAD_REQUEST);
+                }
+
+                singleChatService.update(singleChat);
+                return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>("Ошибка удаления. Чат не найден.", HttpStatus.NOT_FOUND);
+    }
+
+
 }

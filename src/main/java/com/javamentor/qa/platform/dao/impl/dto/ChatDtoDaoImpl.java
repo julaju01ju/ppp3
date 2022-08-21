@@ -40,6 +40,11 @@ public class ChatDtoDaoImpl implements ChatDtoDao {
                         "or " +
                         "(ch.id in(select sc.chat.id from SingleChat sc where " +
                         "case " +
+                        "when  sc.userOne.id = :userId " +
+                        "then sc.isDeleteOne " +
+                        "else sc.isDeleteTwo end = false " +
+                        "and " +
+                        "case " +
                             "when sc.userOne.id = :userId " +
                             "then upper(sc.userOne.fullName) " +
                             "else upper(sc.useTwo.fullName) end like upper(:searchString)))) " +
