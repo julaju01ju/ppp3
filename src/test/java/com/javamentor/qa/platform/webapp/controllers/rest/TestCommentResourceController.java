@@ -23,17 +23,17 @@ public class TestCommentResourceController extends AbstractControllerTest{
 
     @Test
     @DataSet(value = {
-            "dataset/QuestionResourceController/users.yml",
-            "dataset/QuestionResourceController/tag.yml",
-            "dataset/QuestionResourceController/votes_on_questions.yml",
-            "dataset/QuestionResourceController/answers.yml",
-            "dataset/QuestionResourceController/questions.yml",
-            "dataset/QuestionResourceController/question_has_tag.yml",
-            "dataset/QuestionResourceController/reputations.yml",
-            "dataset/QuestionResourceController/roles.yml",
+            "dataset/CommentResourceController/users.yml",
+            "dataset/CommentResourceController/tag.yml",
+            "dataset/CommentResourceController/votes_on_questions.yml",
+            "dataset/CommentResourceController/answers.yml",
+            "dataset/CommentResourceController/questions.yml",
+            "dataset/CommentResourceController/question_has_tag.yml",
+            "dataset/CommentResourceController/reputations.yml",
+            "dataset/CommentResourceController/roles.yml",
             "dataset/CommentResourceController/comment.yml",
             "dataset/CommentResourceController/comment_question.yml",
-            "dataset/QuestionResourceController/answerVote.yml"
+            "dataset/CommentResourceController/answerVote.yml"
     },
             disableConstraints = true, cleanBefore = true)
     public void getQuestionByIdAndCheckSortCommentDESC() throws Exception {
