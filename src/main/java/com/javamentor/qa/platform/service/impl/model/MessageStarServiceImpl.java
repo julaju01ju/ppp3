@@ -34,7 +34,7 @@ public class MessageStarServiceImpl extends ReadWriteServiceImpl<MessageStar, Lo
         Query query = entityManager.createQuery("select u.id from GroupChat gr join gr.users u where gr.id= :chatId")
                 .setParameter("chatId", chatId);
 
-        return query.getResultList().size() > 0;
+        return query.getResultList().contains(userId);
     }
 
     //    проверяет не больше ли трех избранных сообщений у юзера
