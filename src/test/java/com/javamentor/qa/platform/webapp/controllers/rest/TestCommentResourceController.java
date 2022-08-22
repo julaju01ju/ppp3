@@ -31,8 +31,8 @@ public class TestCommentResourceController extends AbstractControllerTest{
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml",
+            "dataset/CommentResourceController/comment.yml",
+            "dataset/CommentResourceController/comment_question.yml",
             "dataset/QuestionResourceController/answerVote.yml"
     },
             disableConstraints = true, cleanBefore = true)
@@ -72,10 +72,10 @@ public class TestCommentResourceController extends AbstractControllerTest{
 
     @Test
     @DataSet(value = {
-            "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/users.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/role.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/questions.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/reputations.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addCommentByQuestionId() throws Exception {
         String USER_TOKEN1 = super.getToken("privet@mail.ru", "USER");
@@ -110,10 +110,10 @@ public class TestCommentResourceController extends AbstractControllerTest{
 
     @Test
     @DataSet(value = {
-            "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/users.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/role.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/questions.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/reputations.yml",
     }, cleanBefore = true)
     public void addCommentByQuestionIdNotFound() throws Exception {
         String USER_TOKEN = super.getToken("privet@mail.ru", "USER");
@@ -128,10 +128,10 @@ public class TestCommentResourceController extends AbstractControllerTest{
 
     @Test
     @DataSet(value = {
-            "dataset/QuestionResourceController/addCommentByQuestionId/users.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/role.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/questions.yml",
-            "dataset/QuestionResourceController/addCommentByQuestionId/reputations.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/users.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/role.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/questions.yml",
+            "dataset/CommentResourceController/addCommentByIdQuestion/reputations.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addCommentEmptyByQuestionId() throws Exception {
         String USER_TOKEN = super.getToken("privet@mail.ru", "USER");

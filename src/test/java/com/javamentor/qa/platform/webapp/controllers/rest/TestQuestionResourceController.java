@@ -306,8 +306,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml",
+            "dataset/CommentResourceController/comment.yml",
+            "dataset/CommentResourceController/comment_question.yml",
             "dataset/QuestionResourceController/isUserBookMark/bookmark.yml"
     },
             disableConstraints = true, cleanBefore = true)
@@ -386,8 +386,8 @@ public class TestQuestionResourceController extends AbstractControllerTest {
             "dataset/QuestionResourceController/question_has_tag.yml",
             "dataset/QuestionResourceController/reputations.yml",
             "dataset/QuestionResourceController/roles.yml",
-            "dataset/QuestionResourceController/comment.yml",
-            "dataset/QuestionResourceController/comment_question.yml",
+            "dataset/CommentResourceController/comment.yml",
+            "dataset/CommentResourceController/comment_question.yml",
     }, cleanBefore = true)
     public void getQuestionByIdNotIsUserBookMarks() throws Exception {
 
