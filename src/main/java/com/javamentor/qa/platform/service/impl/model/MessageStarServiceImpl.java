@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MessageStarServiceImpl extends ReadWriteServiceImpl<MessageStar, Long> implements MessageStarService{
+
     private MessageStarDao messageStarDao;
 
     @Autowired
@@ -22,7 +23,6 @@ public class MessageStarServiceImpl extends ReadWriteServiceImpl<MessageStar, Lo
 
     @Override
     public boolean isChatHasUser(long chatId, long userId) {
-
         return messageStarDao.isChatHasUser(chatId, userId);
     }
 
@@ -30,5 +30,4 @@ public class MessageStarServiceImpl extends ReadWriteServiceImpl<MessageStar, Lo
     public boolean isUserHasNoMoreThanThreeMessageStar(long userId) {
         return messageStarDao.isUserHasNoMoreThanThreeMessageStar(userId);
     }
-
 }
