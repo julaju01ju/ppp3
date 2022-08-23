@@ -1,0 +1,37 @@
+tag:
+  - id: 100
+    name: "TAG100"
+  - id: 107
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:01
+  - id: 102
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:02
+  - id: 103
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:03
+  - id: 104
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:04
+  - id: 105
+    description: "Some text here"
+    name: "Some name here"
+    persist_date: 2021-12-06 00:00:05
+  - id: 106
+    description: "Some another text here"
+    name: "Some another name here"
+    persist_date: 2021-12-06 00:00:06
+  - id: 101
+    name: "TAG101"
+  - id: 108
+    description: "Some text here"
+    name: "TAG108"
+    persist_date: 2021-12-06 00:00:07
+  - id: 109
+    description: "Some text here"
+    name: "TAG109"
+    persist_date: 2021-12-06 00:00:08
