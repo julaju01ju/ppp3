@@ -5,9 +5,11 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
@@ -32,6 +34,14 @@ public abstract class AbstractControllerTest {
 
     @PersistenceContext
     protected EntityManager entityManager;
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @BeforeEach
+    public void cleanCache(){
+        cacheManager.getCache("getUserByEmail").clear();
+    }
 
     private AuthenticationRequest setUserAuth(String userName, String password){
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();

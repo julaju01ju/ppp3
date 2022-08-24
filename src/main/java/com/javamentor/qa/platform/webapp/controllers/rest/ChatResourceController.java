@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -123,7 +122,7 @@ public class ChatResourceController {
             @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag,
             @PathVariable("id") Long chatId){
 
-        if (!singleChatService.existsById(chatId)) {
+        if (!singleChatService.existsById(chatId) || singleChatService.isDeleted(chatId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чат с данным ID = " + chatId + ", не найден.");
         }
 
@@ -228,36 +227,15 @@ public class ChatResourceController {
     @ApiOperation("Удаления чата по Id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Чат успешно удален"),
-            @ApiResponse(code = 404, message = "Чат не найден"),
-            @ApiResponse(code = 400, message = "Ошибка удаления чата")})
-    @Transactional
+            @ApiResponse(code = 404, message = "Чат не найден")})
     public ResponseEntity<?> deleteChatById(@PathVariable Long id){
 
-        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        GroupChat groupChat = groupChatService.getById(id).orElse(null);
-
-        if (groupChat != null){
-            if(!groupChat.getUsers().remove(user)){
-                return new ResponseEntity<>("Ошибка удаления чата", HttpStatus.BAD_REQUEST);
-            }
-
-            groupChatService.update(groupChat);
+        if (groupChatService.getById(id).isPresent()){
+            groupChatService.deleteById(id);
             return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
-
-        } else {
-            SingleChat singleChat = singleChatService.getById(id).orElse(null);
-            if (singleChat != null) {
-                if(user.getId() == singleChat.getUserOne().getId()){
-                    singleChat.setDeleteOne(true);
-                }else if(user.getId() == singleChat.getUseTwo().getId()){
-                    singleChat.setDeleteTwo(true);
-                }else {
-                    return new ResponseEntity<>("Ошибка удаления чата", HttpStatus.BAD_REQUEST);
-                }
-
-                singleChatService.update(singleChat);
-                return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
-            }
+        } else if (singleChatService.getById(id).isPresent()) {
+            singleChatService.deleteById(id);
+            return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("Ошибка удаления. Чат не найден.", HttpStatus.NOT_FOUND);

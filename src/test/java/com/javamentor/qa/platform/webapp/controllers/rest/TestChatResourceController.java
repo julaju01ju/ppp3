@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 public class TestChatResourceController extends AbstractControllerTest {
 
@@ -715,7 +716,6 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/deleteChatById/role.yml",
             "dataset/ChatResourceController/deleteChatById/groupChatHasUsers.yml"
     }, disableConstraints = true, cleanBefore = true)
-    @Transactional
     public void deleteChatById() throws Exception {
 
         String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
@@ -724,19 +724,25 @@ public class TestChatResourceController extends AbstractControllerTest {
         mockMvc.perform(
                         delete("/api/user/chat/3")
                                 .header(AUTHORIZATION, USER_TOKEN)).andDo(print())
-                .andExpect(status().isOk());
+                                .andExpect(status().isOk());
+
+        Assertions.assertEquals(true, entityManager.createQuery(
+                "SELECT c.isDeleteTwo FROM SingleChat c WHERE c.id = 3").getSingleResult());
 
         //GlobalChat
         mockMvc.perform(
                         delete("/api/user/chat/6")
                                 .header(AUTHORIZATION, USER_TOKEN)).andDo(print())
-                .andExpect(status().isOk());
+                                .andExpect(status().isOk());
+
+        Assertions.assertEquals("10", entityManager.createNativeQuery(
+                "SELECT count(chat_id) FROM groupchat_has_users").getSingleResult().toString());
 
         //nonExistentChat
         mockMvc.perform(
                         delete("/api/user/chat/99")
                                 .header(AUTHORIZATION, USER_TOKEN)).andDo(print())
-                .andExpect(status().isNotFound());
+                                .andExpect(status().isNotFound());
 
     }
 

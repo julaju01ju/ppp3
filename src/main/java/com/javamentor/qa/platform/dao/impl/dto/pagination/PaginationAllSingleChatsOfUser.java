@@ -45,6 +45,9 @@ public class PaginationAllSingleChatsOfUser implements PageDtoDao<SingleChatDto>
                             "messageMaxDate.chat.id = singleChat.chat.id) " +
                         "and (singleChat.userOne.id = :userId " +
                         "or singleChat.useTwo.id = :userId) " +
+                        "and " +
+                        "case when singleChat.userOne.id = :userId then singleChat.isDeleteOne " +
+                        "else singleChat.isDeleteTwo end = false " +
                         "order by message.persistDate desc")
                 .setParameter("userId", params.get("userId"))
                 .setFirstResult((page - 1) * itemsOnPage)
