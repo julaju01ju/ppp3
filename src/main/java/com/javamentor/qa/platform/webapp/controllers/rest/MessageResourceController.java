@@ -3,7 +3,11 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.entity.user.MessageStar;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.MessageStarService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +37,8 @@ public class MessageResourceController {
     @ApiOperation(value = "Удаление сообщения из избранных пользователя")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Сообщение удаленно из избранных"),
-            @ApiResponse(code = 404, message = "Сообщение не найдено")
+            @ApiResponse(code = 404, message = "Сообщение не найдено"),
+            @ApiResponse(code = 400, message = "Сообщение не принадлежит авторизованному пользователю")
     })
     @ApiParam(name = "id", value = "message id", required = true)
     public ResponseEntity<?> deleteMessageStarById(@NotNull @RequestParam("id") Long id){
@@ -41,7 +46,10 @@ public class MessageResourceController {
         Optional<MessageStar> messageStar = messageStarService.getById(id);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (messageStar.isPresent() && messageStar.get().getUser().getId() == user.getId()){
+        if (messageStar.isPresent()){
+            if(messageStar.get().getUser().getId() != user.getId()){
+                return new ResponseEntity<>("Сообщение другово пользователя не может быть удаленно", HttpStatus.BAD_REQUEST);
+            }
             messageStarService.deleteById(id);
             return new ResponseEntity<>("Сообщение удаленно из избранных", HttpStatus.OK);
         }

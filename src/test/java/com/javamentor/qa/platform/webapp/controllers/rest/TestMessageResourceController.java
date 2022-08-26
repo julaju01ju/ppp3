@@ -3,10 +3,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.github.database.rider.core.api.dataset.DataSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-
-import javax.persistence.EntityManager;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -14,12 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TestMessageResourceController extends AbstractControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Test
     @DataSet(value = {
@@ -46,7 +36,15 @@ public class TestMessageResourceController extends AbstractControllerTest {
         mockMvc.perform(
                         delete("/api/user/message/star")
                                 .header(AUTHORIZATION,USER_TOKEN)
-                                .param("id", "2"))
+                                .param("id", "3"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+
+        mockMvc.perform(
+                        delete("/api/user/message/star")
+                                .header(AUTHORIZATION,USER_TOKEN)
+                                .param("id", "10"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
