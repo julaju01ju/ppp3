@@ -46,17 +46,16 @@ public class MessageResourceController {
         Optional<MessageStar> messageStar = messageStarService.getById(id);
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (messageStar.isPresent()){
-            if(messageStar.get().getUser().getId() != user.getId()){
-                return new ResponseEntity<>("Сообщение другово пользователя не может быть удаленно", HttpStatus.BAD_REQUEST);
-            }
-            messageStarService.deleteById(id);
-            return new ResponseEntity<>("Сообщение удаленно из избранных", HttpStatus.OK);
+        if (messageStar.isEmpty()) {
+            return new ResponseEntity<>("Сообщение не найдено", HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>("Сообщение не найдено", HttpStatus.NOT_FOUND);
+        if (messageStar.get().getUser().getId() != user.getId()){
+            return new ResponseEntity<>("Сообщение другово пользователя не может быть удаленно", HttpStatus.BAD_REQUEST);
+        }
+
+        messageStarService.deleteById(id);
+        return new ResponseEntity<>("Сообщение удаленно из избранных", HttpStatus.OK);
     }
-
-
 
 }
