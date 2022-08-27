@@ -1,6 +1,11 @@
 package com.javamentor.qa.platform.webapp.controllers.rest;
 
-import com.javamentor.qa.platform.models.dto.*;
+import com.javamentor.qa.platform.models.dto.ChatDto;
+import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
+import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
+import com.javamentor.qa.platform.models.dto.MessageDto;
+import com.javamentor.qa.platform.models.dto.PageDto;
+import com.javamentor.qa.platform.models.dto.SingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.Chat;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
@@ -23,11 +28,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 
 
@@ -122,7 +140,7 @@ public class ChatResourceController {
             @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag,
             @PathVariable("id") Long chatId){
 
-        if (!singleChatService.existsById(chatId) || singleChatService.isDeleted(chatId)) {
+        if (!singleChatService.existsById(chatId) || singleChatService.isStatusDeleted(chatId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чат с данным ID = " + chatId + ", не найден.");
         }
 
@@ -227,14 +245,16 @@ public class ChatResourceController {
     @ApiOperation("Удаления чата по Id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Чат успешно удален"),
-            @ApiResponse(code = 404, message = "Чат не найден")})
+            @ApiResponse(code = 404, message = "Чат или пользователь не найден")})
     public ResponseEntity<?> deleteChatById(@PathVariable Long id){
 
-        if (groupChatService.getById(id).isPresent()){
+        if (groupChatService.existsById(id)){
             groupChatService.deleteById(id);
             return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
-        } else if (singleChatService.getById(id).isPresent()) {
-            singleChatService.deleteById(id);
+        }
+
+        if (singleChatService.existsById(id)) {
+            singleChatService.deleteChatFromUser(id);
             return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
         }
 

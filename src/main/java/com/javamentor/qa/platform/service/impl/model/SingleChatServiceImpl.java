@@ -39,40 +39,27 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
         messageService.persist(new Message(message, sender, singleChat.getChat()));
     }
     @Override
-    public boolean isDeleted(Long id) {
+    public boolean isStatusDeleted(Long id) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<SingleChat> singleChat = singleChatDao.getById(id);
 
-        if(singleChat.isPresent()) {
-            if (Objects.equals(user.getId(), singleChat.get().getUserOne().getId())) {
-                return singleChat.get().isDeleteOne();
-            }else if (Objects.equals(user.getId(), singleChat.get().getUseTwo().getId())) {
-                return singleChat.get().isDeleteTwo();
-            }
+        if (singleChat.isEmpty()) {
+            return true;
         }
 
-        return true;
+        if (Objects.equals(user.getId(), singleChat.get().getUserOne().getId())) {
+            return singleChat.get().isDeleteOne();
+        }
+
+        return singleChat.get().isDeleteTwo();
     }
 
     @Override
-    public void deleteById(Long id) {
-
-        Optional<SingleChat> singleChat = getById(id);
-
-        if (singleChat.isPresent()) {
-
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (Objects.equals(user.getId(), singleChat.get().getUserOne().getId())) {
-                singleChat.get().setDeleteOne(true);
-            } else if (Objects.equals(user.getId(), singleChat.get().getUseTwo().getId())) {
-                singleChat.get().setDeleteTwo(true);
-            }
-
-            update(singleChat.get());
-        }
-
+    @Transactional
+    public void deleteChatFromUser(Long id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        singleChatDao.deleteChatFromUser(id, user);
     }
 }
 
