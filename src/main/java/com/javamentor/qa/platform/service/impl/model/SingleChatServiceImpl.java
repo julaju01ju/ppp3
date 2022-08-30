@@ -11,6 +11,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+import java.util.Optional;
+
 
 @Service
 public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long> implements SingleChatService {
@@ -34,6 +37,28 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
 
         User sender = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         messageService.persist(new Message(message, sender, singleChat.getChat()));
+    }
+    @Override
+    public boolean isStatusDeleted(Long id) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<SingleChat> singleChat = singleChatDao.getById(id);
+
+        if (singleChat.isEmpty()) {
+            return true;
+        }
+
+        if (Objects.equals(user.getId(), singleChat.get().getUserOne().getId())) {
+            return singleChat.get().isDeleteOne();
+        }
+
+        return singleChat.get().isDeleteTwo();
+    }
+
+    @Override
+    @Transactional
+    public void deleteChatFromUser(Long id, User user) {
+        singleChatDao.deleteChatFromUser(id, user);
     }
 }
 

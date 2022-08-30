@@ -2,35 +2,27 @@ chat:
   - id: 101
     chat_type: 1
     persist_date: 2021-12-06 00:00:00
-    title: "Hello"
   - id: 102
     chat_type: 1
     persist_date: 2021-12-07 00:00:00
-    title: "Hello"
   - id: 103
     chat_type: 1
     persist_date: 2021-12-08 00:00:00
-    title: "Hello"
   - id: 104
     chat_type: 1
     persist_date: 2021-12-09 00:00:00
-    title: "Hello"
   - id: 105
     chat_type: 1
     persist_date: 2021-12-10 00:00:00
-    title: "Hello"
   - id: 106
     chat_type: 1
     persist_date: 2021-12-11 00:00:00
-    title: "Hello"
   - id: 107
     chat_type: 1
     persist_date: 2021-12-11 00:00:00
-    title: "Hello"
   - id: 108
     chat_type: 1
     persist_date: 2021-12-11 00:00:00
-    title: "Hello"
 
 
 

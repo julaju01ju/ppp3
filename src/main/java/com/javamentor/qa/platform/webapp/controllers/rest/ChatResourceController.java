@@ -3,13 +3,11 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 import com.javamentor.qa.platform.models.dto.ChatDto;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
-import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.SingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.Chat;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
-import com.javamentor.qa.platform.models.entity.chat.Message;
 import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.ChatDtoService;
@@ -17,9 +15,9 @@ import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
 import com.javamentor.qa.platform.service.abstracts.model.MessageService;
+import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import com.javamentor.qa.platform.webapp.converters.SingleChatConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,14 +36,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
+
 import javax.validation.Valid;
 import java.util.HashMap;
-import java.util.List;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Optional;
+import java.util.Set;
 
 
 
@@ -133,14 +132,18 @@ public class ChatResourceController {
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы"),
             @ApiResponse(code = 500, message = "Страницы под номером page=* пока не существует")
     })
-    public ResponseEntity<PageDto<MessageDto>> getAllMessageDtoInSingleChatSortedByPersistDate(
+    public ResponseEntity<?> getAllMessageDtoInSingleChatSortedByPersistDate(
             @RequestParam("page") Integer page,
             @RequestParam(value = "items", defaultValue = "10") Integer items,
             @RequestParam(value = "sortAscendingFlag", required = false, defaultValue = "false") Boolean sortAscendingFlag,
             @PathVariable("id") Long chatId){
 
         if (!singleChatService.existsById(chatId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Чат с данным ID = " + chatId + ", не найден.");
+            return new ResponseEntity<>("Чат с данным ID = " + chatId + ", не найден.", HttpStatus.NOT_FOUND);
+        }
+
+        if (singleChatService.isStatusDeleted(chatId)) {
+            return new ResponseEntity<>("Чат с данным ID = " + chatId + ", не найден.", HttpStatus.NOT_FOUND);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -239,4 +242,28 @@ public class ChatResourceController {
         groupChatService.update(groupChat);
         return new ResponseEntity<>("пользователь успешно добавлен в групповой чат", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation("Удаления чата по Id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Чат успешно удален"),
+            @ApiResponse(code = 404, message = "Чат или пользователь не найден")})
+    public ResponseEntity<?> deleteChatById(@PathVariable Long id){
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (groupChatService.existsById(id)){
+            groupChatService.deleteChatFromUser(id, user);
+            return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
+        }
+
+        if (singleChatService.existsById(id)) {
+            singleChatService.deleteChatFromUser(id, user);
+            return new ResponseEntity<>("Чат успешно удален", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("Ошибка удаления. Чат не найден.", HttpStatus.NOT_FOUND);
+    }
+
+
 }

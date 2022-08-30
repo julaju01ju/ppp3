@@ -32,6 +32,12 @@ public class SingleChat{
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User useTwo;
 
+    @Column(name = "is_delete_one")
+    private boolean isDeleteOne;
+
+    @Column(name = "is_delete_two")
+    private boolean isDeleteTwo;
+
     @PrePersist
     private void prePersistFunction() {
         checkConstraints();
