@@ -57,8 +57,7 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
 
     @Override
     @Transactional
-    public void deleteChatFromUser(Long id) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public void deleteChatFromUser(Long id, User user) {
         singleChatDao.deleteChatFromUser(id, user);
     }
 }
