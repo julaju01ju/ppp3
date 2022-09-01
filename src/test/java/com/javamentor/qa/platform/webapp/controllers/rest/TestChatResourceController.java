@@ -39,11 +39,6 @@ public class TestChatResourceController extends AbstractControllerTest {
     @Autowired
     private EntityManager entityManager;
 
-    @BeforeAll
-    public static void clearCache(ApplicationContext ctx){
-        CacheManager cacheManager = (CacheManager) ctx.getBean("cacheManager");
-        cacheManager.getCache("getUserByEmail").clear();
-    }
 
     @Test
     @DataSet(value = {
