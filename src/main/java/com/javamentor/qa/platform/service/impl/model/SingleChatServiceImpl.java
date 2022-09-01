@@ -68,7 +68,6 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isUsersChat(Long chatId, User user) {
         return singleChatDao.isUsersChat(chatId, user);
     }

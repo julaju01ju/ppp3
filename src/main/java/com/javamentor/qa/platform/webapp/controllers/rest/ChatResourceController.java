@@ -247,6 +247,7 @@ public class ChatResourceController {
     @ApiOperation("Удаления чата по Id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Чат успешно удален"),
+            @ApiResponse(code = 400, message = "Чат не принадлежит текущему пользователю"),
             @ApiResponse(code = 404, message = "Чат или пользователь не найден")})
     public ResponseEntity<?> deleteChatById(@PathVariable Long id){
 

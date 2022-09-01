@@ -44,7 +44,6 @@ public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> 
     }
 
     @Override
-    @Transactional(readOnly = true)
     public boolean isUsersChat(Long chatId, User user) {
         return groupChatDao.isUsersChat(chatId, user);
     }
