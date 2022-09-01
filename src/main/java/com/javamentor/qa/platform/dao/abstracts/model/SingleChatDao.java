@@ -7,4 +7,6 @@ public interface SingleChatDao extends ReadWriteDao <SingleChat, Long> {
 
     void deleteChatFromUser(Long chatId, User user);
 
+    boolean isUsersChat(Long chatId, User user);
+
 }

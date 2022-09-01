@@ -5,9 +5,10 @@ import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
@@ -32,9 +33,19 @@ public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> 
 
         Optional<GroupChat> groupChat = getById(id);
 
+        if (!isUsersChat(id,user)){
+            throw new BadCredentialsException("Чат не принадлежит текущему пользователю");
+        }
+
         if(groupChat.isPresent()) {
             groupChat.get().getUsers().remove(user);
             update(groupChat.get());
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isUsersChat(Long chatId, User user) {
+        return groupChatDao.isUsersChat(chatId, user);
     }
 }

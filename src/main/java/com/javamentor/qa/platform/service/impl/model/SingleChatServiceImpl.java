@@ -7,6 +7,7 @@ import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.MessageService;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,18 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
     @Override
     @Transactional
     public void deleteChatFromUser(Long id, User user) {
+
+        if (!isUsersChat(id,user)){
+            throw new BadCredentialsException("Чат не принадлежит текущему пользователю");
+        }
+
         singleChatDao.deleteChatFromUser(id, user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isUsersChat(Long chatId, User user) {
+        return singleChatDao.isUsersChat(chatId, user);
     }
 }
 

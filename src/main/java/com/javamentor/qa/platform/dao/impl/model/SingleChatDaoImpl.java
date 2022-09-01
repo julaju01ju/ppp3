@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Objects;
 
 @Repository
 public class SingleChatDaoImpl extends ReadWriteDaoImpl<SingleChat, Long> implements SingleChatDao {
@@ -26,6 +27,15 @@ public class SingleChatDaoImpl extends ReadWriteDaoImpl<SingleChat, Long> implem
                 .setParameter("userId", user.getId())
                 .setParameter("chatId", chatId)
                 .executeUpdate();
+    }
+
+    @Override
+    public boolean isUsersChat(Long chatId, User user) {
+        return Objects.equals(entityManager.createQuery("select count(sc.id) from SingleChat sc " +
+                        "where sc.id = :chatId and (sc.useTwo.id = :uid or sc.userOne.id = :uid)")
+                .setParameter("uid", user.getId())
+                .setParameter("chatId", chatId)
+                .getSingleResult().toString(), "1");
     }
 
 }

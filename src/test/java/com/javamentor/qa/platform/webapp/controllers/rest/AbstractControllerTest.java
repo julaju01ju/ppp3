@@ -5,11 +5,12 @@ import com.github.database.rider.core.api.configuration.DBUnit;
 import com.github.database.rider.junit5.api.DBRider;
 import com.javamentor.qa.platform.models.dto.AuthenticationRequest;
 import com.javamentor.qa.platform.webapp.configs.JmApplication;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
@@ -35,15 +36,13 @@ public abstract class AbstractControllerTest {
     @PersistenceContext
     protected EntityManager entityManager;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @BeforeEach
-    public void cleanCache(){
+    @BeforeAll
+    public static void clearCache(ApplicationContext ctx) {
+        CacheManager cacheManager = (CacheManager) ctx.getBean("cacheManager");
         cacheManager.getCache("getUserByEmail").clear();
     }
 
-    private AuthenticationRequest setUserAuth(String userName, String password){
+    private AuthenticationRequest setUserAuth(String userName, String password) {
         AuthenticationRequest authenticationRequest = new AuthenticationRequest();
         authenticationRequest.setPassword(password);
         authenticationRequest.setUsername(userName);
@@ -53,13 +52,13 @@ public abstract class AbstractControllerTest {
     public String getToken(String userName, String password) throws Exception {
         String USER_TOKEN = mockMvc.perform(
                         post("/api/auth/token/")
-                                .content(new ObjectMapper().writeValueAsString(this.setUserAuth(userName,password)))
+                                .content(new ObjectMapper().writeValueAsString(this.setUserAuth(userName, password)))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
         USER_TOKEN = "Bearer " + USER_TOKEN.substring(USER_TOKEN.indexOf(":") + 2, USER_TOKEN.length() - 2);
-        return  USER_TOKEN;
+        return USER_TOKEN;
     }
 
 }
