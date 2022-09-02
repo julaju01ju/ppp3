@@ -33,7 +33,7 @@ public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> 
 
         Optional<GroupChat> groupChat = getById(id);
 
-        if (!isUsersChat(id,user)){
+        if (!groupChatDao.isUsersChat(id, user.getId())){
             throw new BadCredentialsException("Чат не принадлежит текущему пользователю");
         }
 
@@ -43,8 +43,4 @@ public class GroupChatServiceImpl extends ReadWriteServiceImpl<GroupChat, Long> 
         }
     }
 
-    @Override
-    public boolean isUsersChat(Long chatId, User user) {
-        return groupChatDao.isUsersChat(chatId, user);
-    }
 }

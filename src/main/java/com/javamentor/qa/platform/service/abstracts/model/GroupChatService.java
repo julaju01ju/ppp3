@@ -11,5 +11,4 @@ public interface GroupChatService extends ReadWriteService<GroupChat, Long>{
 
     void deleteChatFromUser(Long id, User user);
 
-    boolean isUsersChat(Long chatId, User user);
 }

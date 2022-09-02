@@ -60,16 +60,12 @@ public class SingleChatServiceImpl extends ReadWriteServiceImpl<SingleChat, Long
     @Transactional
     public void deleteChatFromUser(Long id, User user) {
 
-        if (!isUsersChat(id,user)){
+        if (!singleChatDao.isUsersChat(id, user.getId())){
             throw new BadCredentialsException("Чат не принадлежит текущему пользователю");
         }
 
         singleChatDao.deleteChatFromUser(id, user);
     }
 
-    @Override
-    public boolean isUsersChat(Long chatId, User user) {
-        return singleChatDao.isUsersChat(chatId, user);
-    }
 }
 

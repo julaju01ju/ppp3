@@ -10,5 +10,4 @@ public interface SingleChatService extends ReadWriteService<SingleChat, Long>{
 
     void deleteChatFromUser(Long id, User user);
 
-    boolean isUsersChat(Long chatId, User user);
 }
