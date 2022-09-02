@@ -10,4 +10,5 @@ public interface GroupChatService extends ReadWriteService<GroupChat, Long>{
     Optional<GroupChat> getGroupChatWithUsersById(Long id);
 
     void deleteChatFromUser(Long id, User user);
+
 }

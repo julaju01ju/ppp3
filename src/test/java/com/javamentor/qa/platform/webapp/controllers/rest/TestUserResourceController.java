@@ -2,7 +2,6 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.models.dto.UserDtoTest;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.Assertions;

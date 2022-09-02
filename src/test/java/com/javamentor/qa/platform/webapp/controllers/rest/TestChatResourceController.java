@@ -8,8 +8,11 @@ import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -36,6 +39,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     @Autowired
     private EntityManager entityManager;
 
+
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/role.yml",
@@ -49,7 +53,7 @@ public class TestChatResourceController extends AbstractControllerTest {
 
     public void getSingleChatDtosByUser() throws Exception {
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/single?page=1&items=15")
@@ -113,7 +117,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getAllMessageDtoInSingleChatSortedByPersistDateWithValidParameter() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "user");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1&items=4")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -155,7 +159,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getAllMessageDtoInSingleChatSortedByPersistDateWithoutItemsParameter() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "user");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/chat/101/single/message?page=1")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -202,7 +206,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getAllMessageDtoInSingleChatSortedByPersistDateWithoutPageParameter() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "user");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/101/single/message")
@@ -222,7 +226,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             disableConstraints = true, cleanBefore = true)
     public void getAllMessageDtoInSingleChatSortedByPersistDateWithNonExistentChatId() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "user");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/115/single/message?page=1&items=4")
@@ -241,7 +245,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     }, disableConstraints = true, cleanBefore = true)
     public void getGroupChatWithValidParameters() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/group?page=1&items=10")
@@ -283,7 +287,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     }, disableConstraints = true, cleanBefore = true)
     public void getGroupChatWithValidParametersWithoutItemsCount() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/group?page=1")
@@ -326,7 +330,7 @@ public class TestChatResourceController extends AbstractControllerTest {
     }, disableConstraints = true, cleanBefore = true)
     public void getGroupChatWithoutParameters() throws Exception {
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         get("/api/user/chat/group")
@@ -345,7 +349,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         CreateGroupChatDto createGroupChatDto = new CreateGroupChatDto();
         createGroupChatDto.setChatName("Test");
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                 post("/api/user/chat/group")
@@ -367,7 +371,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         createGroupChatDto.setChatName("Test");
         createGroupChatDto.setUserIds(new ArrayList<Long>());
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/group")
@@ -392,7 +396,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         userIds.add(103L);
         createGroupChatDto.setUserIds(userIds);
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/group")
@@ -420,7 +424,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         createGroupChatDto.setUserIds(userIds);
         createGroupChatDto.setChatName("Test");
 
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/group")
@@ -444,7 +448,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
         createSingleChatDto.setUserRecipientId(1001L);
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/single")
@@ -466,7 +470,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         CreateSingleChatDto createSingleChatDto = new CreateSingleChatDto();
         createSingleChatDto.setMessage(" ");
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/single")
@@ -492,7 +496,7 @@ public class TestChatResourceController extends AbstractControllerTest {
         createSingleChatDto.setUserRecipientId(101L);
         createSingleChatDto.setMessage("Hello101");
 
-        String USER_TOKEN = super.getToken("user@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user@mail.ru", "pass0");
 
         mockMvc.perform(
                         post("/api/user/chat/single")
@@ -513,7 +517,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/GroupChat/messages.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addUserToGroupChatUserDoesNotExist() throws Exception {
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
         mockMvc.perform(
                 post("/api/user/chat/group/101/join?userId=110")
                         .header(AUTHORIZATION, USER_TOKEN))
@@ -530,7 +534,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/GroupChat/messages.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addUserToGroupChatGroupChatDoesNotExist() throws Exception {
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
         mockMvc.perform(
                         post("/api/user/chat/group/110/join?userId=101")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -547,7 +551,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/GroupChat/messages.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addUserToGroupChatUserExistsAndGroupChatExists() throws Exception {
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
         mockMvc.perform(
                         post("/api/user/chat/group/101/join?userId=101")
                                 .header(AUTHORIZATION, USER_TOKEN))
@@ -566,7 +570,7 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/GroupChat/messages.yml",
     }, disableConstraints = true, cleanBefore = true)
     public void addUserToGroupChatUserAlreadyAddedToGroupChat() throws Exception {
-        String USER_TOKEN = super.getToken("user1@mail.ru", "USER");
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
         mockMvc.perform(
                         post("/api/user/chat/group/101/join?userId=101")
                                 .header(AUTHORIZATION, USER_TOKEN))

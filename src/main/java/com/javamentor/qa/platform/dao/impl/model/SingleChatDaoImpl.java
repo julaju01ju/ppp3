@@ -28,4 +28,13 @@ public class SingleChatDaoImpl extends ReadWriteDaoImpl<SingleChat, Long> implem
                 .executeUpdate();
     }
 
+    @Override
+    public boolean isUsersChat(Long chatId, Long userId) {
+        return (boolean) entityManager.createQuery("select count(sc.id) > 0 from SingleChat sc " +
+                        "where sc.id = :chatId and (sc.useTwo.id = :uid or sc.userOne.id = :uid)")
+                .setParameter("uid", userId)
+                .setParameter("chatId", chatId)
+                .getSingleResult();
+    }
+
 }
