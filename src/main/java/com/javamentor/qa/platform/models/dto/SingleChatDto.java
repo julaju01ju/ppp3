@@ -18,4 +18,12 @@ public class SingleChatDto {
     private String image;
     private String lastMessage;
     private LocalDateTime persistDateTimeLastMessage;
+
+    public SingleChatDto(Long id, String name ,String image, String lastMessage, LocalDateTime persistDateTimeLastMessage) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.lastMessage = lastMessage;
+        this.persistDateTimeLastMessage = persistDateTimeLastMessage;
+    }
 }

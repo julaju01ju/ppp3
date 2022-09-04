@@ -12,6 +12,7 @@ public abstract class ReadWriteServiceImpl<E, K> extends ReadOnlyServiceImpl<E, 
     private final ReadWriteDao<E, K> readWriteDao;
     private static final String ENTITIES_MUST_NOT_BE_NULL = "Entities cannot be null and empty";
 
+
     public ReadWriteServiceImpl(ReadWriteDao<E, K> readWriteDao) {
         super(readWriteDao);
         this.readWriteDao = readWriteDao;

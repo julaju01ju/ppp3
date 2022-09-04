@@ -1,7 +1,10 @@
 group_chat:
   - chat_id: 1
     image_chat: "Some image in Group chat 1"
+    title: "Some group chat 1"
   - chat_id: 2
     image_chat: "Some image in Group chat 2"
+    title: "Some group chat 2"
   - chat_id: 5
     image_chat: "Some image in group Chat 5"
+    title: "Some group chat 5"

@@ -23,7 +23,7 @@ public class GroupChatDtoDaoImpl implements GroupChatDtoDao {
         return SingleResultUtil.getSingleResultOrNull(entityManager.createQuery(
                         "select new com.javamentor.qa.platform.models.dto.GroupChatDto" +
                                 "(g.id, " +
-                                "c.title) " +
+                                "g.title) " +
                                 "from GroupChat g, " +
                                 "Chat c where g.id = c.id", GroupChatDto.class)
                 .setMaxResults(1));

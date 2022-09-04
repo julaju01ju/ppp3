@@ -62,7 +62,7 @@ class AuthenticationResourceControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().contentType("text/plain;charset=UTF-8"))
                 .andExpect(status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.content().string("Bad credentials"));
+                .andExpect(MockMvcResultMatchers.content().string("Имя или пароль неправильны"));
     }
 
     @Test

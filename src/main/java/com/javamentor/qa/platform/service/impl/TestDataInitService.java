@@ -6,10 +6,10 @@ import com.javamentor.qa.platform.models.entity.question.*;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
+import com.javamentor.qa.platform.models.entity.user.MessageStar;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.model.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -52,6 +52,7 @@ public class TestDataInitService {
     private MessageService messageService;
 
     private QuestionViewedService questionViewedService;
+    private MessageStarService messageStarService;
     public TestDataInitService() {
     }
 
@@ -72,7 +73,8 @@ public class TestDataInitService {
             @Lazy GroupChatService groupChatService,
             @Lazy SingleChatService singleChatService,
             @Lazy QuestionViewedService questionViewedService,
-            @Lazy MessageService messageService) {
+            @Lazy MessageService messageService,
+            @Lazy MessageStarService messageStarService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -89,6 +91,7 @@ public class TestDataInitService {
         this.singleChatService = singleChatService;
         this.messageService = messageService;
         this.questionViewedService = questionViewedService;
+        this.messageStarService = messageStarService;
     }
 
     public void createRole() {
@@ -355,7 +358,6 @@ public class TestDataInitService {
         for (long i = 1; i <= count; i++) {
             SingleChat singleChat = new SingleChat();
             Chat chat = new Chat(ChatType.SINGLE);
-            chat.setTitle("Some single chat " + i);
             singleChat.setChat(chat);
             User userOne = userService.getById(i).get();
             User userTwo = userService.getById(i+i).get();
@@ -367,7 +369,14 @@ public class TestDataInitService {
             List<Message> saveMessages = new ArrayList<>();
             saveMessages.add(messageUserOne);
             saveMessages.add(messageUserTwo);
-            messageService.persistAll(saveMessages);
+            for (Message message : saveMessages){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                messageService.persist(message);
+            }
         }
     }
 
@@ -375,7 +384,7 @@ public class TestDataInitService {
         for (long i = 1; i <= count; i++) {
             GroupChat groupChat = new GroupChat();
             Chat chat = new Chat(ChatType.GROUP);
-            chat.setTitle("Some group chat " + i);
+            groupChat.setTitle("Some group chat " + i);
             groupChat.setImageChat("Some group chat image " + i);
             Set<User> groupChatUsers = new HashSet<>();
             List<Message> messages = new ArrayList<>();
@@ -387,14 +396,16 @@ public class TestDataInitService {
             groupChat.setChat(chat);
             groupChat.setUsers(groupChatUsers);
             groupChatService.persist(groupChat);
-            messageService.persistAll(messages);
+            for (Message message : messages){
+                messageService.persist(message);
+            }
         }
     }
 
     public void createGlobalGroupChat() {
         GroupChat groupChat = new GroupChat();
         Chat chat = new Chat(ChatType.GROUP);
-        chat.setTitle("Some global group chat");
+        groupChat.setTitle("Some global group chat");
         Set<User> groupChatUsers = new HashSet<>();
         List<Message> messages = new ArrayList<>();
         for (long k = 1; k < 5; k++) {
@@ -406,9 +417,34 @@ public class TestDataInitService {
         groupChat.setUsers(groupChatUsers);
         groupChat.setGlobal(true);
         groupChatService.persist(groupChat);
-        messageService.persistAll(messages);
+
+        for (Message message : messages){
+            messageService.persist(message);
+        }
 
     }
+
+    public void createMessageStar(long count) {
+        for (int i = 1; i < count; i++) {
+            Random r = new Random();
+            int random = r.nextInt(3 - 1 + 1) + 1;
+
+            for (int k = 1; k <= random; k++) {
+                int messageRandom = r.nextInt(19 - 1 + 1) + 1;
+                long chatId = messageService.getAll().get(messageRandom).getChat().getId();
+                if (messageStarService.isUserHasNoMoreThanThreeMessageStar(userService.getAll().get(i).getId()) &&
+                        messageStarService.isChatHasUser(chatId, userService.getAll().get(i).getId())) {
+                    MessageStar messageStar = new MessageStar();
+                    messageStar.setPersistDateTime(LocalDateTime.of(2022, 8, 18, 23, 12));
+                    messageStar.setUser(userService.getAll().get(i));
+                    messageStar.setMessage(messageService.getAll().get(messageRandom));
+                    messageStarService.persist(messageStar);
+                }
+            }
+        }
+    }
+
+
 
     public void init() {
         createRole();
@@ -426,5 +462,6 @@ public class TestDataInitService {
         createGroupChat(2);
         createGlobalGroupChat();
         createQuestionViewed(50);
+        createMessageStar(50);
     }
 }
