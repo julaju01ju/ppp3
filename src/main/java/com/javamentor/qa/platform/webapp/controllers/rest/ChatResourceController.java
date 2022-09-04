@@ -120,7 +120,7 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("userId", userId);
 
-        return new ResponseEntity<>(groupChatDtoService.getOptionalGroupChatDto(
+        return new ResponseEntity<>(groupChatDtoService.getPageDto(
                 "paginationGroupChatMessages", params), HttpStatus.OK);
     }
 
