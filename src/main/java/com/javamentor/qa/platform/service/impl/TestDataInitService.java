@@ -413,6 +413,11 @@ public class TestDataInitService {
             saveMessages.add(messageUserOne);
             saveMessages.add(messageUserTwo);
             for (Message message : saveMessages){
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 messageService.persist(message);
             }
         }
