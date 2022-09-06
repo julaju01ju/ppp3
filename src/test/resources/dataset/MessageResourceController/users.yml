@@ -1,5 +1,5 @@
 user_entity:
-  - id: 1
+  - id: 101
     full_name: "USER"
     password: "$2a$12$8fN.8ujWHGmGrEo.iHBXSOOcZhY6AZczeP1GJI0NTgU9C8hM1eFmW"
     persist_date: "2021-12-09"
@@ -14,8 +14,8 @@ user_entity:
     is_deleted: false
     image_link: "image"
     nickname: "USR"
-    role_id: 1
-  - id: 2
+    role_id: 101
+  - id: 102
     about: "Something"
     city: "Moscow"
     email: "SomeEmail@mail.com"
@@ -30,8 +30,8 @@ user_entity:
     nickname: "NickName103"
     password: "$2a$12$7hq5eGQ8UvHfX2RRcPSlrunT.DzY3AxzPoNWXlrWrUyHnhglotCYG"
     persist_date: 2021-12-06 00:00:00
-    role_id: 1
-  - id: 3
+    role_id: 101
+  - id: 103
     about: "Something"
     city: "Moscow"
     email: "SomeEmail@mail.mail"
@@ -46,8 +46,8 @@ user_entity:
     nickname: "NickName102"
     password: "$2b$10$cGQ/HnP70pqO1z7RtisfwOSQzrqZSw0tK8/rmrO7k0q1EY7rpSuka"
     persist_date: 2021-12-06 00:00:00
-    role_id: 1
-  - id: 4
+    role_id: 101
+  - id: 104
     about: "Something"
     city: "Moscow"
     email: "user4@mail.ru"
@@ -62,8 +62,8 @@ user_entity:
     nickname: "NickName104"
     password: "$2a$12$OhDNSKYhUZAF8kbDABWPTOqwWhc2ZqVPmnVBNUHES6gowtXeDfJly"
     persist_date: 2021-12-06 00:00:00
-    role_id: 1
-  - id: 5
+    role_id: 101
+  - id: 105
     about: "Something"
     city: "Moscow"
     email: "user5@mail.ru"
@@ -78,4 +78,4 @@ user_entity:
     nickname: "NickName105"
     password: "$2a$12$7/eF1egebaK4MIG0Zt0BT.Y.I8hkkv7DZ9cLgZehssDNWC4DBEO.i"
     persist_date: 2021-12-06 00:00:00
-    role_id: 1
+    role_id: 101

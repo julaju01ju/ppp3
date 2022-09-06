@@ -14,18 +14,12 @@ public class MessageStarServiceImpl extends ReadWriteServiceImpl<MessageStar, Lo
 
     private MessageStarDao messageStarDao;
 
+
     @Autowired
     public MessageStarServiceImpl(MessageStarDao messageStarDao) {
         super(messageStarDao);
         this.messageStarDao = messageStarDao;
     }
-
-
-    @Override
-    public boolean isChatHasUser(long chatId, long userId) {
-        return messageStarDao.isChatHasUser(chatId, userId);
-    }
-
     @Override
     public boolean isUserHasNoMoreThanThreeMessageStar(long userId) {
         return messageStarDao.isUserHasNoMoreThanThreeMessageStar(userId);

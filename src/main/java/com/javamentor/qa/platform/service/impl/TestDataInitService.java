@@ -53,6 +53,7 @@ public class TestDataInitService {
 
     private QuestionViewedService questionViewedService;
     private MessageStarService messageStarService;
+    private ChatService chatService;
     public TestDataInitService() {
     }
 
@@ -74,7 +75,8 @@ public class TestDataInitService {
             @Lazy SingleChatService singleChatService,
             @Lazy QuestionViewedService questionViewedService,
             @Lazy MessageService messageService,
-            @Lazy MessageStarService messageStarService) {
+            @Lazy MessageStarService messageStarService,
+            @Lazy ChatService chatService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -92,6 +94,7 @@ public class TestDataInitService {
         this.messageService = messageService;
         this.questionViewedService = questionViewedService;
         this.messageStarService = messageStarService;
+        this.chatService = chatService;
     }
 
     public void createRole() {
@@ -433,7 +436,7 @@ public class TestDataInitService {
                 int messageRandom = r.nextInt(19 - 1 + 1) + 1;
                 long chatId = messageService.getAll().get(messageRandom).getChat().getId();
                 if (messageStarService.isUserHasNoMoreThanThreeMessageStar(userService.getAll().get(i).getId()) &&
-                        messageStarService.isChatHasUser(chatId, userService.getAll().get(i).getId())) {
+                        chatService.isChatHasUser(chatId, userService.getAll().get(i).getId())) {
                     MessageStar messageStar = new MessageStar();
                     messageStar.setPersistDateTime(LocalDateTime.of(2022, 8, 18, 23, 12));
                     messageStar.setUser(userService.getAll().get(i));
