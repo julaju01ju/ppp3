@@ -1,21 +1,55 @@
 package com.javamentor.qa.platform.service.impl;
 
 import com.javamentor.qa.platform.models.entity.BookMarks;
-import com.javamentor.qa.platform.models.entity.chat.*;
-import com.javamentor.qa.platform.models.entity.question.*;
+import com.javamentor.qa.platform.models.entity.chat.Chat;
+import com.javamentor.qa.platform.models.entity.chat.ChatType;
+import com.javamentor.qa.platform.models.entity.chat.GroupChat;
+import com.javamentor.qa.platform.models.entity.chat.Message;
+import com.javamentor.qa.platform.models.entity.chat.SingleChat;
+import com.javamentor.qa.platform.models.entity.question.IgnoredTag;
+import com.javamentor.qa.platform.models.entity.question.Question;
+import com.javamentor.qa.platform.models.entity.question.QuestionViewed;
+import com.javamentor.qa.platform.models.entity.question.RelatedTag;
+import com.javamentor.qa.platform.models.entity.question.Tag;
+import com.javamentor.qa.platform.models.entity.question.TrackedTag;
+import com.javamentor.qa.platform.models.entity.question.VoteQuestion;
 import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteAnswer;
 import com.javamentor.qa.platform.models.entity.question.answer.VoteType;
 import com.javamentor.qa.platform.models.entity.user.MessageStar;
 import com.javamentor.qa.platform.models.entity.user.Role;
 import com.javamentor.qa.platform.models.entity.user.User;
-import com.javamentor.qa.platform.service.abstracts.model.*;
+import com.javamentor.qa.platform.models.entity.user.UserChatPin;
+import com.javamentor.qa.platform.service.abstracts.model.AnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.BookMarksService;
+import com.javamentor.qa.platform.service.abstracts.model.ChatService;
+import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
+import com.javamentor.qa.platform.service.abstracts.model.IgnoredTagService;
+import com.javamentor.qa.platform.service.abstracts.model.MessageService;
+import com.javamentor.qa.platform.service.abstracts.model.MessageStarService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionService;
+import com.javamentor.qa.platform.service.abstracts.model.QuestionViewedService;
+import com.javamentor.qa.platform.service.abstracts.model.RelatedTagService;
+import com.javamentor.qa.platform.service.abstracts.model.ReputationService;
+import com.javamentor.qa.platform.service.abstracts.model.RoleService;
+import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
+import com.javamentor.qa.platform.service.abstracts.model.TagService;
+import com.javamentor.qa.platform.service.abstracts.model.TrackedTagService;
+import com.javamentor.qa.platform.service.abstracts.model.UserChatPinService;
+import com.javamentor.qa.platform.service.abstracts.model.UserService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnAnswerService;
+import com.javamentor.qa.platform.service.abstracts.model.VoteOnQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,6 +87,11 @@ public class TestDataInitService {
 
     private QuestionViewedService questionViewedService;
     private MessageStarService messageStarService;
+
+    private UserChatPinService userChatPinService;
+
+    private ChatService chatService;
+
     public TestDataInitService() {
     }
 
@@ -74,7 +113,9 @@ public class TestDataInitService {
             @Lazy SingleChatService singleChatService,
             @Lazy QuestionViewedService questionViewedService,
             @Lazy MessageService messageService,
-            @Lazy MessageStarService messageStarService) {
+            @Lazy MessageStarService messageStarService,
+            @Lazy UserChatPinService userChatPinService,
+            @Lazy ChatService chatService) {
         this.roleService = roleService;
         this.userService = userService;
         this.answerService = answerService;
@@ -92,6 +133,8 @@ public class TestDataInitService {
         this.messageService = messageService;
         this.questionViewedService = questionViewedService;
         this.messageStarService = messageStarService;
+        this.userChatPinService = userChatPinService;
+        this.chatService = chatService;
     }
 
     public void createRole() {
@@ -454,6 +497,20 @@ public class TestDataInitService {
         }
     }
 
+    public void createUserChatPin(){
+
+        User user1 = userService.getById(2L).get();
+        User user2 = userService.getById(6L).get();
+        List<UserChatPin> userChatPins = new ArrayList<>(4);
+
+        userChatPins.add(new UserChatPin(chatService.getById(1L).get(), user1));
+        userChatPins.add(new UserChatPin(chatService.getById(7L).get(), user1));
+        userChatPins.add(new UserChatPin(chatService.getById(3L).get(), user2));
+        userChatPins.add(new UserChatPin(chatService.getById(2L).get(), user1));
+
+        userChatPinService.persistAll(userChatPins);
+
+    }
 
 
     public void init() {
@@ -473,5 +530,6 @@ public class TestDataInitService {
         createGlobalGroupChat();
         createQuestionViewed(50);
         createMessageStar(50);
+        createUserChatPin();
     }
 }
