@@ -38,7 +38,7 @@ public class PaginationGroupChat implements PageDtoDao<GroupChatDto> {
     @Override
     public int getTotalResultCount(Map<String, Object> params) {
         return (int) entityManager.createQuery(
-                "SELECT CAST(count(gc) as (int)) " +
+                "SELECT CAST(count(gc) as int) " +
                         "FROM GroupChat gc " +
                         "JOIN gc.users gcu ON gcu.id = :userId")
                 .setParameter("userId", params.get("userId"))
