@@ -414,7 +414,7 @@ public class TestDataInitService {
             saveMessages.add(messageUserTwo);
             for (Message message : saveMessages){
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(5);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -440,6 +440,11 @@ public class TestDataInitService {
             groupChat.setUsers(groupChatUsers);
             groupChatService.persist(groupChat);
             for (Message message : messages){
+                try {
+                    Thread.sleep(5);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 messageService.persist(message);
             }
         }
@@ -462,6 +467,11 @@ public class TestDataInitService {
         groupChatService.persist(groupChat);
 
         for (Message message : messages){
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             messageService.persist(message);
         }
 

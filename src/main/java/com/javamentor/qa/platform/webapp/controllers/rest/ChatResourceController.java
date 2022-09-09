@@ -102,7 +102,7 @@ public class ChatResourceController {
     }
 
     @GetMapping("/group")
-    @ApiOperation("Возвращает все сообщения как объект класса GroupChatDto с учетом заданных параметров пагинации.")
+    @ApiOperation("Возвращает объект PageDto с items <GroupChatDto> с учетом заданных параметров пагинации.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Получены все сообщения с учетом заданных параметров пагинации."),
             @ApiResponse(code = 400, message = "Необходимо ввести обязательный параметр: номер страницы."),
@@ -119,8 +119,8 @@ public class ChatResourceController {
         params.put("itemsOnPage", items);
         params.put("userId", userId);
 
-        return new ResponseEntity<>(groupChatDtoService.getOptionalGroupChatDto(
-                "paginationGroupChatMessages", params), HttpStatus.OK);
+        return new ResponseEntity<>(groupChatDtoService.getPageDto(
+                "paginationGroupChat", params), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/single/message")
