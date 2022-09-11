@@ -17,10 +17,9 @@ public class ChatDtoDaoImpl implements ChatDtoDao {
     private EntityManager entityManager;
 
     public List<ChatDto> getChatByString(Long userId, String searchedString) {
-
         return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.ChatDto " +
                         "(ch.id, "+
-                        "case when ch.chatType = 1 then gc.title else " +
+                        "case when ch.chatType = :chatTypeGroup then gc.title else " +
                                 "case when sc.userOne.id = :userId then (select u.fullName from User as u WHERE u.id = sc.useTwo.id) " +
                                 "else (select u.fullName from User as u WHERE u.id = sc.userOne.id) end " +
                         "end, "+
@@ -29,7 +28,13 @@ public class ChatDtoDaoImpl implements ChatDtoDao {
                             "else " +
                             "(select gc.imageChat from GroupChat as gc where gc.id = ch.id)" +
                         "end , "+
-                        "m.message, m.persistDate) "+
+                        "m.message, " +
+                        "case when exists(" +
+                            "select ucp " +
+                            "from UserChatPin ucp " +
+                            "where ucp.chat.id = ch.id and ucp.user.id = :userId) " +
+                            "then true else false end " +
+                        ", m.persistDate) " +
                         "from Chat as ch " +
                         "join Message as m  on ch.id = m.chat.id " +
                         "left join GroupChat as gc on m.chat.id = gc.chat.id " +
@@ -54,12 +59,12 @@ public class ChatDtoDaoImpl implements ChatDtoDao {
                         "ch.id in (select g.id from GroupChat as g " +
                             "join g.users as ghu on ghu.id = :userId)) " +
                         "and " +
-                        "m.persistDate = (select max(mes.persistDate) from Message as mes where mes.chat.id = ch.id) " +
-                        "order by m.persistDate desc", ChatDto.class)
-
+                        "m.persistDate = (select max(mes.persistDate) from Message as mes where mes.chat.id = ch.id) "
+                        , ChatDto.class)
                 .setParameter("searchString", "%" + searchedString + "%")
                 .setParameter("userId", userId)
                 .setParameter("chatTypeSingle", ChatType.SINGLE)
+                .setParameter("chatTypeGroup", ChatType.GROUP)
                 .getResultList();
     }
 }

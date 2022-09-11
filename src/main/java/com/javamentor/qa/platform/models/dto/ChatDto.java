@@ -1,6 +1,5 @@
 package com.javamentor.qa.platform.models.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,5 +13,6 @@ public class ChatDto {
     private String name;
     private String image;
     private String lastMessage;
+    private Boolean isChatPin;
     private LocalDateTime persistDateTimeLastMessage;
 }
