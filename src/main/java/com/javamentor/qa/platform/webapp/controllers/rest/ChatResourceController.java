@@ -57,15 +57,15 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-    private final ChatDtoService findChatByStringDtoService;
+    private final ChatDtoService chatDtoService;
 
     @Autowired
-    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, ChatDtoService findChatByStringDtoService) {
+    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, ChatDtoService chatDtoService) {
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
-        this.findChatByStringDtoService = findChatByStringDtoService;
+        this.chatDtoService = chatDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
     }
@@ -159,7 +159,7 @@ public class ChatResourceController {
     public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
             @RequestParam(value = "findMessage") String findMessages) {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        return new ResponseEntity<>(findChatByStringDtoService.getChatsByString(userId, findMessages), HttpStatus.OK);
+        return new ResponseEntity<>(chatDtoService.getChatsByString(userId, findMessages), HttpStatus.OK);
     }
 
     @PostMapping("/group")
