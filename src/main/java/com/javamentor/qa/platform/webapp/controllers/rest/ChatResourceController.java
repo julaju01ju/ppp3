@@ -14,11 +14,9 @@ import com.javamentor.qa.platform.service.abstracts.dto.ChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.GroupChatDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.MessageDtoService;
 import com.javamentor.qa.platform.service.abstracts.model.GroupChatService;
-import com.javamentor.qa.platform.service.abstracts.model.MessageService;
 import com.javamentor.qa.platform.service.abstracts.model.SingleChatService;
 import com.javamentor.qa.platform.service.abstracts.model.UserService;
 import com.javamentor.qa.platform.service.impl.dto.SingleChatDtoServiceImpl;
-import com.javamentor.qa.platform.webapp.converters.SingleChatConverter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -59,28 +57,24 @@ public class ChatResourceController {
     private final MessageDtoService messageDtoService;
     private final UserService userService;
     private final GroupChatService groupChatService;
-    private final MessageService messageService;
-    private final SingleChatConverter singleChatConverter;
-    private final ChatDtoService findChatByStringDtoService;
+    private final ChatDtoService chatDtoService;
 
     @Autowired
-    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, MessageService messageService, SingleChatConverter singleChatConverter, ChatDtoService findChatByStringDtoService) {
+    public ChatResourceController(SingleChatDtoServiceImpl singleChatDtoService, SingleChatService singleChatService, GroupChatDtoService groupChatDtoService, MessageDtoService messageDtoService, UserService userService, GroupChatService groupChatService, ChatDtoService chatDtoService) {
         this.singleChatDtoService = singleChatDtoService;
         this.groupChatDtoService = groupChatDtoService;
         this.singleChatService = singleChatService;
         this.messageDtoService = messageDtoService;
-        this.findChatByStringDtoService = findChatByStringDtoService;
+        this.chatDtoService = chatDtoService;
         this.userService = userService;
         this.groupChatService = groupChatService;
-        this.messageService = messageService;
-        this.singleChatConverter = singleChatConverter;
     }
 
 
     @GetMapping("/single")
-    @ApiOperation("Возвращает SingleChatDtos авторизованного пользователя")
+    @ApiOperation("Возвращает SingleChatDto авторизованного пользователя")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Получены все SingleChatDtos авторизованного пользователя"),
+            @ApiResponse(code = 200, message = "Получены все SingleChatDto авторизованного пользователя"),
             @ApiResponse(code = 400, message = "Неправильные параметры запроса"),
     })
     public ResponseEntity<PageDto<SingleChatDto>> receiveAllSingleChatOfUser(
@@ -165,7 +159,7 @@ public class ChatResourceController {
     public ResponseEntity<List<ChatDto>> findStringInSingleAndGroupChats(
             @RequestParam(value = "findMessage") String findMessages) {
         Long userId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        return new ResponseEntity<>(findChatByStringDtoService.getChatByString(userId, findMessages), HttpStatus.OK);
+        return new ResponseEntity<>(chatDtoService.getChatsByString(userId, findMessages), HttpStatus.OK);
     }
 
     @PostMapping("/group")
@@ -265,6 +259,4 @@ public class ChatResourceController {
 
         return new ResponseEntity<>("Ошибка удаления. Чат не найден.", HttpStatus.NOT_FOUND);
     }
-
-
 }

@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface ChatDtoService {
-    List<ChatDto> getChatByString(Long userId, String searchedString);
+    List<ChatDto> getChatsByString(Long userId, String searchedString);
 }
