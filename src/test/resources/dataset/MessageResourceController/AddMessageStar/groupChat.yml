@@ -1,0 +1,5 @@
+group_chat:
+  - chat_id: 101
+    title: "Some group chat 1"
+  - chat_id: 102
+    title: "Some group chat 2"

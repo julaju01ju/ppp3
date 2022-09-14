@@ -15,16 +15,6 @@ public class MessageStarDaoImpl extends ReadWriteDaoImpl<MessageStar, Long> impl
     @PersistenceContext
     private EntityManager entityManager;
 
-    //    проверяет состоит ли юзер в чате, проверка проходит через группу groupchat_has_user
-    @Override
-    public boolean isChatHasUser(long chatId, long userId) {
-
-        Query query = entityManager.createQuery("select u.id from GroupChat gr join gr.users u where gr.id= :chatId")
-                .setParameter("chatId", chatId);
-
-        return query.getResultList().contains(userId);
-    }
-
     //    проверяет не больше ли трех избранных сообщений у юзера
     @Override
     public boolean isUserHasNoMoreThanThreeMessageStar(long userId){

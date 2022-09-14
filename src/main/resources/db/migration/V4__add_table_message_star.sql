@@ -10,7 +10,7 @@ create table message_star (
 alter table message_star
     add constraint message_star_message_fk
         foreign key (message_id)
-            references question;
+            references message;
 
 alter table message_star
     add constraint message_star_user_fk

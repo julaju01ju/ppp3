@@ -1,0 +1,16 @@
+chat:
+  - id: 101
+    chat_type: 1
+    persist_date: 2022-06-13 00:00:00
+  - id: 102
+    chat_type: 1
+    persist_date: 2022-06-13 00:00:00
+  - id: 103
+    chat_type: 2
+    persist_date: 2022-06-13 00:00:00
+  - id: 104
+    chat_type: 2
+    persist_date: 2022-06-13 00:00:00
+
+
+
