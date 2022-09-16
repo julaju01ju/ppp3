@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -785,5 +786,42 @@ public class TestUserResourceController extends AbstractControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(0));
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/users.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/questions.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/answers.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/roles.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getAnswerUserDtoForTheWeek() throws Exception {
+        String USER_TOKEN = getToken("user@mail.ru", "USER");
+        mockMvc.perform(get("/api/user/profile/answers/week")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].answerId").value(156))
+                .andExpect(jsonPath("$.[0].questionId").value(101))
+                .andExpect(jsonPath("$.[0].htmlBody").value("NEW ANSWER"));
+
+
+    }
+
+    @Test
+    @DataSet(value = {
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/users.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/questions.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/answers.yml",
+            "dataset/UserResourceController/getAnswerUserDtoForWeek/roles.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void getAnswerUserDtoForTheWeekNotExist() throws Exception {
+        String USER_TOKEN = getToken("user_null@mail.ru", "USER");
+        mockMvc.perform(get("/api/user/profile/answers/week")
+                        .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+
+
     }
 }

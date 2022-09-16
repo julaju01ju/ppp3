@@ -3,6 +3,7 @@ package com.javamentor.qa.platform.service.impl.dto;
 import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.dao.abstracts.dto.CommentDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.AnswerUserDto;
 import com.javamentor.qa.platform.models.dto.CommentDto;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,11 @@ public class AnswerDtoServiceImpl implements AnswerDtoService {
     @Override
     public Long getAmountAllAnswersByUserId(Long id) {
         return answerDtoDao.getAmountAllAnswersByUserId(id);
+    }
+
+    @Override
+    public List<AnswerUserDto> getAnswerUserDtoForWeek(Long id) {
+        return answerDtoDao.getAnswerUserDtoForWeek(id);
     }
 
 }
