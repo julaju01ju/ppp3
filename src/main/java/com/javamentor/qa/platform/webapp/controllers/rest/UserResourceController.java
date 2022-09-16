@@ -6,6 +6,7 @@ import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.UserDto;
 import com.javamentor.qa.platform.models.dto.UserProfileQuestionDto;
 import com.javamentor.qa.platform.models.dto.UserProfileReputationDto;
+import com.javamentor.qa.platform.models.dto.AnswerUserDto;
 import com.javamentor.qa.platform.models.entity.user.User;
 import com.javamentor.qa.platform.service.abstracts.dto.AnswerDtoService;
 import com.javamentor.qa.platform.service.abstracts.dto.BookMarksDtoService;
@@ -266,6 +267,20 @@ public class UserResourceController {
     })
     public ResponseEntity<List<UserDto>> getTop10UserDtoForAnswerOnTheYear() {
         return new ResponseEntity<>(userDtoService.getTop10UserDtoForAnswerOnTheYear(), HttpStatus.OK);
+    }
+
+    @GetMapping("/profile/answers/week")
+    @ApiOperation(value = "Вывод ответов пользователя за неделю")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Вывод всех ответов за неделю прошел успешно"),
+            @ApiResponse(code = 500, message = "")
+    })
+    public ResponseEntity<List<AnswerUserDto>> outputOfAllTheLatestResponsesForTheWeek() {
+        User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+        return new ResponseEntity<>(answerDtoService.getAnswerUserDtoForWeek(user.getId()), HttpStatus.OK);
+
+
     }
 
 

@@ -2,6 +2,7 @@ package com.javamentor.qa.platform.dao.impl.dto;
 
 import com.javamentor.qa.platform.dao.abstracts.dto.AnswerDtoDao;
 import com.javamentor.qa.platform.models.dto.AnswerDto;
+import com.javamentor.qa.platform.models.dto.AnswerUserDto;
 import com.javamentor.qa.platform.models.dto.CommentDto;
 import org.hibernate.query.Query;
 import org.hibernate.transform.ResultTransformer;
@@ -114,6 +115,21 @@ public class AnswerDtoDaoImpl
                 .getSingleResult();
 
         return countRecords;
+    }
+
+    @Override
+    public List<AnswerUserDto> getAnswerUserDtoForWeek(Long id) {
+        return entityManager.createQuery("select new com.javamentor.qa.platform.models.dto.AnswerUserDto(" +
+                        "a.id, " +
+                        "a.question.id," +
+                        "(SELECT SUM(case v.vote WHEN 'UP_VOTE' THEN 1 ELSE -1 END) FROM VoteAnswer AS v WHERE v.answer.id = a.id)," +
+                        "a.persistDateTime," +
+                        "a.htmlBody)" +
+                        "from Answer a where a.user.id = :id and a.persistDateTime >= :time", AnswerUserDto.class)
+                .setParameter("time", LocalDateTime.of(LocalDate.now(), LocalTime.now()).minusWeeks(1))
+                .setParameter("id", id).getResultList();
+
+
     }
 
 }
