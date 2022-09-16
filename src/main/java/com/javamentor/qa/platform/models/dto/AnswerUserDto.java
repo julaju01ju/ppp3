@@ -19,8 +19,4 @@ public class AnswerUserDto {
     private String htmlBody;
 
 
-
-
-
-
 }
