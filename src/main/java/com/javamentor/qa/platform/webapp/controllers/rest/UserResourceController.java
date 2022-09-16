@@ -273,14 +273,12 @@ public class UserResourceController {
     @ApiOperation(value = "Вывод ответов пользователя за неделю")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Вывод всех ответов за неделю прошел успешно"),
-            @ApiResponse(code = 404, message = "У вас нет ответов за прошедшую неделю")
+            @ApiResponse(code = 500, message = "")
     })
-    public ResponseEntity<?> outputOfAllTheLatestResponsesForTheWeek() {
+    public ResponseEntity<List<AnswerUserDto>> outputOfAllTheLatestResponsesForTheWeek() {
         User user = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        List<AnswerUserDto> answerUserDtos = answerDtoService.getAnswerUserDtoForWeek(user.getId());
-        return answerUserDtos.isEmpty()
-                ? new ResponseEntity<>("У вас нет ответов за прошедшую неделю", HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(answerUserDtos, HttpStatus.OK);
+
+        return new ResponseEntity<>(answerDtoService.getAnswerUserDtoForWeek(user.getId()), HttpStatus.OK);
 
 
     }
