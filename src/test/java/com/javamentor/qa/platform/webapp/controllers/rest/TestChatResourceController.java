@@ -22,8 +22,7 @@ import java.util.List;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class TestChatResourceController extends AbstractControllerTest {
@@ -747,10 +746,34 @@ public class TestChatResourceController extends AbstractControllerTest {
     public void searchByChatMessage() throws Exception {
         String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
+        // Проверка статуса и количества
         mockMvc.perform(
                         get("/api/user/chat/1/message/find?word=chat&page=1")
                                 .header(AUTHORIZATION, USER_TOKEN))
                 .andDo(print())
+                .andExpect(jsonPath("$.totalResultCount").value(3))
                 .andExpect(status().isOk());
+
+        // Проверка на пустую строку
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?page=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        // Проверка на items и totalPageCount
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?word=chat&page=1&items=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.totalPageCount").value(3));
+
+        // Проверка page = 2
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?word=chat&page=2&items=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.currentPageNumber").value(2));
+
     }
 }
