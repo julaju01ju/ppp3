@@ -2,24 +2,19 @@ package com.javamentor.qa.platform.webapp.controllers.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.database.rider.core.api.dataset.DataSet;
-import com.github.database.rider.core.api.dataset.SeedStrategy;
 import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
 import com.javamentor.qa.platform.models.entity.chat.SingleChat;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +22,7 @@ import java.util.List;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 public class TestChatResourceController extends AbstractControllerTest {
@@ -39,18 +33,15 @@ public class TestChatResourceController extends AbstractControllerTest {
     @Autowired
     private EntityManager entityManager;
 
-
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/role.yml",
             "dataset/ChatResourceController/users.yml",
             "dataset/ChatResourceController/singleChats.yml",
             "dataset/ChatResourceController/messages.yml",
-
     },
             disableConstraints = true, cleanBefore = true
     )
-
     public void getSingleChatDtosByUser() throws Exception {
 
         String USER_TOKEN = super.getToken("user@mail.ru", "pass0");
@@ -436,7 +427,6 @@ public class TestChatResourceController extends AbstractControllerTest {
         Assertions.assertNotNull(entityManager.createQuery("from GroupChat", GroupChat.class));
     }
 
-
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/role.yml",
@@ -480,8 +470,6 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isBadRequest());
     }
-
-
 
     @Test
     @DataSet(value = {
@@ -584,7 +572,6 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
@@ -652,7 +639,6 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
     }, disableConstraints = true, cleanBefore = true)
-
     public void getFindChatWithValidParametersUserHasOnlyGroupChat() throws Exception{
         String USER_TOKEN = super.getToken("user5@mail.ru", "pass5");
 
@@ -667,7 +653,6 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(jsonPath("$[0].persistDateTimeLastMessage").value("2022-07-05T20:00:00"));
     }
 
-
     @Test
     @DataSet(value = {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
@@ -678,7 +663,6 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
     }, disableConstraints = true, cleanBefore = true)
-
     public void getFindStringWithoutParametersInSingleAndGroupChat() throws Exception {
         String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
@@ -699,7 +683,6 @@ public class TestChatResourceController extends AbstractControllerTest {
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
             "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
     }, disableConstraints = true, cleanBefore = true)
-
     public void getFindStringWithIncorrectParameters() throws Exception {
         String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
 
@@ -709,7 +692,6 @@ public class TestChatResourceController extends AbstractControllerTest {
                 .andExpect(status().isOk());
 
     }
-
 
     @Test
     @DataSet(value = {
@@ -751,4 +733,47 @@ public class TestChatResourceController extends AbstractControllerTest {
 
     }
 
+    @Test
+    @DataSet(value = {
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/chat.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/singleChats.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/messages.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/users.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/role.yml",
+            "dataset/ChatResourceController/getStringInGroupAndSingleChats/groupChatHasUsers.yml"
+    }, disableConstraints = true, cleanBefore = true)
+    public void searchByChatMessage() throws Exception {
+        String USER_TOKEN = super.getToken("user1@mail.ru", "pass0");
+
+        // Проверка статуса и количества
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?word=chat&page=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.totalResultCount").value(3))
+                .andExpect(status().isOk());
+
+        // Проверка на пустую строку
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?page=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+        // Проверка на items и totalPageCount
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?word=chat&page=1&items=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.totalPageCount").value(3));
+
+        // Проверка page = 2
+        mockMvc.perform(
+                        get("/api/user/chat/1/message/find?word=chat&page=2&items=1")
+                                .header(AUTHORIZATION, USER_TOKEN))
+                .andDo(print())
+                .andExpect(jsonPath("$.currentPageNumber").value(2));
+
+    }
 }

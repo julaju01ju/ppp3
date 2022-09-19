@@ -5,10 +5,6 @@ import com.javamentor.qa.platform.models.entity.question.answer.Answer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-
-
-
-
 @Mapper(componentModel = "spring")
 public abstract class AnswerConverter {
 

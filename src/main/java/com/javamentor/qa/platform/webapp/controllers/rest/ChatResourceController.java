@@ -5,6 +5,7 @@ import com.javamentor.qa.platform.models.dto.CreateGroupChatDto;
 import com.javamentor.qa.platform.models.dto.CreateSingleChatDto;
 import com.javamentor.qa.platform.models.dto.PageDto;
 import com.javamentor.qa.platform.models.dto.SingleChatDto;
+import com.javamentor.qa.platform.models.dto.MessageDto;
 import com.javamentor.qa.platform.models.entity.chat.Chat;
 import com.javamentor.qa.platform.models.entity.chat.ChatType;
 import com.javamentor.qa.platform.models.entity.chat.GroupChat;
@@ -43,13 +44,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-
-
 @RestController
 @Api("Chats Api")
 @RequestMapping("api/user/chat")
 public class ChatResourceController {
-
 
     private final SingleChatDtoServiceImpl singleChatDtoService;
     private final SingleChatService singleChatService;
@@ -69,7 +67,6 @@ public class ChatResourceController {
         this.userService = userService;
         this.groupChatService = groupChatService;
     }
-
 
     @GetMapping("/single")
     @ApiOperation("Возвращает SingleChatDto авторизованного пользователя")
@@ -204,7 +201,6 @@ public class ChatResourceController {
 
     }
 
-
     @PostMapping("/group/{id}/join")
     @ApiOperation("Добавляет пользователя в групповой чат. Получает id группового чата и пользователя в параметрах запроса. "
             +"Проверяет существование группового чата и пользователя. " +
@@ -258,5 +254,26 @@ public class ChatResourceController {
         }
 
         return new ResponseEntity<>("Ошибка удаления. Чат не найден.", HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/{chatId}/message/find")
+    @ApiOperation("Возвращает сообщения в чате в виде PageDto<MessageDto> при не точном поиске")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Успешно возвращены все сообщения"),
+            @ApiResponse(code = 400, message = "Не введены все обязательные параметры, либо введены не корректно")
+    })
+    public ResponseEntity<PageDto<MessageDto>> searchByChatMessage(
+            @RequestParam(value = "items", defaultValue = "20") Integer items,
+            @RequestParam("page") Integer page,
+            @RequestParam("word") String word,
+            @PathVariable Long chatId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("chatId", chatId);
+        params.put("itemsOnPage", items);
+        params.put("currentPageNumber", page);
+        params.put("word", word);
+
+        return new ResponseEntity<>(messageDtoService.getPageDto("paginationSearchByChatMessage", params), HttpStatus.OK);
     }
 }
